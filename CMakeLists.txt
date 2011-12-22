@@ -18,7 +18,7 @@
 # Project setup
 ########################################################################
 cmake_minimum_required(VERSION 2.6)
-project(tsbe C CXX)
+project(tsbe CXX)
 enable_testing()
 
 ########################################################################
@@ -27,10 +27,9 @@ enable_testing()
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 install(FILES
-    include/tsbe/api.h
-    include/tsbe/types.h
-    include/tsbe/buffer.h
-    include/tsbe/queue.h
+    include/tsbe/config.hpp
+    include/tsbe/buffer.hpp
+    include/tsbe/queue.hpp
     DESTINATION include/tsbe
     COMPONENT "devel"
 )

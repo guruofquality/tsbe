@@ -14,33 +14,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_TSBE_TYPES_IMPL_H
-#define INCLUDED_TSBE_TYPES_IMPL_H
+#ifndef INCLUDED_TSBE_BUFFER_IMPL_HPP
+#define INCLUDED_TSBE_BUFFER_IMPL_HPP
 
-#include <tsbe/types.h>
-#include <tsbe/buffer.h>
+//! the buffer impl code is common so queue can also access it
+
+#include <tsbe/buffer.hpp>
 #include "atomic_impl.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct{
-    tbse__buffer__config_t config;
+struct tsbe::Buffer::Impl{
+    BufferConfig config;
     size_t length;
-    AO_t count;
-} tsbe_impl__buffer_t;
+    AO_t ref_count;
+    AO_t reader_count;
+    Queue owner;
+};
 
-#define COMPILE_TIME_ASSERT(pred)       \
-    switch(0){case 0:case (pred):;}
-
-static inline void compile_time_assertions(void){
-    COMPILE_TIME_ASSERT(sizeof(tsbe_impl__buffer_t) <= sizeof(tsbe__buffer_t));
-}
-
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif /*INCLUDED_TSBE_TYPES_IMPL_H*/
+#endif /*INCLUDED_TSBE_BUFFER_IMPL_HPP*/

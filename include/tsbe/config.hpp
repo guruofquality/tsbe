@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_TSBE_API_H
-#define INCLUDED_TSBE_API_H
+#ifndef INCLUDED_TSBE_CONFIG_HPP
+#define INCLUDED_TSBE_CONFIG_HPP
 
 // http://gcc.gnu.org/wiki/Visibility
 // Generic helper definitions for shared library support
@@ -51,13 +51,4 @@
   #define TSBE_LOCAL
 #endif // TSBE_DLL
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif /*INCLUDED_TSBE_API_H*/
+#endif /*INCLUDED_TSBE_CONFIG_HPP*/

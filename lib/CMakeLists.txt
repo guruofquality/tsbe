@@ -20,6 +20,7 @@
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 find_package(NumaNuma)
 find_package(Pthreads)
+find_package(AtomicOps)
 
 if(NOT NUMANUMA_FOUND)
     message(FATAL_ERROR "no numanuma found!")
@@ -29,6 +30,10 @@ if(NOT PTHREADS_FOUND)
     message(FATAL_ERROR "no pthreads found!")
 endif()
 
+if(NOT ATOMIC_OPS_FOUND)
+    message(FATAL_ERROR "no atomic ops found!")
+endif()
+
 if(CMAKE_COMPILER_IS_GNUCXX)
     add_definitions(-Wall)
 endif()
@@ -36,14 +41,15 @@ endif()
 add_definitions(${PTHREADS_DEFINITIONS})
 include_directories(${PTHREADS_INCLUDE_DIRS})
 include_directories(${NUMANUMA_INCLUDE_DIRS})
+include_directories(${ATOMIC_OPS_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 ########################################################################
 # The sources
 ########################################################################
 list(APPEND libtsbe_sources
-    buffer.c
-    queue.c
+    buffer.cpp
+    queue.cpp
 )
 
 ########################################################################
