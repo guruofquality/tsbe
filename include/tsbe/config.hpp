@@ -51,4 +51,28 @@
   #define TSBE_LOCAL
 #endif // TSBE_DLL
 
+#include <boost/config.hpp>
+
+#ifdef BOOST_MSVC
+#  pragma warning(disable: 4251) // class 'A<T>' needs to have dll-interface to be used by clients of class 'B'
+#  include <ciso646>
+#endif //BOOST_MSVC
+
+//forward declares and stuff for library implementation
+namespace tsbe{
+
+//! Forward declaration for queue implementation
+struct QueueImpl;
+
+//! Forward declaration for buffer implementation
+class BufferImpl;
+
+//! Intrusive pointer hook for buffer implementation
+TSBE_API void intrusive_ptr_add_ref(BufferImpl *);
+
+//! Intrusive pointer hook for buffer implementation
+TSBE_API void intrusive_ptr_release(BufferImpl *);
+
+} //namespace tsbe
+
 #endif /*INCLUDED_TSBE_CONFIG_HPP*/

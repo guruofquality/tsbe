@@ -18,7 +18,6 @@
 #define INCLUDED_TSBE_BUFFER_HPP
 
 #include <tsbe/config.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/intrusive_ptr.hpp>
 
 namespace tsbe{
@@ -37,13 +36,13 @@ struct BufferConfig{
 /*!
  * Buffer object: memory, length, reference count...
  */
-class TSBE_API Buffer{
-public:
-    //! Make a new buffer object
-    static Buffer make(const BufferConfig &config);
+struct TSBE_API Buffer : public boost::intrusive_ptr<BufferImpl>{
 
-    //! Null if the buffer is not allocated
-    bool is_null(void) const;
+    //! Make a null/empty buffer
+    Buffer(void);
+
+    //! Make a new buffer object
+    Buffer(const BufferConfig &config);
 
     /*!
      * A reader of this buffer should mark it as done.
@@ -80,13 +79,7 @@ public:
      * \param length the length in bytes
      */
     void set_length(const size_t length);
-
-    struct Impl; boost::intrusive_ptr<Impl> _impl;
 };
-
-TSBE_API void intrusive_ptr_add_ref(Buffer::Impl *p);
-
-TSBE_API void intrusive_ptr_release(Buffer::Impl *p);
 
 } //namespace tsbe
 

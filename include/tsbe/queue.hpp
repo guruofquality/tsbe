@@ -26,20 +26,27 @@ namespace tsbe{
 /*!
  * Queue structure for pushing and popping buffers.
  */
-class TSBE_API Queue{
-public:
-    //! Make a new queue for buffers
-    static Queue make(void);
+struct TSBE_API Queue : public boost::shared_ptr<QueueImpl>{
 
-    //! Null if the queue is not allocated
-    bool is_null(void) const;
+    //! Make a null queue
+    Queue(void);
+
+    //! Make a new queue for buffers
+    Queue(const bool);
 
     /*!
      * Adopt a buffer makes this queue the owner.
      * When the buffer's reference count goes to zero,
      * it will automatically be pushed into this queue.
+     * Will thrown if the buffer already has an owner.
      */
     void adopt(const Buffer &buff) const;
+
+    /*!
+     * Disown the buffer, it is now free to delete.
+     * Will throw if this queue is not the owner.
+     */
+    void disown(const Buffer &buff) const;
 
     /*!
      * Push a buffer into the back of the queue.
@@ -59,9 +66,6 @@ public:
      * - timeout < 0, block forever (not recommended)
      */
     void pop(Buffer &buff, const long long timeout_ns);
-
-private:
-    struct Impl; boost::shared_ptr<Impl> _impl;
 };
 
 } //namespace tsbe

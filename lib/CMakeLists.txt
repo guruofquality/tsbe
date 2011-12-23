@@ -19,15 +19,14 @@
 ########################################################################
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 find_package(NumaNuma)
-find_package(Pthreads)
 find_package(AtomicOps)
 
 if(NOT NUMANUMA_FOUND)
     message(FATAL_ERROR "no numanuma found!")
 endif()
 
-if(NOT PTHREADS_FOUND)
-    message(FATAL_ERROR "no pthreads found!")
+if(NOT Boost_FOUND)
+    message(FATAL_ERROR "no boost found!")
 endif()
 
 if(NOT ATOMIC_OPS_FOUND)
@@ -38,11 +37,14 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     add_definitions(-Wall)
 endif()
 
-add_definitions(${PTHREADS_DEFINITIONS})
-include_directories(${PTHREADS_INCLUDE_DIRS})
 include_directories(${NUMANUMA_INCLUDE_DIRS})
+
 include_directories(${ATOMIC_OPS_INCLUDE_DIRS})
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # The sources
@@ -57,7 +59,7 @@ list(APPEND libtsbe_sources
 ########################################################################
 add_definitions(-DTSBE_DLL) #defined when building dynamic libraries
 add_library(tsbe SHARED ${libtsbe_sources})
-target_link_libraries(tsbe ${PTHREADS_LIBRARY} ${NUMANUMA_LIBRARIES})
+target_link_libraries(tsbe ${PTHREADS_LIBRARY} ${NUMANUMA_LIBRARIES} ${Boost_LIBRARIES})
 set_target_properties(tsbe PROPERTIES DEFINE_SYMBOL "TSBE_DLL_EXPORTS")
 
 ########################################################################

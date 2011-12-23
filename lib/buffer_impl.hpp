@@ -21,13 +21,14 @@
 
 #include <tsbe/buffer.hpp>
 #include "atomic_impl.h"
+#include <boost/weak_ptr.hpp>
 
-struct tsbe::Buffer::Impl{
+struct tsbe::BufferImpl{
     BufferConfig config;
     size_t length;
     AO_t ref_count;
     AO_t reader_count;
-    Queue owner;
+    boost::weak_ptr<QueueImpl> owner;
 };
 
 #endif /*INCLUDED_TSBE_BUFFER_IMPL_HPP*/

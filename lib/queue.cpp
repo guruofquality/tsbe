@@ -18,39 +18,48 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <queue>
+#include <stdexcept>
 #include "buffer_impl.hpp"
 
-struct tsbe::Queue::Impl{
-    std::queue<Buffer> queue;
+struct tsbe::QueueImpl{
+    std::queue<tsbe::Buffer> queue;
     boost::mutex mutex;
     boost::condition_variable cond;
 };
 
-tsbe::Queue tsbe::Queue::make(void){
-    Queue queue;
-    queue._impl = boost::shared_ptr<tsbe::Queue::Impl>(new tsbe::Queue::Impl());
-    return queue;
+tsbe::Queue::Queue(void){
+    //NOP
 }
 
-bool tsbe::Queue::is_null(void) const{
-    return _impl.get() == NULL;
+tsbe::Queue::Queue(const bool){
+    this->reset(new QueueImpl());
 }
 
 void tsbe::Queue::adopt(const Buffer &buff) const{
-    buff._impl->owner = *this;
+    if (buff->owner.lock() != NULL){
+        throw std::runtime_error("queue cannot adopt this buffer");
+    }
+    buff->owner = *this;
+}
+
+void tsbe::Queue::disown(const Buffer &buff) const{
+    if (buff->owner.lock() != *this){
+        throw std::runtime_error("queue cannot disown this buffer");
+    }
+    buff->owner.reset();
 }
 
 void tsbe::Queue::push(const Buffer &buff){
-    boost::mutex::scoped_lock lock(_impl->mutex);
-    _impl->queue.push(buff);
+    boost::mutex::scoped_lock lock((*this)->mutex);
+    (*this)->queue.push(buff);
     lock.unlock(); //unlock before notify
-    _impl->cond.notify_one();
+    (*this)->cond.notify_one();
 }
 
 void tsbe::Queue::pop(Buffer &buff, const long long timeout_ns){
-    boost::mutex::scoped_lock lock(_impl->mutex);
+    boost::mutex::scoped_lock lock((*this)->mutex);
 
-    if (_impl->queue.empty()){
+    if (not (*this)->queue.empty()){
         //NOP
     }
 
@@ -61,14 +70,14 @@ void tsbe::Queue::pop(Buffer &buff, const long long timeout_ns){
     }
 
     else if (timeout_ns < 0){
-        while (_impl->queue.empty()){
-            _impl->cond.wait(lock);
+        while ((*this)->queue.empty()){
+            (*this)->cond.wait(lock);
         }
     }
 
     else if (timeout_ns > 0){
-        while (_impl->queue.empty()){
-            if (not _impl->cond.timed_wait(lock, boost::posix_time::microseconds(timeout_ns * 1000))){
+        while ((*this)->queue.empty()){
+            if (not (*this)->cond.timed_wait(lock, boost::posix_time::microseconds(timeout_ns * 1000))){
                 Buffer null_buff;
                 buff = null_buff;
                 return;
@@ -77,6 +86,6 @@ void tsbe::Queue::pop(Buffer &buff, const long long timeout_ns){
     }
 
     //now, really pop the buffer
-    buff = _impl->queue.front();
-    _impl->queue.pop();
+    buff = (*this)->queue.front();
+    (*this)->queue.pop();
 }
