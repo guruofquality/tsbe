@@ -18,6 +18,12 @@
 #include <tsbe/queue.hpp>
 #include "buffer_impl.hpp"
 
+tsbe::BufferImpl::~BufferImpl(void){
+    if (this->config.callback){
+        this->config.callback();
+    }
+}
+
 tsbe::Buffer::Buffer(void){
     //NOP
 }

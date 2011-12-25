@@ -18,6 +18,7 @@
 # unit test suite
 ########################################################################
 set(test_sources
+    allocator_test.cpp
     buffer_test.cpp
     queue_test.cpp
 )

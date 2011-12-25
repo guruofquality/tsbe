@@ -64,8 +64,11 @@ struct TSBE_API Queue : public boost::shared_ptr<QueueImpl>{
      * - timeout > 0, actual timeout operation
      * - timeout = 0, immediate return on empty
      * - timeout < 0, block forever (not recommended)
+     * \param timeout_ns the timeout in nanoseconds
+     * \return the buffer or null on timeout
      */
-    void pop(Buffer &buff, const long long timeout_ns);
+    Buffer pop(const long long timeout_ns);
+
 };
 
 } //namespace tsbe

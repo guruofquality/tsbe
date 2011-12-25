@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#define BOOST_DATE_TIME_POSIX_TIME_STD_CONFIG //gives boost nanosecond support
+
 #include <tsbe/queue.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
@@ -56,7 +58,7 @@ void tsbe::Queue::push(const Buffer &buff){
     (*this)->cond.notify_one();
 }
 
-void tsbe::Queue::pop(Buffer &buff, const long long timeout_ns){
+tsbe::Buffer tsbe::Queue::pop(const long long timeout_ns){
     boost::mutex::scoped_lock lock((*this)->mutex);
 
     if (not (*this)->queue.empty()){
@@ -65,8 +67,7 @@ void tsbe::Queue::pop(Buffer &buff, const long long timeout_ns){
 
     else if (timeout_ns == 0){
         Buffer null_buff;
-        buff = null_buff;
-        return;
+        return null_buff;
     }
 
     else if (timeout_ns < 0){
@@ -77,15 +78,17 @@ void tsbe::Queue::pop(Buffer &buff, const long long timeout_ns){
 
     else if (timeout_ns > 0){
         while ((*this)->queue.empty()){
-            if (not (*this)->cond.timed_wait(lock, boost::posix_time::microseconds(timeout_ns * 1000))){
+            const boost::posix_time::nanoseconds to(timeout_ns);
+            //const boost::posix_time::microseconds to(timeout_ns / 1000);
+            if (not (*this)->cond.timed_wait(lock, to)){
                 Buffer null_buff;
-                buff = null_buff;
-                return;
+                return null_buff;
             }
         }
     }
 
     //now, really pop the buffer
-    buff = (*this)->queue.front();
+    Buffer buff = (*this)->queue.front();
     (*this)->queue.pop();
+    return buff;
 }

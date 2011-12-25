@@ -61,6 +61,9 @@
 //forward declares and stuff for library implementation
 namespace tsbe{
 
+//! Forward declaration for allocator implementation
+struct AllocatorImpl;
+
 //! Forward declaration for queue implementation
 struct QueueImpl;
 

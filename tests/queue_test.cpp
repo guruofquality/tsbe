@@ -42,23 +42,20 @@ BOOST_AUTO_TEST_CASE(queue_test2){
 
     //find the buffer in the queue
     {
-        tsbe::Buffer buff;
-        queue.pop(buff, 0);
+        tsbe::Buffer buff = queue.pop(0);
         BOOST_CHECK(buff.get() != NULL);
     }
 
     //find the buffer in the queue, this time disown
     {
-        tsbe::Buffer buff;
-        queue.pop(buff, 0);
+        tsbe::Buffer buff = queue.pop(0);
         BOOST_CHECK(buff.get() != NULL);
         queue.disown(buff);
     }
 
     //dont find the buffer in the queue
     {
-        tsbe::Buffer buff;
-        queue.pop(buff, 0);
+        tsbe::Buffer buff = queue.pop(0);
         BOOST_CHECK(buff.get() == NULL);
     }
 }

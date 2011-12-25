@@ -64,3 +64,18 @@ BOOST_AUTO_TEST_CASE(buffer_test4){
     buff.done_reading(2); //simulate passing this onto extra readers
     BOOST_CHECK_EQUAL(buff.get_mode_flags(), tsbe::BUFFER_MODE_FLAG_RD);
 }
+
+static int callback_happened = 0;
+static void buffer_callback(void){
+    callback_happened++;
+}
+
+BOOST_AUTO_TEST_CASE(buffer_test5){
+    tsbe::BufferConfig config;
+    config.callback = &buffer_callback;
+    tsbe::Buffer buff(config);
+
+    BOOST_CHECK_EQUAL(callback_happened, 0);
+    buff.reset();
+    BOOST_CHECK_EQUAL(callback_happened, 1);
+}

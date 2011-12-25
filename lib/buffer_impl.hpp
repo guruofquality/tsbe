@@ -24,6 +24,7 @@
 #include <boost/weak_ptr.hpp>
 
 struct tsbe::BufferImpl{
+    ~BufferImpl(void);
     BufferConfig config;
     size_t length;
     AO_t ref_count;

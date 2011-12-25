@@ -50,6 +50,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 # The sources
 ########################################################################
 list(APPEND libtsbe_sources
+    allocator.cpp
     buffer.cpp
     queue.cpp
 )

@@ -18,6 +18,7 @@
 #define INCLUDED_TSBE_BUFFER_HPP
 
 #include <tsbe/config.hpp>
+#include <boost/function.hpp>
 #include <boost/intrusive_ptr.hpp>
 
 namespace tsbe{
@@ -25,12 +26,25 @@ namespace tsbe{
 static const int BUFFER_MODE_FLAG_RD = (1 << 0);
 static const int BUFFER_MODE_FLAG_WR = (1 << 1);
 
+typedef boost::function<void(void)> BufferCB;
+
 //! Configuration struct for making a new buffer
 struct BufferConfig{
+
+    //! pointer to the base of the memory
     void *memory;
+
+    //! length of the memory in bytes
     size_t length;
+
+    //! mode flags: readable and or writable
     int mode_flags;
+
+    //! memory node affinity, -1 for no association
     int node_affinity;
+
+    //! callback when buffer deconstruction (optional)
+    BufferCB callback;
 };
 
 /*!
@@ -79,6 +93,7 @@ struct TSBE_API Buffer : public boost::intrusive_ptr<BufferImpl>{
      * \param length the length in bytes
      */
     void set_length(const size_t length);
+
 };
 
 } //namespace tsbe
