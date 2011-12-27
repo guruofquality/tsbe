@@ -49,21 +49,9 @@ find_package(Boost COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 ########################################################################
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-install(FILES
-    include/tsbe/config.hpp
-    include/tsbe/allocator.hpp
-    include/tsbe/buffer.hpp
-    include/tsbe/queue.hpp
-    DESTINATION include/tsbe
-    COMPONENT "devel"
-)
-
 ########################################################################
-# Build it
+# Do subdirectories
 ########################################################################
+add_subdirectory(include/tsbe)
 add_subdirectory(lib)
-
-########################################################################
-# Test it
-########################################################################
 add_subdirectory(tests)

@@ -29,7 +29,7 @@ static const int BUFFER_MODE_FLAG_WR = (1 << 1);
 typedef boost::function<void(void)> BufferCB;
 
 //! Configuration struct for making a new buffer
-struct BufferConfig{
+struct TSBE_API BufferConfig{
 
     //! pointer to the base of the memory
     void *memory;
@@ -50,7 +50,7 @@ struct BufferConfig{
 /*!
  * Buffer object: memory, length, reference count...
  */
-struct TSBE_API Buffer : public boost::intrusive_ptr<BufferImpl>{
+struct TSBE_API Buffer : boost::intrusive_ptr<BufferImpl>{
 
     //! Make a null/empty buffer
     Buffer(void);

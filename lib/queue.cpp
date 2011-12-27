@@ -33,7 +33,7 @@ tsbe::Queue::Queue(void){
     //NOP
 }
 
-tsbe::Queue::Queue(const bool){
+tsbe::Queue::Queue(const QueueConfig &){
     this->reset(new QueueImpl());
 }
 

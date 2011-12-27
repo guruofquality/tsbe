@@ -53,6 +53,7 @@ list(APPEND libtsbe_sources
     allocator.cpp
     buffer.cpp
     queue.cpp
+    task.cpp
 )
 
 ########################################################################

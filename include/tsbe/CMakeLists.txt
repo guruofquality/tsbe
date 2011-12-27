@@ -15,25 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ########################################################################
-# unit test suite
+# install include files
 ########################################################################
-set(test_sources
-    allocator_test.cpp
-    buffer_test.cpp
-    queue_test.cpp
-    task_test.cpp
+install(FILES
+    config.hpp
+    allocator.hpp
+    buffer.hpp
+    queue.hpp
+    task.hpp
+    DESTINATION include/tsbe
+    COMPONENT "devel"
 )
-
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
-
-#turn each test cpp file into an executable with an int main() function
-add_definitions(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
-
-#for each source: build an executable, register it as a test
-foreach(test_source ${test_sources})
-    get_filename_component(test_name ${test_source} NAME_WE)
-    add_executable(${test_name} ${test_source})
-    target_link_libraries(${test_name} tsbe ${Boost_LIBRARIES})
-    add_test(${test_name} ${test_name})
-endforeach(test_source)

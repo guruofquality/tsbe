@@ -23,7 +23,8 @@
 
 namespace tsbe{
 
-struct AllocatorConfig{
+//! The configuration struct for a new allocator
+struct TSBE_API AllocatorConfig{
 
     //! length of each buffer in bytes
     size_t length;
@@ -51,7 +52,7 @@ struct AllocatorConfig{
  * the user should manually use a queue and allocate buffers.
  * Example: buffers that reside in a specific portion of memory
  */
-struct TSBE_API Allocator : public boost::shared_ptr<AllocatorImpl>{
+struct TSBE_API Allocator : boost::shared_ptr<AllocatorImpl>{
 
     //! Make a null/empty allocator
     Allocator(void);

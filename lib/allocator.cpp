@@ -66,7 +66,7 @@ tsbe::Allocator::Allocator(void){
 tsbe::Allocator::Allocator(const AllocatorConfig &config){
     this->reset(new AllocatorImpl());
     (*this)->config = config;
-    (*this)->queue = Queue(true);
+    (*this)->queue = Queue(QueueConfig());
 
     //allocate default number of buffers
     AO_store(&(*this)->num_allocated, 0);

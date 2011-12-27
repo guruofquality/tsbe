@@ -17,12 +17,30 @@
 #ifndef INCLUDED_TSBE_ATOMIC_IMPL_H
 #define INCLUDED_TSBE_ATOMIC_IMPL_H
 
-//if you cant use atomic_ops,
-//its a simple interface,
-//implement it in this file
+#define TSBE_USE_ATOMIC_OPS //yes, use atomic ops
 
-#define AO_ASSUME_WINDOWS98 //assume modern os
-#define AO_USE_PENTIUM4_INSTRS //assume modern cpu
-#include <atomic_ops.h>
+//http://www.hpl.hp.com/research/linux/atomic_ops/README.txt
+#ifdef TSBE_USE_ATOMIC_OPS
+
+#  define AO_ASSUME_WINDOWS98 //assume modern os
+#  define AO_USE_PENTIUM4_INSTRS //assume modern cpu
+#  include <atomic_ops.h>
+
+//not using atomic ops? define these below for your hardware
+#else
+
+typedef size_t AO_t;
+typedef size_t AO_TS_VAL_t;
+void AO_nop();
+AO_t AO_load(volatile AO_t * addr);
+void AO_store(volatile AO_t * addr, AO_t new_val);
+AO_t AO_fetch_and_add(volatile AO_t *addr, AO_t incr);
+AO_t AO_fetch_and_add1(volatile AO_t *addr);
+AO_t AO_fetch_and_sub1(volatile AO_t *addr);
+void AO_or(volatile AO_t *addr, AO_t incr);
+int AO_compare_and_swap(volatile AO_t * addr, AO_t old_val, AO_t new_val);
+AO_TS_VAL_t AO_test_and_set(volatile AO_TS_t * addr);
+
+#endif
 
 #endif /*INCLUDED_TSBE_ATOMIC_IMPL_H*/

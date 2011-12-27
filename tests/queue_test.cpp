@@ -25,13 +25,15 @@ BOOST_AUTO_TEST_CASE(queue_test0){
 }
 
 BOOST_AUTO_TEST_CASE(queue_test1){
-    tsbe::Queue queue(true);
+    tsbe::QueueConfig config;
+    tsbe::Queue queue(config);
 
     BOOST_CHECK(queue.get() != NULL);
 }
 
 BOOST_AUTO_TEST_CASE(queue_test2){
-    tsbe::Queue queue(true);
+    tsbe::QueueConfig config;
+    tsbe::Queue queue(config);
 
     //buff should go out of scope and delete into queue
     {

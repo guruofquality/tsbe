@@ -68,7 +68,13 @@ struct AllocatorImpl;
 struct QueueImpl;
 
 //! Forward declaration for buffer implementation
-class BufferImpl;
+struct BufferImpl;
+
+//! Forward declaration for Task used in callback typedef
+struct Task;
+
+//! Forward declaration for task implementation
+struct TaskImpl;
 
 //! Intrusive pointer hook for buffer implementation
 TSBE_API void intrusive_ptr_add_ref(BufferImpl *);

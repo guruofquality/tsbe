@@ -23,16 +23,21 @@
 
 namespace tsbe{
 
+//! The configuration struct for making a new queue
+struct TSBE_API QueueConfig{
+    //! empty struct, no config args yet
+};
+
 /*!
  * Queue structure for pushing and popping buffers.
  */
-struct TSBE_API Queue : public boost::shared_ptr<QueueImpl>{
+struct TSBE_API Queue : boost::shared_ptr<QueueImpl>{
 
     //! Make a null queue
     Queue(void);
 
     //! Make a new queue for buffers
-    Queue(const bool);
+    Queue(const QueueConfig &config);
 
     /*!
      * Adopt a buffer makes this queue the owner.
