@@ -29,9 +29,9 @@ if(NOT Boost_FOUND)
     message(FATAL_ERROR "no boost found!")
 endif()
 
-if(NOT ATOMIC_OPS_FOUND)
-    message(FATAL_ERROR "no atomic ops found!")
-endif()
+#if(NOT ATOMIC_OPS_FOUND)
+#    message(FATAL_ERROR "no atomic ops found!")
+#endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     add_definitions(-Wall)
@@ -39,7 +39,7 @@ endif()
 
 include_directories(${NUMANUMA_INCLUDE_DIRS})
 
-include_directories(${ATOMIC_OPS_INCLUDE_DIRS})
+#include_directories(${ATOMIC_OPS_INCLUDE_DIRS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
