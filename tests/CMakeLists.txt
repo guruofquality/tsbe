@@ -22,6 +22,7 @@ set(test_sources
     buffer_test.cpp
     queue_test.cpp
     task_test.cpp
+    test_shared_mem_alloc.cpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS})

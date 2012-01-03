@@ -17,8 +17,8 @@
 #ifndef INCLUDED_TSBE_ATOMIC_IMPL_H
 #define INCLUDED_TSBE_ATOMIC_IMPL_H
 
-//#define TSBE_USE_ATOMIC_OPS //yes, use atomic ops
-#define TSBE_USR_BOOST_ATOMIC //use the boost implementation
+#define TSBE_USE_ATOMIC_OPS //yes, use atomic ops
+//#define TSBE_USR_BOOST_ATOMIC //use the boost implementation
 
 //http://www.hpl.hp.com/research/linux/atomic_ops/README.txt
 #ifdef TSBE_USE_ATOMIC_OPS
@@ -31,7 +31,7 @@
 
 #include <boost/interprocess/detail/atomic.hpp>
 
-typedef boost::uint32_t AO_t;
+typedef size_t AO_t;
 
 inline AO_t AO_load(volatile AO_t * addr){
     return boost::interprocess::detail::atomic_read32(addr);
@@ -60,8 +60,8 @@ inline int AO_compare_and_swap(volatile AO_t * addr, AO_t old_val, AO_t new_val)
 //not using atomic ops? define these below for your hardware
 #else
 
-typedef uint32_t AO_t;
-//typedef uint32_t AO_TS_VAL_t;
+typedef size_t AO_t;
+//typedef size_t AO_TS_VAL_t;
 //void AO_nop();
 AO_t AO_load(volatile AO_t * addr);
 void AO_store(volatile AO_t * addr, AO_t new_val);
