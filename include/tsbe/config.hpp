@@ -1,5 +1,5 @@
 //
-// Copyright 2011 Josh Blum
+// Copyright 2011-2012 Josh Blum
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -66,6 +66,9 @@ struct AllocatorImpl;
 
 //! Forward declaration for queue implementation
 struct QueueImpl;
+
+//! Forward declaration for junction implementation
+struct JunctionImpl;
 
 //! Forward declaration for buffer implementation
 struct BufferImpl;

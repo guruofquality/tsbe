@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Josh Blum
+# Copyright 2011-2012 Josh Blum
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -52,7 +52,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 list(APPEND libtsbe_sources
     allocator.cpp
     buffer.cpp
-    queue.cpp
+    junction.cpp
     task.cpp
 )
 

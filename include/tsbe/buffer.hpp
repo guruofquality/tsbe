@@ -1,5 +1,5 @@
 //
-// Copyright 2011 Josh Blum
+// Copyright 2011-2012 Josh Blum
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -59,16 +59,6 @@ struct TSBE_API Buffer : boost::intrusive_ptr<BufferImpl>{
     Buffer(const BufferConfig &config);
 
     /*!
-     * A reader of this buffer should mark it as done.
-     * Internally, this decrements the reference count.
-     * The num readers allows the caller to tell the buffer
-     * how many extra things will also hold onto this buffer,
-     * even after the current caller is done with the buffer.
-     * \param new_readers extra buffer reference holders
-     */
-    void done_reading(const size_t new_readers = 0);
-
-    /*!
      * Get the RW mode of the buffer.
      * Note: A writable buffer will not have WR set when it has multiple readers.
      * \return the RW mode flags
@@ -86,13 +76,6 @@ struct TSBE_API Buffer : boost::intrusive_ptr<BufferImpl>{
 
     //! Get the length in bytes of the buffer
     size_t get_length(void) const;
-
-    /*!
-     * Set the length in bytes of the buffer.
-     * This is the number of bytes filled with useful data.
-     * \param length the length in bytes
-     */
-    void set_length(const size_t length);
 
 };
 

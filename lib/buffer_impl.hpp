@@ -1,5 +1,5 @@
 //
-// Copyright 2011 Josh Blum
+// Copyright 2011-2012 Josh Blum
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -22,14 +22,22 @@
 #include <tsbe/buffer.hpp>
 #include "atomic_impl.h"
 #include <boost/weak_ptr.hpp>
+#include <vector>
 
 struct tsbe::BufferImpl{
     ~BufferImpl(void);
     BufferConfig config;
-    size_t length;
     AO_t ref_count;
     AO_t reader_count;
-    boost::weak_ptr<QueueImpl> owner;
+    boost::weak_ptr<JunctionImpl> owner;
+    std::vector<Buffer> sub_buffs;
+
+    inline void update_readers(int incr){
+        AO_fetch_and_add(&reader_count, incr);
+        for (size_t i = 0; i < sub_buffs.size(); i++){
+            sub_buffs[i].update_readers(incr);
+        }
+    }
 };
 
 #endif /*INCLUDED_TSBE_BUFFER_IMPL_HPP*/

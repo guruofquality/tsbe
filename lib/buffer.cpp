@@ -1,5 +1,5 @@
 //
-// Copyright 2011 Josh Blum
+// Copyright 2011-2012 Josh Blum
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -15,10 +15,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <tsbe/buffer.hpp>
-#include <tsbe/queue.hpp>
+#include <tsbe/junction.hpp>
+#include <boost/foreach.hpp>
 #include "buffer_impl.hpp"
 
 tsbe::BufferImpl::~BufferImpl(void){
+    //free up sub-buffer references before callback
+    this->sub_buffs.clear();
+
     if (this->config.callback){
         this->config.callback();
     }
@@ -31,7 +35,6 @@ tsbe::Buffer::Buffer(void){
 tsbe::Buffer::Buffer(const BufferConfig &config){
     this->reset(new BufferImpl());
     (*this)->config = config;
-    (*this)->length = config.length; //init actual length to full
     AO_store(&(*this)->ref_count, 1);
     AO_store(&(*this)->reader_count, 1);
 }
@@ -43,12 +46,11 @@ void tsbe::intrusive_ptr_add_ref(BufferImpl *p){
 void tsbe::intrusive_ptr_release(BufferImpl *p){
     if (AO_fetch_and_sub1(&p->ref_count) == 1){
 
-        Queue owner;
+        Junction owner;
         owner.reset(p->owner.lock(), p->owner.lock().get()); //loads owner from weak ptr
 
         //the buffer has a valid owner, return it to the owner
         if (owner != NULL){
-            p->length = p->config.length; //reset length
             AO_store(&p->reader_count, 1); //when popped, this buffer has one reader
 
             Buffer buff;
@@ -61,10 +63,6 @@ void tsbe::intrusive_ptr_release(BufferImpl *p){
             delete p;
         }
     }
-}
-
-void tsbe::Buffer::done_reading(const size_t new_readers){
-    AO_fetch_and_add(&(*this)->reader_count, int(new_readers) - 1);
 }
 
 int tsbe::Buffer::get_mode_flags(void) const{
@@ -86,9 +84,5 @@ void *tsbe::Buffer::get_memory(void) const{
 }
 
 size_t tsbe::Buffer::get_length(void) const{
-    return (*this)->length;
-}
-
-void tsbe::Buffer::set_length(const size_t length){
-    (*this)->length = length;
+    return (*this)->config.length;
 }

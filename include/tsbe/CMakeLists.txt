@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Josh Blum
+# Copyright 2011-2012 Josh Blum
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -21,7 +21,7 @@ install(FILES
     config.hpp
     allocator.hpp
     buffer.hpp
-    queue.hpp
+    junction.hpp
     task.hpp
     DESTINATION include/tsbe
     COMPONENT "devel"
