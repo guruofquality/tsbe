@@ -18,11 +18,12 @@
 # unit test suite
 ########################################################################
 set(test_sources
-    allocator_test.cpp
-    buffer_test.cpp
-    queue_test.cpp
-    task_test.cpp
-    test_shared_mem_alloc.cpp
+    token_test.cpp
+    #allocator_test.cpp
+    #buffer_test.cpp
+    #queue_test.cpp
+    #task_test.cpp
+    #test_shared_mem_alloc.cpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS})

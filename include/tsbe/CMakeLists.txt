@@ -19,10 +19,7 @@
 ########################################################################
 install(FILES
     config.hpp
-    allocator.hpp
-    buffer.hpp
-    junction.hpp
-    task.hpp
+    #TODO put them here
     DESTINATION include/tsbe
     COMPONENT "devel"
 )
