@@ -19,6 +19,7 @@
 ########################################################################
 set(test_sources
     token_test.cpp
+    theron_test.cpp
     #allocator_test.cpp
     #buffer_test.cpp
     #queue_test.cpp
@@ -36,6 +37,6 @@ add_definitions(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 foreach(test_source ${test_sources})
     get_filename_component(test_name ${test_source} NAME_WE)
     add_executable(${test_name} ${test_source})
-    target_link_libraries(${test_name} tsbe ${Boost_LIBRARIES})
+    target_link_libraries(${test_name} tsbe theron ${Boost_LIBRARIES})
     add_test(${test_name} ${test_name})
 endforeach(test_source)

@@ -1,5 +1,5 @@
 //
-// Copyright 2011-2012 Josh Blum
+// Copyright 2012 Josh Blum
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -18,67 +18,68 @@
 #define INCLUDED_TSBE_BUFFER_HPP
 
 #include <tsbe/config.hpp>
-#include <boost/function.hpp>
-#include <boost/intrusive_ptr.hpp>
+#include <tsbe/token.hpp>
+#include <boost/asio/buffer.hpp>
 
 namespace tsbe{
 
-static const int BUFFER_MODE_FLAG_RD = (1 << 0);
-static const int BUFFER_MODE_FLAG_WR = (1 << 1);
+//! Wrapper for a constant buffer
+struct TSBE_API ConstBuffer:
+    boost::asio::const_buffer
+{
+    //! Create a null const buffer
+    ConstBuffer(void);
 
-typedef boost::function<void(void)> BufferCB;
+    //! Create a const buffer from pointer and length in bytes
+    ConstBuffer(const void *mem, const size_t len);
 
-//! Configuration struct for making a new buffer
-struct TSBE_API BufferConfig{
+    //! Get the size of the const buffer in bytes
+    size_t size(void) const;
 
-    //! pointer to the base of the memory
-    void *memory;
+    //! Cast the memory pointer to a pointer of type
+    template <typename Type>
+    const Type *cast(void) const;
+};
 
-    //! length of the memory in bytes
-    size_t length;
+//! Wrapper for a mutable buffer
+struct TSBE_API MutableBuffer:
+    boost::asio::mutable_buffer
+{
+    //! Create a null mutable buffer
+    MutableBuffer(void);
 
-    //! mode flags: readable and or writable
-    int mode_flags;
+    //! Create a mutable buffer from pointer and length in bytes
+    MutableBuffer(void *mem, const size_t len);
 
-    //! memory node affinity, -1 for no association
-    int node_affinity;
+    //! Get the size of the const buffer in bytes
+    size_t size(void) const;
 
-    //! callback when buffer deconstruction (optional)
-    BufferCB callback;
+    //! Cast the memory pointer to a pointer of type
+    template <typename Type>
+    Type *cast(void) const;
 };
 
 /*!
- * Buffer object: memory, length, reference count...
+ * A lightweight buffer object.
+ * Has a pointer to memory, length, and token.
+ * When the token reference goes to zero,
+ * the callback is executed, presumably,
+ * the buffer is restored to a source pool.
  */
-struct TSBE_API Buffer : boost::intrusive_ptr<BufferImpl>{
+struct TSBE_API BufferToken
+{
+    //! The buffer containing mutable memory
+    MutableBuffer buff;
 
-    //! Make a null/empty buffer
-    Buffer(void);
+    //! The token with bound callback
+    Token token;
 
-    //! Make a new buffer object
-    Buffer(const BufferConfig &config);
-
-    /*!
-     * Get the RW mode of the buffer.
-     * Note: A writable buffer will not have WR set when it has multiple readers.
-     * \return the RW mode flags
-     */
-    int get_mode_flags(void) const;
-
-    /*!
-     * Get the memory node affinity of this buffer.
-     * \return the node affinity or -1 for not applicable
-     */
-    int get_node_affinity(void) const;
-
-    //! Get the memory address of the buffer
-    void *get_memory(void) const;
-
-    //! Get the length in bytes of the buffer
-    size_t get_length(void) const;
-
+    //!TODO a way to claim this buffer for reading
+    //!Probably make this part of being a token
 };
 
 } //namespace tsbe
+
+#include <tsbe/detail/buffer.hpp>
 
 #endif /*INCLUDED_TSBE_BUFFER_HPP*/

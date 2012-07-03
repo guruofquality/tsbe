@@ -21,6 +21,22 @@ cmake_minimum_required(VERSION 2.6)
 project(tsbe CXX)
 enable_testing()
 
+#select the release build type by default to get optimization flags
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE "Release")
+   message(STATUS "Build type not specified: defaulting to release.")
+endif(NOT CMAKE_BUILD_TYPE)
+set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
+
+########################################################################
+# Setup Theron
+########################################################################
+add_subdirectory(Theron)
+include_directories(${CMAKE_SOURCE_DIR}/Theron/Include)
+if (NOT WIN32) #not on windows? tell theron headers to use boost
+    add_definitions(-DTHERON_USE_BOOST_THREADS)
+endif()
+
 ########################################################################
 # Setup Boost
 ########################################################################
