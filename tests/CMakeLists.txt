@@ -18,13 +18,7 @@
 # unit test suite
 ########################################################################
 set(test_sources
-    token_test.cpp
-    theron_test.cpp
-    #allocator_test.cpp
-    #buffer_test.cpp
-    #queue_test.cpp
-    #task_test.cpp
-    #test_shared_mem_alloc.cpp
+    compile_test.cpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS})
