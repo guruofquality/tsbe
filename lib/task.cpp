@@ -14,13 +14,35 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <tsbe/task.hpp>
 #include "tsbe_impl.hpp"
 #include <boost/foreach.hpp>
-#include <vector>
-#include <queue>
 
 using namespace tsbe;
+
+/***********************************************************************
+ * implementation details below
+ **********************************************************************/
+inline void TaskActor::handle_buffer_message(const TaskBufferMessage &message, const Theron::Address from)
+{
+    //step 1) push the buffer into the appropriate queue
+    task->input_buffer_queues[message.index].push(message.buffer);
+
+    //step 2) call the task callback since the state changed
+    task->config.callback(task);
+}
+
+inline void TaskActor::handle_connect_message(const TaskConnectMessage &message, const Theron::Address from)
+{
+    
+    if (message.create)
+    {
+        
+    }
+    else
+    {
+        
+    }
+}
 
 Task::Task(void)
 {
@@ -29,8 +51,7 @@ Task::Task(void)
 
 Task::Task(const TaskConfig &config)
 {
-    this->reset(new TaskImpl());
-    (*this)->config = config;
+    this->reset(new TaskImpl(config));
 
     TaskActor::Parameters actor_params;
     actor_params.task = *this;

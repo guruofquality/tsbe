@@ -37,8 +37,8 @@ link_directories(${Boost_LIBRARY_DIRS})
 ########################################################################
 list(APPEND libtsbe_sources
     buffer.cpp
+    connection.cpp
     task.cpp
-    topology.cpp
 )
 
 ########################################################################

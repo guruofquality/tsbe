@@ -16,7 +16,6 @@
 
 #include <tsbe/buffer.hpp>
 #include <tsbe/task.hpp>
-#include <tsbe/topology.hpp>
 
 int main(void)
 {

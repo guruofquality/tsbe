@@ -61,29 +61,9 @@
 //forward declares and stuff for library implementation
 namespace tsbe{
 
-//! Forward declaration for allocator implementation
-struct AllocatorImpl;
-
-//! Forward declaration for queue implementation
-struct QueueImpl;
-
-//! Forward declaration for junction implementation
-struct JunctionImpl;
-
-//! Forward declaration for buffer implementation
-struct BufferImpl;
-
-//! Forward declaration for Task used in callback typedef
+struct ConnectionImpl;
 struct Task;
-
-//! Forward declaration for task implementation
 struct TaskImpl;
-
-//! Intrusive pointer hook for buffer implementation
-TSBE_API void intrusive_ptr_add_ref(BufferImpl *);
-
-//! Intrusive pointer hook for buffer implementation
-TSBE_API void intrusive_ptr_release(BufferImpl *);
 
 } //namespace tsbe
 

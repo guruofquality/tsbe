@@ -25,16 +25,17 @@
 namespace tsbe
 {
 
-struct Task;
-
 //! The callback type for task processing
 typedef boost::function<void(Task &)> TaskCallback;
 
-struct TaskImpl;
-
-struct TaskConfig
+//! Configuration struct for creating a task
+struct TSBE_API TaskConfig
 {
+    TaskConfig(void);
+
     TaskCallback callback;
+
+    size_t num_threads;
 };
 
 /*!
@@ -56,6 +57,9 @@ struct TSBE_API Task : boost::shared_ptr<TaskImpl>
     Buffer pop_input_buffer(const size_t index);
 
     void push_output_buffer(const Buffer &buff, const size_t index);
+
+    size_t get_num_inputs(void);
+    size_t get_num_outputs(void);
 };
 
 } //namespace tsbe
