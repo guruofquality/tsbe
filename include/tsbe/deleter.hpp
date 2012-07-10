@@ -24,21 +24,21 @@
 namespace tsbe
 {
 
-class DeleterImpl;
+struct DeleterImpl;
+
+typedef boost::function<void(void)> DeleterCallback;
 
 /*!
  * A deleter is a reference counted object
  * that calls a bound function upon de-ref.
  */
-class TSBE_API Deleter : boost::shared_ptr<DeleterImpl>
+struct TSBE_API Deleter : boost::shared_ptr<DeleterImpl>
 {
-    typedef boost::function<void(void)> Callback;
-
     //! Create an empty deleter
-    Deleter(void);
+    Deleter(void){}
 
     //! Create a deleter with callback
-    Deleter(const Callback &cb);
+    Deleter(const DeleterCallback &cb);
 };
 
 

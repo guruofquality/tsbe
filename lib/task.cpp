@@ -20,7 +20,7 @@
 using namespace tsbe;
 
 /***********************************************************************
- * implementation details below
+ * buffer handler
  **********************************************************************/
 inline void TaskActor::handle_buffer_message(const TaskBufferMessage &message, const Theron::Address from)
 {
@@ -31,6 +31,9 @@ inline void TaskActor::handle_buffer_message(const TaskBufferMessage &message, c
     task->config.callback(task);
 }
 
+/***********************************************************************
+ * connect handler + helpers
+ **********************************************************************/
 template <typename T>
 void connect(T &t, Endpoint ep, const size_t index)
 {
@@ -59,7 +62,7 @@ void disconnect(T &t, Endpoint ep, const size_t index)
     }
 
     //trim (dont want trailing empty ones)
-    while (not t.empty() and not t.back().empty())
+    while (not t.empty() and t.back().empty())
     {
         t.resize(t.size()-1);
     }
@@ -97,6 +100,17 @@ inline void TaskActor::handle_connect_message(const TaskConnectMessage &message,
 
     //always resize the input queues, they should match with the connections
     task->input_buffer_queues.resize(task->inputs.size());
+
+    //send a reply to the receiver
+    task->framework.Send(message, this->GetAddress(), from);
+}
+
+/***********************************************************************
+ * task methods
+ **********************************************************************/
+TaskConfig::TaskConfig(void)
+{
+    //NOP
 }
 
 Task::Task(void)
@@ -116,11 +130,13 @@ Task::Task(const TaskConfig &config)
 
 bool Task::has_input_buffer(const size_t index)
 {
+    //TODO throw bad index
     return not (*this)->input_buffer_queues[index].empty();
 }
 
 Buffer Task::pop_input_buffer(const size_t index)
 {
+    //TODO throw bad index or empty
     Buffer buff = (*this)->input_buffer_queues[index].front();
     (*this)->input_buffer_queues[index].pop();
     return buff;
@@ -128,12 +144,23 @@ Buffer Task::pop_input_buffer(const size_t index)
 
 void Task::push_output_buffer(const Buffer &buff, const size_t index)
 {
-    BOOST_FOREACH(TaskDestination &destination, (*this)->output_destinations[index])
+    //TODO throw bad index
+    BOOST_FOREACH(const Endpoint &ep, (*this)->outputs[index])
     {
         TaskBufferMessage message;
         message.buffer = buff;
-        message.index = destination.index;
+        message.index = ep.index;
         Theron::Address from_addr = (*this)->actor.GetAddress();
-        destination.actor.Push(message, from_addr);
+        ep.task->actor.Push(message, from_addr);
     }
+}
+
+size_t Task::get_num_inputs(void)
+{
+    return (*this)->inputs.size();
+}
+
+size_t Task::get_num_outputs(void)
+{
+    return (*this)->outputs.size();
 }

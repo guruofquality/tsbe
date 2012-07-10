@@ -15,3 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <tsbe/buffer.hpp>
+
+using namespace tsbe;
+
+Buffer::Buffer(void)
+{
+    
+}

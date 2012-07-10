@@ -85,14 +85,13 @@ struct tsbe::TaskImpl
 {
     TaskImpl(const tsbe::TaskConfig &config):
         config(config),
-        framework(config.num_threads)
+        framework(1/*thread*/)
     {
         //NOP
     }
 
     const tsbe::TaskConfig config;
     std::vector<std::queue<Buffer> > input_buffer_queues;
-    std::vector<std::vector<TaskDestination> > output_destinations;
 
     std::vector<std::vector<Endpoint> > inputs;
     std::vector<std::vector<Endpoint> > outputs;
