@@ -49,11 +49,12 @@ void ConnectionImpl::create(void)
     Theron::Receiver receiver;
     TaskConnectMessage message;
     message.connection = config;
-    message.create = true;
 
     //tell the destination first
+    message.action = TaskConnectMessage::CONNECT_DEST;
     config.dest_task->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
+    message.action = TaskConnectMessage::CONNECT_SOURCE;
     config.source_task->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
 }
@@ -63,11 +64,12 @@ void ConnectionImpl::destroy(void)
     Theron::Receiver receiver;
     TaskConnectMessage message;
     message.connection = config;
-    message.create = false;
 
     //tell the source first
+    message.action = TaskConnectMessage::DISCONNECT_SOURCE;
     config.source_task->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
+    message.action = TaskConnectMessage::DISCONNECT_DEST;
     config.dest_task->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
 }

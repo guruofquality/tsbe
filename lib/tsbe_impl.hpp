@@ -38,8 +38,9 @@ struct TaskBufferMessage
 struct TaskConnectMessage
 {
     tsbe::ConnectionConfig connection;
-    bool create;
+    enum {CONNECT_SOURCE, CONNECT_DEST, DISCONNECT_SOURCE, DISCONNECT_DEST} action;
 };
+
 
 /***********************************************************************
  * The actor that will run inside the task itself
@@ -74,6 +75,12 @@ struct TaskDestination
     size_t index; //the index of actor's input port
 };
 
+struct Endpoint
+{
+    tsbe::Task task;
+    size_t index;
+};
+
 struct tsbe::TaskImpl
 {
     TaskImpl(const tsbe::TaskConfig &config):
@@ -86,6 +93,9 @@ struct tsbe::TaskImpl
     const tsbe::TaskConfig config;
     std::vector<std::queue<Buffer> > input_buffer_queues;
     std::vector<std::vector<TaskDestination> > output_destinations;
+
+    std::vector<std::vector<Endpoint> > inputs;
+    std::vector<std::vector<Endpoint> > outputs;
 
     Theron::Framework framework;
     Theron::ActorRef actor;
