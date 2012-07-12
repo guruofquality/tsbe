@@ -99,6 +99,7 @@ inline void TaskActor::handle_connect_message(const TaskConnectMessage &message,
     }
 
     //always resize the input queues, they should match with the connections
+    task->output_buffer_queues.resize(task->outputs.size());
     task->input_buffer_queues.resize(task->inputs.size());
 
     //send a reply to the receiver
@@ -134,6 +135,12 @@ bool Task::has_input_buffer(const size_t index)
     return not (*this)->input_buffer_queues[index].empty();
 }
 
+bool Task::has_output_buffer(const size_t index)
+{
+    //TODO throw bad index
+    return not (*this)->output_buffer_queues[index].empty();
+}
+
 Buffer Task::pop_input_buffer(const size_t index)
 {
     //TODO throw bad index or empty
@@ -142,7 +149,15 @@ Buffer Task::pop_input_buffer(const size_t index)
     return buff;
 }
 
-void Task::push_output_buffer(const Buffer &buff, const size_t index)
+Buffer Task::pop_output_buffer(const size_t index)
+{
+    //TODO throw bad index or empty
+    Buffer buff = (*this)->output_buffer_queues[index].front();
+    (*this)->output_buffer_queues[index].pop();
+    return buff;
+}
+
+void Task::send_buffer(const Buffer &buff, const size_t index)
 {
     //TODO throw bad index
     BOOST_FOREACH(const Endpoint &ep, (*this)->outputs[index])

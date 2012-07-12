@@ -56,16 +56,26 @@ struct TSBE_API Task : boost::shared_ptr<TaskImpl>
     bool has_input_buffer(const size_t index);
 
     /*!
+     * Is there an output buffer available?
+     */
+    bool has_output_buffer(const size_t index);
+
+    /*!
      * Pop a buffer from the input queue.
      * Throws if the queue was empty.
      */
     Buffer pop_input_buffer(const size_t index);
 
     /*!
-     * Push a buffer to the output port.
-     * The buffer will get sent to all connections on this port.
+     * Pop a buffer from the output queue.
+     * Throws if the queue was empty.
      */
-    void push_output_buffer(const Buffer &buff, const size_t index);
+    Buffer pop_output_buffer(const size_t index);
+
+    /*!
+     * Send a buffer to all subscribed outputs on this port.
+     */
+    void send_buffer(const Buffer &buff, const size_t index);
 
     //! Get the number of input ports (buffer consumption by task)
     size_t get_num_inputs(void);

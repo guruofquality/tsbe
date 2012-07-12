@@ -92,6 +92,7 @@ struct tsbe::TaskImpl
 
     const tsbe::TaskConfig config;
     std::vector<std::queue<Buffer> > input_buffer_queues;
+    std::vector<std::queue<Buffer> > output_buffer_queues;
 
     std::vector<std::vector<Endpoint> > inputs;
     std::vector<std::vector<Endpoint> > outputs;

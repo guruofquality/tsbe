@@ -1,0 +1,8 @@
+* auto inplace buffers, if its only one ref count, you can write inplace
+* hook to parallelize embarrassingly parallel blocks
+* mask for ready input and output queues (& with a mask to know ready)
+* source blocks (no inputs) should perform work in a separate actor/thread
+because source blocks can potentially block forever on IO
+* set affinity calls for each task
+* affinity for each buffer
+* tasks can be smart about affinity and downstream
