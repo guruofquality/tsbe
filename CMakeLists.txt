@@ -38,6 +38,13 @@ if (NOT WIN32) #not on windows? tell theron headers to use boost
 endif()
 
 ########################################################################
+# Setup NumaNuma
+########################################################################
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/numanuma/cmake)
+find_package(NumaNuma)
+add_subdirectory(numanuma)
+
+########################################################################
 # Setup Boost
 ########################################################################
 if(UNIX AND EXISTS "/usr/lib64")

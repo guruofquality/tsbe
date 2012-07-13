@@ -46,7 +46,7 @@ list(APPEND libtsbe_sources
 ########################################################################
 add_definitions(-DTSBE_DLL) #defined when building dynamic libraries
 add_library(tsbe SHARED ${libtsbe_sources})
-target_link_libraries(tsbe ${Boost_LIBRARIES})
+target_link_libraries(tsbe ${Boost_LIBRARIES} ${NUMANUMA_LIBRARIES})
 set_target_properties(tsbe PROPERTIES DEFINE_SYMBOL "TSBE_DLL_EXPORTS")
 
 ########################################################################
