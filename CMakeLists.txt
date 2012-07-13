@@ -41,6 +41,7 @@ endif()
 # Setup NumaNuma
 ########################################################################
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/numanuma/cmake)
+include_directories(${CMAKE_SOURCE_DIR}/numanuma/include)
 find_package(NumaNuma)
 add_subdirectory(numanuma)
 

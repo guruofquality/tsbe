@@ -15,9 +15,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <tsbe/buffer.hpp>
+#include <numanuma.hpp>
+#include <boost/bind.hpp>
 #include <boost/detail/atomic_count.hpp>
 
 using namespace tsbe;
+
+static void numanuma_mem_deleter(Buffer &, numanuma::mem *m)
+{
+    delete m;
+}
+
+static void default_allocator_deleter(Buffer &, char *m)
+{
+    delete m;
+}
 
 struct tsbe::BufferImpl
 {
@@ -34,7 +46,21 @@ struct tsbe::BufferImpl
 
     void default_allocator(void)
     {
-        //TODO call numanuma
+        if (config.affinity == TSBE_AFFINITY_NONE)
+        {
+            char *m = new char[config.length + TSBE_MAX_ALIGNMENT - 1];
+            size_t x = size_t(m) + TSBE_MAX_ALIGNMENT - 1;
+            x -= x % TSBE_MAX_ALIGNMENT;
+            config.memory = (void *)x;
+            config.deleter = boost::bind(&default_allocator_deleter, _1, m);
+        }
+        else
+        {
+            numanuma::mem *m = numanuma::mem::make(config.affinity, config.length);
+            config.memory = m->get();
+            config.length = m->len();
+            config.deleter = boost::bind(&numanuma_mem_deleter, _1, m);
+        }
     }
 
     void reset(void)
@@ -75,8 +101,12 @@ void tsbe::intrusive_ptr_release(BufferImpl *impl)
             Buffer buff;
             buff.reset(impl);
             impl->config.deleter(buff);
+            impl->config.deleter = BufferDeleter(); //reset deleter, so we dont double delete
         }
-        //else just let it wither away here...
+        else
+        {
+            delete impl; //its really dead now
+        }
     }
 }
 

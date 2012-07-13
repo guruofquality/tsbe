@@ -73,6 +73,8 @@ struct TaskImpl;
 
 } //namespace tsbe
 
-#define TSBE_AFFINITY_NONE 0
+#define TSBE_AFFINITY_NONE size_t(~0)
+
+#define TSBE_MAX_ALIGNMENT 32
 
 #endif /*INCLUDED_TSBE_CONFIG_HPP*/
