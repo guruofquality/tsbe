@@ -58,8 +58,11 @@
 #  include <ciso646>
 #endif //BOOST_MSVC
 
+#include <boost/dynamic_bitset.hpp>
+
 //forward declares and stuff for library implementation
-namespace tsbe{
+namespace tsbe
+{
 
 struct Buffer;
 struct BufferImpl;
@@ -70,6 +73,8 @@ extern TSBE_API void intrusive_ptr_release(BufferImpl*);
 struct ConnectionImpl;
 struct Task;
 struct TaskImpl;
+
+typedef boost::dynamic_bitset<> BitSet;
 
 } //namespace tsbe
 

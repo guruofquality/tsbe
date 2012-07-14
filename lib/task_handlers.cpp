@@ -27,10 +27,12 @@ void TaskActor::handle_buffer_message(const TaskBufferMessage &message, const Th
     if (message.input)
     {
         task->input_buffer_queues[message.index].push(message.buffer);
+        task->inputs_ready.set(message.index);
     }
     else
     {
         task->output_buffer_queues[message.index].push(message.buffer);
+        task->outputs_ready.set(message.index);
     }
 
     //step 2) call the task callback since the state changed
@@ -107,6 +109,10 @@ void TaskActor::handle_connect_message(const TaskConnectMessage &message, const 
     //always resize the input queues, they should match with the connections
     task->output_buffer_queues.resize(task->outputs.size());
     task->input_buffer_queues.resize(task->inputs.size());
+
+    //also resize the ready bitsets to match
+    task->outputs_ready.resize(task->outputs.size());
+    task->inputs_ready.resize(task->inputs.size());
 
     //send a reply to the receiver
     task->framework.Send(message, this->GetAddress(), from);

@@ -48,7 +48,6 @@ struct TaskConnectMessage
  **********************************************************************/
 struct TaskActor : Theron::Actor
 {
-
     struct Parameters
     {
         tsbe::Task task;
@@ -90,6 +89,9 @@ struct tsbe::TaskImpl
     {
         //NOP
     }
+
+    BitSet inputs_ready;
+    BitSet outputs_ready;
 
     const tsbe::TaskConfig config;
     std::vector<std::queue<Buffer> > input_buffer_queues;

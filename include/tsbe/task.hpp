@@ -51,14 +51,18 @@ struct TSBE_API Task : boost::shared_ptr<TaskImpl>
     Task(const TaskConfig &config);
 
     /*!
-     * Is there an input buffer available?
+     * Get a bitset representing ready inputs.
+     * The bit set will be num inputs wide.
+     * If bitset[index] == 1, index has a buffer.
      */
-    bool has_input_buffer(const size_t index);
+    const BitSet& get_inputs_ready(void);
 
     /*!
-     * Is there an output buffer available?
+     * Get a bitset representing ready outputs.
+     * The bit set will be num outputs wide.
+     * If bitset[index] == 1, index has a buffer.
      */
-    bool has_output_buffer(const size_t index);
+    const BitSet& get_outputs_ready(void);
 
     /*!
      * Pop a buffer from the input queue.

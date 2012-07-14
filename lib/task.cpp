@@ -41,32 +41,31 @@ Task::Task(const TaskConfig &config)
     (*this)->actor = (*this)->framework.CreateActor<TaskActor>(actor_params);
 }
 
-
-bool Task::has_input_buffer(const size_t index)
+const BitSet& Task::get_inputs_ready(void)
 {
-    //TODO throw bad index
-    return not (*this)->input_buffer_queues[index].empty();
+    return (*this)->inputs_ready;
 }
 
-bool Task::has_output_buffer(const size_t index)
+const BitSet& Task::get_outputs_ready(void)
 {
-    //TODO throw bad index
-    return not (*this)->output_buffer_queues[index].empty();
+    return (*this)->outputs_ready;
 }
 
 Buffer Task::pop_input_buffer(const size_t index)
 {
     //TODO throw bad index or empty
-    Buffer buff = (*this)->input_buffer_queues[index].front();
-    (*this)->input_buffer_queues[index].pop();
+    std::queue<Buffer> &queue = (*this)->input_buffer_queues[index];
+    Buffer buff = queue.front(); queue.pop();
+    (*this)->inputs_ready.set(index, not queue.empty());
     return buff;
 }
 
 Buffer Task::pop_output_buffer(const size_t index)
 {
     //TODO throw bad index or empty
-    Buffer buff = (*this)->output_buffer_queues[index].front();
-    (*this)->output_buffer_queues[index].pop();
+    std::queue<Buffer> &queue = (*this)->output_buffer_queues[index];
+    Buffer buff = queue.front(); queue.pop();
+    (*this)->outputs_ready.set(index, not queue.empty());
     return buff;
 }
 
