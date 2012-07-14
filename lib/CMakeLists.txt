@@ -39,6 +39,7 @@ list(APPEND libtsbe_sources
     buffer.cpp
     connection.cpp
     task.cpp
+    task_handlers.cpp
 )
 
 ########################################################################

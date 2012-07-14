@@ -33,6 +33,7 @@ struct TaskBufferMessage
 {
     tsbe::Buffer buffer;
     size_t index;
+    bool input;
 };
 
 struct TaskConnectMessage

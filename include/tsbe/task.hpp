@@ -62,26 +62,35 @@ struct TSBE_API Task : boost::shared_ptr<TaskImpl>
 
     /*!
      * Pop a buffer from the input queue.
+     * The input queue contains filled buffers.
      * Throws if the queue was empty.
      */
     Buffer pop_input_buffer(const size_t index);
 
     /*!
      * Pop a buffer from the output queue.
+     * The output queue contains empty buffers.
      * Throws if the queue was empty.
      */
     Buffer pop_output_buffer(const size_t index);
 
+    //! Push a buffer onto the input queue
+    void push_input_buffer(const size_t index, const Buffer &buff);
+
+    //! Push a buffer onto the output queue
+    void push_output_buffer(const size_t index, const Buffer &buff);
+
     /*!
      * Send a buffer to all subscribed outputs on this port.
      */
-    void send_buffer(const Buffer &buff, const size_t index);
+    void send_buffer(const size_t index, const Buffer &buff);
 
     //! Get the number of input ports (buffer consumption by task)
     size_t get_num_inputs(void);
 
     //! Get the number of output ports (buffer production by task)
     size_t get_num_outputs(void);
+
 };
 
 } //namespace tsbe
