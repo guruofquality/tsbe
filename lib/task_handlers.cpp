@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "tsbe_impl.hpp"
+#include <numanuma.hpp>
 
 using namespace tsbe;
 
@@ -116,4 +117,20 @@ void TaskActor::handle_connect_message(const TaskConnectMessage &message, const 
 
     //send a reply to the receiver
     task->framework.Send(message, this->GetAddress(), from);
+}
+
+/***********************************************************************
+ * setting the affinity
+ **********************************************************************/
+void TaskActor::handle_affinity_message(const Affinity &message, const Theron::Address from)
+{
+    Affinity affinity = message;
+    if (affinity == Affinity())
+    {
+        numanuma::set_thread_affinity(NUMANUMA_NODE_NONE);
+    }
+    else
+    {
+        numanuma::set_thread_affinity(affinity);
+    }
 }

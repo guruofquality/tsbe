@@ -46,7 +46,7 @@ struct tsbe::BufferImpl
 
     void default_allocator(void)
     {
-        if (config.affinity == TSBE_AFFINITY_NONE)
+        if (config.affinity == Affinity())
         {
             char *m = new char[config.length + TSBE_MAX_ALIGNMENT - 1];
             size_t x = size_t(m) + TSBE_MAX_ALIGNMENT - 1;
@@ -114,7 +114,6 @@ BufferConfig::BufferConfig(void)
 {
     memory = NULL;
     length = 0;
-    affinity = TSBE_AFFINITY_NONE;
 }
 
 Buffer::Buffer(void)
@@ -147,7 +146,7 @@ size_t &Buffer::get_length(void)
     return (*this)->length;
 }
 
-size_t Buffer::get_affinity(void) const
+Affinity Buffer::get_affinity(void) const
 {
     return (*this)->config.affinity;
 }

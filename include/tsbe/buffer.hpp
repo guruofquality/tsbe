@@ -40,7 +40,7 @@ struct TSBE_API BufferConfig
     size_t length;
 
     //! memory affinity - meta information
-    size_t affinity;
+    Affinity affinity;
 
     //! deleter callback, may be used to free
     BufferDeleter deleter;
@@ -112,7 +112,7 @@ struct TSBE_API Buffer : boost::intrusive_ptr<BufferImpl>
     size_t &get_length(void);
 
     //! Get the affinity of the memory
-    size_t get_affinity(void) const;
+    Affinity get_affinity(void) const;
 };
 
 } //namespace tsbe

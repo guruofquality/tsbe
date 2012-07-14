@@ -105,3 +105,13 @@ size_t Task::get_num_outputs(void)
 {
     return (*this)->outputs.size();
 }
+
+void Task::set_affinity(const Affinity &affinity)
+{
+    (*this)->actor.Push(affinity, Theron::Address::Null());
+}
+
+Affinity Task::get_affinity(void)
+{
+    return (*this)->affinity;
+}

@@ -58,10 +58,12 @@ struct TaskActor : Theron::Actor
         task = params.task;
         RegisterHandler(this, &TaskActor::handle_buffer_message);
         RegisterHandler(this, &TaskActor::handle_connect_message);
+        RegisterHandler(this, &TaskActor::handle_affinity_message);
     }
 
     void handle_buffer_message(const TaskBufferMessage &message, const Theron::Address from);
     void handle_connect_message(const TaskConnectMessage &message, const Theron::Address from);
+    void handle_affinity_message(const tsbe::Affinity &message, const Theron::Address from);
 
     tsbe::Task task;
 };
@@ -102,6 +104,8 @@ struct tsbe::TaskImpl
 
     Theron::Framework framework;
     Theron::ActorRef actor;
+
+    Affinity affinity;
 };
 
 

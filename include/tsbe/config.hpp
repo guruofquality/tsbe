@@ -76,9 +76,22 @@ struct TaskImpl;
 
 typedef boost::dynamic_bitset<> BitSet;
 
-} //namespace tsbe
+struct TSBE_API Affinity
+{
+    Affinity(void)
+    {
+        value = -1;
+    }
 
-#define TSBE_AFFINITY_NONE size_t(~0)
+    operator long long(void) const
+    {
+        return value;
+    }
+
+    long long value;
+};
+
+} //namespace tsbe
 
 #define TSBE_MAX_ALIGNMENT 32
 

@@ -95,6 +95,12 @@ struct TSBE_API Task : boost::shared_ptr<TaskImpl>
     //! Get the number of output ports (buffer production by task)
     size_t get_num_outputs(void);
 
+    //! Set the affinity of this task
+    void set_affinity(const Affinity &affinity);
+
+    //! Get the affinity of this task
+    Affinity get_affinity(void);
+
 };
 
 } //namespace tsbe
