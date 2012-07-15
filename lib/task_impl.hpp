@@ -26,19 +26,22 @@
 #include <vector>
 #include <queue>
 
+namespace tsbe
+{
+
 /***********************************************************************
  * Messages to be accepted by the task's actor
  **********************************************************************/
 struct TaskBufferMessage
 {
-    tsbe::Buffer buffer;
+    Buffer buffer;
     size_t index;
     bool input;
 };
 
 struct TaskConnectMessage
 {
-    tsbe::ConnectionConfig connection;
+    ConnectionConfig connection;
     enum {CONNECT_SOURCE, CONNECT_DEST, DISCONNECT_SOURCE, DISCONNECT_DEST} action;
 };
 
@@ -50,12 +53,14 @@ struct TaskActor : Theron::Actor
 {
     struct Parameters
     {
-        tsbe::Task task;
+        TaskImpl *task;
+        Task *task4cb;
     };
 
     inline explicit TaskActor(const Parameters &params)
     {
         task = params.task;
+        task4cb = params.task4cb;
         RegisterHandler(this, &TaskActor::handle_buffer_message);
         RegisterHandler(this, &TaskActor::handle_connect_message);
         RegisterHandler(this, &TaskActor::handle_affinity_message);
@@ -63,9 +68,10 @@ struct TaskActor : Theron::Actor
 
     void handle_buffer_message(const TaskBufferMessage &message, const Theron::Address from);
     void handle_connect_message(const TaskConnectMessage &message, const Theron::Address from);
-    void handle_affinity_message(const tsbe::Affinity &message, const Theron::Address from);
+    void handle_affinity_message(const Affinity &message, const Theron::Address from);
 
-    tsbe::Task task;
+    TaskImpl *task;
+    Task *task4cb;
 };
 
 /***********************************************************************
@@ -79,13 +85,13 @@ struct TaskDestination
 
 struct Endpoint
 {
-    tsbe::Task task;
+    Task task;
     size_t index;
 };
 
-struct tsbe::TaskImpl
+struct TaskImpl
 {
-    TaskImpl(const tsbe::TaskConfig &config):
+    TaskImpl(const TaskConfig &config):
         config(config),
         framework(1/*thread*/)
     {
@@ -95,7 +101,7 @@ struct tsbe::TaskImpl
     BitSet inputs_ready;
     BitSet outputs_ready;
 
-    const tsbe::TaskConfig config;
+    const TaskConfig config;
     std::vector<std::queue<Buffer> > input_buffer_queues;
     std::vector<std::queue<Buffer> > output_buffer_queues;
 
@@ -108,6 +114,6 @@ struct tsbe::TaskImpl
     Affinity affinity;
 };
 
-
+} //namespace tsbe
 
 #endif /*INCLUDED_LIBTSBE_TASK_IMPL_HPP*/

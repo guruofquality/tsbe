@@ -37,7 +37,7 @@ void TaskActor::handle_buffer_message(const TaskBufferMessage &message, const Th
     }
 
     //step 2) call the task callback since the state changed
-    task->config.callback(task);
+    task->config.callback(*task4cb);
 }
 
 /***********************************************************************
