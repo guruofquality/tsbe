@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_LIBTSBE_IMPL_HPP
-#define INCLUDED_LIBTSBE_IMPL_HPP
+#ifndef INCLUDED_LIBTSBE_TASK_IMPL_HPP
+#define INCLUDED_LIBTSBE_TASK_IMPL_HPP
 
 #include <tsbe/config.hpp>
 #include <tsbe/task.hpp>
@@ -110,4 +110,4 @@ struct tsbe::TaskImpl
 
 
 
-#endif /*INCLUDED_LIBTSBE_IMPL_HPP*/
+#endif /*INCLUDED_LIBTSBE_TASK_IMPL_HPP*/
