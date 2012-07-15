@@ -38,7 +38,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 list(APPEND libtsbe_sources
     block.cpp
     buffer.cpp
-    connection.cpp
+    flow.cpp
     task.cpp
     task_handlers.cpp
     topology.cpp

@@ -19,7 +19,7 @@
 
 #include <tsbe/config.hpp>
 #include <tsbe/task.hpp>
-#include <tsbe/connection.hpp>
+#include <tsbe/flow.hpp>
 #include <Theron/Framework.h>
 #include <Theron/Actor.h>
 #include <Theron/ActorRef.h>
@@ -41,7 +41,7 @@ struct TaskBufferMessage
 
 struct TaskConnectMessage
 {
-    ConnectionConfig connection;
+    FlowConfig connection;
     enum {CONNECT_SOURCE, CONNECT_DEST, DISCONNECT_SOURCE, DISCONNECT_DEST} action;
 };
 

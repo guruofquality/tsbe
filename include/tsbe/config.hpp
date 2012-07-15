@@ -71,7 +71,7 @@ struct BufferImpl;
 extern TSBE_API void intrusive_ptr_add_ref(BufferImpl*);
 extern TSBE_API void intrusive_ptr_release(BufferImpl*);
 
-struct ConnectionImpl;
+struct FlowImpl;
 struct Task;
 struct TaskImpl;
 

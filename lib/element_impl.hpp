@@ -23,14 +23,6 @@
 namespace tsbe
 {
 
-struct Connection
-{
-    Element src;
-    size_t src_port;
-    Element sink;
-    size_t sink_port;
-};
-
 struct ElementImpl
 {
     std::vector<Topology> sub_topologies;

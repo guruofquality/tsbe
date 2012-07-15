@@ -18,21 +18,21 @@
 
 using namespace tsbe;
 
-ConnectionConfig::ConnectionConfig(void)
+FlowConfig::FlowConfig(void)
 {
     source_index = 0;
     dest_index = 0;
 }
 
-struct tsbe::ConnectionImpl
+struct tsbe::FlowImpl
 {
-    ConnectionImpl(const ConnectionConfig &config):
+    FlowImpl(const FlowConfig &config):
         config(config)
     {
         this->create();
     }
 
-    ~ConnectionImpl(void)
+    ~FlowImpl(void)
     {
         this->destroy();
     }
@@ -41,10 +41,10 @@ struct tsbe::ConnectionImpl
 
     void destroy(void);
 
-    const ConnectionConfig config;
+    const FlowConfig config;
 };
 
-void ConnectionImpl::create(void)
+void FlowImpl::create(void)
 {
     Theron::Receiver receiver;
     TaskConnectMessage message;
@@ -59,7 +59,7 @@ void ConnectionImpl::create(void)
     receiver.Wait();
 }
 
-void ConnectionImpl::destroy(void)
+void FlowImpl::destroy(void)
 {
     Theron::Receiver receiver;
     TaskConnectMessage message;
@@ -74,32 +74,32 @@ void ConnectionImpl::destroy(void)
     receiver.Wait();
 }
 
-Connection::Connection(void)
+Flow::Flow(void)
 {
     //NOP
 }
 
-Connection::Connection(const ConnectionConfig &config)
+Flow::Flow(const FlowConfig &config)
 {
-    this->reset(new ConnectionImpl(config));
+    this->reset(new FlowImpl(config));
 }
 
-Task Connection::get_source_task(void) const
+Task Flow::get_source_task(void) const
 {
     return (*this)->config.source_task;
 }
 
-size_t Connection::get_source_index(void) const
+size_t Flow::get_source_index(void) const
 {
     return (*this)->config.source_index;
 }
 
-Task Connection::get_dest_task(void) const
+Task Flow::get_dest_task(void) const
 {
     return (*this)->config.dest_task;
 }
 
-size_t Connection::get_dest_index(void) const
+size_t Flow::get_dest_index(void) const
 {
     return (*this)->config.dest_index;
 }

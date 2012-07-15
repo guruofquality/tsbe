@@ -21,5 +21,10 @@ using namespace tsbe;
 
 void Topology::add_child(const Topology &src)
 {
+    (*this)->sub_topologies.push_back(src);
+}
+
+void connect(const Connection &connection){
     
+    //(*this)->
 }

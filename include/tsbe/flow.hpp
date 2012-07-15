@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_TSBE_CONNECTION_HPP
-#define INCLUDED_TSBE_CONNECTION_HPP
+#ifndef INCLUDED_TSBE_FLOW_HPP
+#define INCLUDED_TSBE_FLOW_HPP
 
 #include <tsbe/config.hpp>
 #include <tsbe/task.hpp>
@@ -27,10 +27,10 @@ namespace tsbe
 /*!
  * The configuration struct for creating a new connection
  */
-struct TSBE_API ConnectionConfig
+struct TSBE_API FlowConfig
 {
     //! Default connection config constructor
-    ConnectionConfig(void);
+    FlowConfig(void);
 
     //! The source task that produces
     Task source_task;
@@ -46,18 +46,18 @@ struct TSBE_API ConnectionConfig
 };
 
 /*!
- * A connection object represents a flow of information between
+ * A flow object represents a live connection of information between
  * an output port of a source task and an input port of a destination task.
- * Creating a connection object with the config actually creates the connection.
- * Allowing all connection references to go out of scope causes a disconnect.
+ * Creating a flow object with the config actually creates the connection.
+ * Allowing all flow references to go out of scope causes a disconnect.
  */
-struct TSBE_API Connection : boost::shared_ptr<ConnectionImpl>
+struct TSBE_API Flow : boost::shared_ptr<FlowImpl>
 {
     //! Creates a null connection
-    Connection(void);
+    Flow(void);
 
     //! Create a connection between two ports
-    Connection(const ConnectionConfig &config);
+    Flow(const FlowConfig &config);
 
     //! Get the source/output task
     Task get_source_task(void) const;
@@ -74,4 +74,4 @@ struct TSBE_API Connection : boost::shared_ptr<ConnectionImpl>
 
 } //namespace tsbe
 
-#endif /*INCLUDED_TSBE_CONNECTION_HPP*/
+#endif /*INCLUDED_TSBE_FLOW_HPP*/

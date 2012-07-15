@@ -23,6 +23,14 @@
 namespace tsbe
 {
 
+struct TSBE_API Connection
+{
+    Element src;
+    size_t src_port;
+    Element sink;
+    size_t sink_port;
+};
+
 struct TSBE_API TopologyConfig
 {
     TopologyConfig(void);
@@ -59,19 +67,13 @@ struct TSBE_API Topology : boost::shared_ptr<ElementImpl>
      * Connect the outport port of an element to the input port of an element.
      * The element may be a block, a topology, or this object via self().
      */
-    void connect(
-        const Element &src, const size_t src_port,
-        const Element &sink, const size_t sink_port
-    );
+    void connect(const Connection &connection);
 
     //! Remove a child topology from this parent.
     void remove_child(const Topology &src);
 
     //! Disconnect an output port from an input port
-    void disconnect(
-        const Element &src, const size_t src_port,
-        const Element &sink, const size_t sink_port
-    );
+    void disconnect(const Connection &connection);
 };
 
 } //namespace tsbe
