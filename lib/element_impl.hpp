@@ -25,7 +25,7 @@ namespace tsbe
 
 struct ElementImpl
 {
-    std::vector<Topology> sub_topologies;
+    std::vector<Topology> topologies;
     std::vector<Connection> connections;
 };
 

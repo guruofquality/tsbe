@@ -89,6 +89,11 @@ struct Endpoint
     size_t index;
 };
 
+inline bool operator==(const Endpoint &lhs, const Endpoint &rhs)
+{
+    return (lhs.task == rhs.task and lhs.index == rhs.index);
+}
+
 struct TaskImpl
 {
     TaskImpl(const TaskConfig &config):

@@ -95,6 +95,20 @@ struct TSBE_API Affinity
     long long value;
 };
 
+//! return true if an instance was found and removed
+template <typename V, typename T> bool remove_one(V &v, const T &t)
+{
+    for (size_t i = 0; i < v.size(); i++)
+    {
+        if (v[i] == t)
+        {
+            v.erase(v.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+
 } //namespace tsbe
 
 #define TSBE_MAX_ALIGNMENT 32

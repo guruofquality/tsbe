@@ -60,15 +60,7 @@ template <typename T>
 void disconnect(T &t, Endpoint ep, const size_t index)
 {
     //remove the first match found for this connection
-    for (size_t i = 0; i < t[index].size(); i++)
-    {
-        Endpoint ep_i = t[index][i];
-        if (ep_i.task == ep.task and ep_i.index == ep.index)
-        {
-            t[index].erase(t[index].begin()+i);
-            break;
-        }
-    }
+    remove_one(t[index], ep);
 
     //trim (dont want trailing empty ones)
     while (not t.empty() and t.back().empty())

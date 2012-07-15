@@ -25,11 +25,15 @@ namespace tsbe
 
 struct TSBE_API Connection
 {
+    Connection(void);
+
     Element src;
     size_t src_port;
     Element sink;
     size_t sink_port;
 };
+
+TSBE_API bool operator==(const Connection &lhs, const Connection &rhs);
 
 struct TSBE_API TopologyConfig
 {
@@ -61,16 +65,16 @@ struct TSBE_API Topology : boost::shared_ptr<ElementImpl>
      * Normally the hierarchy is implied by connect:
      * This routine is reserved for a topology without IO.
      */
-    void add_child(const Topology &src);
+    void add_topology(const Topology &topology);
+
+    //! Remove a child topology from this parent.
+    void remove_topology(const Topology &topology);
 
     /*!
      * Connect the outport port of an element to the input port of an element.
      * The element may be a block, a topology, or this object via self().
      */
     void connect(const Connection &connection);
-
-    //! Remove a child topology from this parent.
-    void remove_child(const Topology &src);
 
     //! Disconnect an output port from an input port
     void disconnect(const Connection &connection);
