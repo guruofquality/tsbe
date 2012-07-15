@@ -91,7 +91,7 @@ void Task::push_output_buffer(const size_t index, const Buffer &buff)
 void Task::send_buffer(const size_t index, const Buffer &buff)
 {
     //TODO throw bad index
-    BOOST_FOREACH(Endpoint &ep, (*this)->outputs[index])
+    BOOST_FOREACH(FlowEndpoint &ep, (*this)->outputs[index])
     {
         ep.task.push_input_buffer(ep.index, buff);
     }

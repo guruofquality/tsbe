@@ -58,7 +58,12 @@
 #  include <ciso646>
 #endif //BOOST_MSVC
 
+// include smart pointer stuff for typedefs below
 #include <boost/shared_ptr.hpp>
+#include <boost/intrusive_ptr.hpp>
+#include <boost/weak_ptr.hpp>
+
+// include bitset here for the typedef below
 #include <boost/dynamic_bitset.hpp>
 
 //forward declares and stuff for library implementation

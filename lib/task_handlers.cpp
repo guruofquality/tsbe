@@ -44,7 +44,7 @@ void TaskActor::handle_buffer_message(const TaskBufferMessage &message, const Th
  * connect handler + helpers
  **********************************************************************/
 template <typename T>
-void connect(T &t, Endpoint ep, const size_t index)
+void connect(T &t, FlowEndpoint ep, const size_t index)
 {
     //ensure that there is room
     if (index >= t.size())
@@ -57,7 +57,7 @@ void connect(T &t, Endpoint ep, const size_t index)
 }
 
 template <typename T>
-void disconnect(T &t, Endpoint ep, const size_t index)
+void disconnect(T &t, FlowEndpoint ep, const size_t index)
 {
     //remove the first match found for this connection
     remove_one(t[index], ep);
@@ -71,30 +71,25 @@ void disconnect(T &t, Endpoint ep, const size_t index)
 
 void TaskActor::handle_connect_message(const TaskConnectMessage &message, const Theron::Address from)
 {
-    Endpoint dest_ep;
-    dest_ep.task = message.connection.dest_task;
-    dest_ep.index = message.connection.dest_index;
-
-    Endpoint source_ep;
-    source_ep.task = message.connection.source_task;
-    source_ep.index = message.connection.source_index;
+    const FlowEndpoint &dest_ep = message.connection.dest;
+    const FlowEndpoint &source_ep = message.connection.source;
 
     switch(message.action)
     {
     case TaskConnectMessage::CONNECT_SOURCE:
-        connect(task->outputs, dest_ep, message.connection.source_index);
+        connect(task->outputs, dest_ep, message.connection.source.index);
         break;
 
     case TaskConnectMessage::CONNECT_DEST:
-        connect(task->inputs, source_ep, message.connection.dest_index);
+        connect(task->inputs, source_ep, message.connection.dest.index);
         break;
 
     case TaskConnectMessage::DISCONNECT_SOURCE:
-        disconnect(task->outputs, dest_ep, message.connection.source_index);
+        disconnect(task->outputs, dest_ep, message.connection.source.index);
         break;
 
     case TaskConnectMessage::DISCONNECT_DEST:
-        disconnect(task->inputs, source_ep, message.connection.dest_index);
+        disconnect(task->inputs, source_ep, message.connection.dest.index);
         break;
 
     }

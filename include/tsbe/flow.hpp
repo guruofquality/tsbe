@@ -19,10 +19,28 @@
 
 #include <tsbe/config.hpp>
 #include <tsbe/task.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace tsbe
 {
+
+/*!
+ * And endpoint represents one half of a flow.
+ * The source/destination task and respective index.
+ */
+struct TSBE_API FlowEndpoint
+{
+    FlowEndpoint(void);
+
+    FlowEndpoint(const Task &task, const size_t index);
+
+    //! The source or destination task
+    Task task;
+
+    //! The index for this endpoint
+    size_t index;
+};
+
+TSBE_API bool operator==(const FlowEndpoint &lhs, const FlowEndpoint &rhs);
 
 /*!
  * The configuration struct for creating a new connection
@@ -33,16 +51,10 @@ struct TSBE_API FlowConfig
     FlowConfig(void);
 
     //! The source task that produces
-    Task source_task;
-
-    //! The index of source production
-    size_t source_index;
+    FlowEndpoint source;
 
     //! The destination task that consumes
-    Task dest_task;
-
-    //! The index of destination consumption
-    size_t dest_index;
+    FlowEndpoint dest;
 };
 
 /*!
@@ -59,17 +71,11 @@ struct TSBE_API Flow : boost::shared_ptr<FlowImpl>
     //! Create a connection between two ports
     Flow(const FlowConfig &config);
 
-    //! Get the source/output task
-    Task get_source_task(void) const;
+    //! Get the source/output endpoint
+    FlowEndpoint get_source(void) const;
 
-    //! Get the source/outport port index
-    size_t get_source_index(void) const;
-
-    //! Get the destination/input task
-    Task get_dest_task(void) const;
-
-    //! Get the destination/input port index
-    size_t get_dest_index(void) const;
+    //! Get the destination/input endpoint
+    FlowEndpoint get_dest(void) const;
 };
 
 } //namespace tsbe

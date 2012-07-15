@@ -18,7 +18,6 @@
 #define INCLUDED_TSBE_BLOCK_HPP
 
 #include <tsbe/config.hpp>
-#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace tsbe

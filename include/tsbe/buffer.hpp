@@ -19,8 +19,6 @@
 
 #include <tsbe/config.hpp>
 #include <boost/function.hpp>
-#include <boost/intrusive_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 
 namespace tsbe
 {

@@ -83,17 +83,6 @@ struct TaskDestination
     size_t index; //the index of actor's input port
 };
 
-struct Endpoint
-{
-    Task task;
-    size_t index;
-};
-
-inline bool operator==(const Endpoint &lhs, const Endpoint &rhs)
-{
-    return (lhs.task == rhs.task and lhs.index == rhs.index);
-}
-
 struct TaskImpl
 {
     TaskImpl(const TaskConfig &config):
@@ -110,8 +99,8 @@ struct TaskImpl
     std::vector<std::queue<Buffer> > input_buffer_queues;
     std::vector<std::queue<Buffer> > output_buffer_queues;
 
-    std::vector<std::vector<Endpoint> > inputs;
-    std::vector<std::vector<Endpoint> > outputs;
+    std::vector<std::vector<FlowEndpoint> > inputs;
+    std::vector<std::vector<FlowEndpoint> > outputs;
 
     Theron::Framework framework;
     Theron::ActorRef actor;

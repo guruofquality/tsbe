@@ -18,10 +18,25 @@
 
 using namespace tsbe;
 
+FlowEndpoint::FlowEndpoint(void)
+{
+    index = 0;
+}
+
+FlowEndpoint::FlowEndpoint(const Task &task, const size_t index):
+    task(task), index(index)
+{
+    //NOP
+}
+
+bool tsbe::operator==(const FlowEndpoint &lhs, const FlowEndpoint &rhs)
+{
+    return (lhs.task == rhs.task and lhs.index == rhs.index);
+}
+
 FlowConfig::FlowConfig(void)
 {
-    source_index = 0;
-    dest_index = 0;
+    //NOP
 }
 
 struct tsbe::FlowImpl
@@ -52,10 +67,10 @@ void FlowImpl::create(void)
 
     //tell the destination first
     message.action = TaskConnectMessage::CONNECT_DEST;
-    config.dest_task->actor.Push(message, receiver.GetAddress());
+    config.dest.task->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
     message.action = TaskConnectMessage::CONNECT_SOURCE;
-    config.source_task->actor.Push(message, receiver.GetAddress());
+    config.source.task->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
 }
 
@@ -67,10 +82,10 @@ void FlowImpl::destroy(void)
 
     //tell the source first
     message.action = TaskConnectMessage::DISCONNECT_SOURCE;
-    config.source_task->actor.Push(message, receiver.GetAddress());
+    config.source.task->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
     message.action = TaskConnectMessage::DISCONNECT_DEST;
-    config.dest_task->actor.Push(message, receiver.GetAddress());
+    config.dest.task->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
 }
 
@@ -84,22 +99,12 @@ Flow::Flow(const FlowConfig &config)
     this->reset(new FlowImpl(config));
 }
 
-Task Flow::get_source_task(void) const
+FlowEndpoint Flow::get_source(void) const
 {
-    return (*this)->config.source_task;
+    return (*this)->config.source;
 }
 
-size_t Flow::get_source_index(void) const
+FlowEndpoint Flow::get_dest(void) const
 {
-    return (*this)->config.source_index;
-}
-
-Task Flow::get_dest_task(void) const
-{
-    return (*this)->config.dest_task;
-}
-
-size_t Flow::get_dest_index(void) const
-{
-    return (*this)->config.dest_index;
+    return (*this)->config.dest;
 }

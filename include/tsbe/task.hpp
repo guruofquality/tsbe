@@ -20,7 +20,6 @@
 #include <tsbe/config.hpp>
 #include <tsbe/buffer.hpp>
 #include <boost/function.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace tsbe
 {

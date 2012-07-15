@@ -18,7 +18,6 @@
 #define INCLUDED_TSBE_TOPOLOGY_HPP
 
 #include <tsbe/config.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace tsbe
 {

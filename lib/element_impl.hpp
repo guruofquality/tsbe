@@ -23,8 +23,12 @@
 namespace tsbe
 {
 
+//! ElementImpl is both a topology and a block to allow interconnection
 struct ElementImpl
 {
+    bool block;
+    bool is_block(void){return block;}
+
     std::vector<Topology> topologies;
     std::vector<Connection> connections;
 };

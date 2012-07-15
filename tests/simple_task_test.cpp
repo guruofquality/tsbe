@@ -52,10 +52,10 @@ BOOST_AUTO_TEST_CASE(test_simple_flowect)
     {
 
         tsbe::FlowConfig flow_config;
-        flow_config.source_task = task0;
-        flow_config.source_index = 0;
-        flow_config.dest_task = task1;
-        flow_config.dest_index = 0;
+        flow_config.source.task = task0;
+        flow_config.source.index = 0;
+        flow_config.dest.task = task1;
+        flow_config.dest.index = 0;
         tsbe::Flow flow(flow_config);
 
         BOOST_CHECK_EQUAL(task0.get_num_outputs(), 1);
