@@ -18,14 +18,37 @@
 #define INCLUDED_TSBE_BLOCK_HPP
 
 #include <tsbe/config.hpp>
+#include <boost/any.hpp>
+#include <boost/function.hpp>
 #include <string>
 
 namespace tsbe
 {
 
+typedef boost::function<void(const boost::any &)> BlockMsgHandler;
+
+struct InputPattern
+{
+    size_t history;
+    size_t multiple;
+};
+
+struct OutputPattern
+{
+    size_t multiple;
+};
+
+struct TSBE_API BlockConfig
+{
+    BlockConfig(void);
+};
+
 struct TSBE_API Block : boost::shared_ptr<ElementImpl>
 {
+    //! Construct a null block
     Block(void);
+
+    Block(const BlockConfig &config);
 
     //! Get the number of input ports
     size_t get_num_inputs(void);
@@ -38,6 +61,19 @@ struct TSBE_API Block : boost::shared_ptr<ElementImpl>
 
     //! Get the associated task group
     std::string get_task_group(void);
+
+    //! How many bytes consumed on the given input port?
+    unsigned long long get_bytes_consumed(const size_t index);
+
+    //! How many bytes produced on the given output port?
+    unsigned long long get_bytes_produced(const size_t index);
+
+    //! Send a message to all downstream subscribers
+    void send_msg(const size_t index, const boost::any &any);
+
+    //! Register a handler to be called for incoming messages
+    void register_msg_handler(const size_t index, const BlockMsgHandler &handler);
+
 };
 
 } //namespace tsbe

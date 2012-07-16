@@ -15,22 +15,48 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "element_impl.hpp"
-#include <tsbe/topology.hpp>
+#include <boost/foreach.hpp>
 
 using namespace tsbe;
 
+TopologyConfig::TopologyConfig(void)
+{
+    //NOP
+}
+
+Port::Port(void)
+{
+    index = 0;
+}
+
+bool tsbe::operator==(const Port &lhs, const Port &rhs)
+{
+    return (lhs.elem == rhs.elem and lhs.index == rhs.index);
+}
+
 Connection::Connection(void)
 {
-    src_port = 0;
-    sink_port = 0;
+    //NOP
 }
 
 bool tsbe::operator==(const Connection &lhs, const Connection &rhs)
 {
-    return (
-        lhs.src == rhs.src and lhs.src_port == rhs.src_port and
-        lhs.sink == rhs.sink and lhs.sink_port == rhs.sink_port
-    );
+    return (lhs.src == rhs.src and lhs.sink == rhs.sink);
+}
+
+Topology::Topology(void)
+{
+    //NOP
+}
+
+Topology::Topology(const TopologyConfig &config)
+{
+    this->reset(new ElementImpl(config));
+}
+
+const Element &Topology::self(void) const
+{
+    return *this;
 }
 
 void Topology::add_topology(const Topology &topology)
@@ -38,8 +64,13 @@ void Topology::add_topology(const Topology &topology)
     (*this)->topologies.push_back(topology);
 }
 
-void Topology::connect(const Connection &connection)
+void Topology::connect(const Connection &connection_)
 {
+    //remove instances of this for outside connections to avoid circular shared ptrs
+    Connection connection = connection_;
+    if (connection.src.elem.get() == this->get()) connection.src.elem.reset();
+    if (connection.sink.elem.get() == this->get()) connection.sink.elem.reset();
+
     (*this)->connections.push_back(connection);
 }
 
@@ -51,10 +82,24 @@ void Topology::remove_topology(const Topology &topology)
     }
 }
 
-void Topology::disconnect(const Connection &connection)
+void Topology::disconnect(const Connection &connection_)
 {
+    //remove instances of this for outside connections to avoid circular shared ptrs
+    Connection connection = connection_;
+    if (connection.src.elem.get() == this->get()) connection.src.elem.reset();
+    if (connection.sink.elem.get() == this->get()) connection.sink.elem.reset();
+
     if (not remove_one((*this)->connections, connection))
     {
         throw std::runtime_error("Topology::disconnect could not find connection");
+    }
+}
+
+void Topology::activate(void)
+{
+    std::vector<Block> all_blocks;
+    BOOST_FOREACH(Connection &connection, (*this)->connections)
+    {
+        
     }
 }

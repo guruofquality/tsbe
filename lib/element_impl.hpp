@@ -18,6 +18,7 @@
 #define INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
 
 #include <tsbe/topology.hpp>
+#include <tsbe/block.hpp>
 #include <vector>
 
 namespace tsbe
@@ -26,9 +27,27 @@ namespace tsbe
 //! ElementImpl is both a topology and a block to allow interconnection
 struct ElementImpl
 {
+    ElementImpl(const BlockConfig &config)
+    {
+        block_config = config;
+        block = true;
+    }
+
+    ElementImpl(const TopologyConfig &config)
+    {
+        topology_config = config;
+        block = false;
+    }
+
     bool block;
     bool is_block(void){return block;}
 
+    //--------- block stuff
+    BlockConfig block_config;
+    std::string group;
+
+    //--------- topology stuff
+    TopologyConfig topology_config;
     std::vector<Topology> topologies;
     std::vector<Connection> connections;
 };

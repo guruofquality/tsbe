@@ -22,14 +22,22 @@
 namespace tsbe
 {
 
+struct TSBE_API Port
+{
+    Port(void);
+
+    Element elem;
+    size_t index;
+};
+
+TSBE_API bool operator==(const Port &lhs, const Port &rhs);
+
 struct TSBE_API Connection
 {
     Connection(void);
 
-    Element src;
-    size_t src_port;
-    Element sink;
-    size_t sink_port;
+    Port src;
+    Port sink;
 };
 
 TSBE_API bool operator==(const Connection &lhs, const Connection &rhs);
@@ -57,7 +65,7 @@ struct TSBE_API Topology : boost::shared_ptr<ElementImpl>
     Topology(const TopologyConfig &config);
 
     //! Get access to this topology as an Element for connect
-    Element self(void);
+    const Element &self(void) const;
 
     /*!
      * Add a child topology to this parent.
@@ -77,6 +85,19 @@ struct TSBE_API Topology : boost::shared_ptr<ElementImpl>
 
     //! Disconnect an output port from an input port
     void disconnect(const Connection &connection);
+
+    /*!
+     * affinity: CPU node index
+     * parallelism: num workers
+     * etc...
+     */
+    void set_task_group_property(
+        const std::string &group,
+        const std::string &key,
+        const std::string &val
+    );
+
+    void activate(void);
 };
 
 } //namespace tsbe

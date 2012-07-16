@@ -15,4 +15,36 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "element_impl.hpp"
-#include <tsbe/block.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
+using namespace tsbe;
+
+BlockConfig::BlockConfig(void)
+{
+    //NOP
+}
+
+Block::Block(void)
+{
+    //NOP
+}
+
+Block::Block(const BlockConfig &config)
+{
+    this->reset(new ElementImpl(config));
+    this->set_task_group("");
+}
+
+void Block::set_task_group(const std::string &group)
+{
+    if (group.empty())
+    {
+        boost::uuids::uuid u; //initialize uuid
+        (*this)->group = to_string(u);
+    }
+    else
+    {
+        (*this)->group = group;
+    }
+}
