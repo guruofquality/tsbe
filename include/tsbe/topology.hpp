@@ -26,6 +26,8 @@ struct TSBE_API Port
 {
     Port(void);
 
+    Port(const Element &elem, const size_t index);
+
     Element elem;
     size_t index;
 };
@@ -35,6 +37,8 @@ TSBE_API bool operator==(const Port &lhs, const Port &rhs);
 struct TSBE_API Connection
 {
     Connection(void);
+
+    Connection(const Port &src, const Port &sink);
 
     Port src;
     Port sink;

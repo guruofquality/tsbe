@@ -53,6 +53,8 @@ struct ElementImpl
 
     std::vector<Port> resolve_src_ports(const Port &);
     std::vector<Port> resolve_sink_ports(const Port &);
+
+    std::vector<Connection> squash_connections(void);
 };
 
 } //namespace tsbe

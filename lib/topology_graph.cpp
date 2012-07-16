@@ -78,3 +78,31 @@ std::vector<Port> ElementImpl::resolve_sink_ports(const Port &sink)
 
     return ports;
 }
+
+std::vector<Connection> ElementImpl::squash_connections(void)
+{
+    std::vector<Connection> connections;
+
+    // traverse the connections in this topology and flatten them
+    BOOST_FOREACH(const Connection &connection, this->connections)
+    {
+        std::vector<Port> srcs = resolve_src_ports(connection.src);
+        std::vector<Port> sinks = resolve_src_ports(connection.sink);
+        BOOST_FOREACH(const Port &src, srcs)
+        {
+            BOOST_FOREACH(const Port &sink, sinks)
+            {
+                connections.push_back(Connection(src, sink));
+            }
+        }
+    }
+
+    //traverse the sub topologies that arent "connected"
+    BOOST_FOREACH(const Topology &topology, this->topologies)
+    {
+        const std::vector<Connection> connections_i = topology->squash_connections();
+        connections.insert(connections.end(), connections_i.begin(), connections_i.end());
+    }
+
+    return connections;
+}
