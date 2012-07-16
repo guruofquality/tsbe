@@ -101,7 +101,8 @@ struct TSBE_API Affinity
 };
 
 //! return true if an instance was found and removed
-template <typename V, typename T> bool remove_one(V &v, const T &t)
+template <typename V, typename T>
+bool remove_one(V &v, const T &t)
 {
     for (size_t i = 0; i < v.size(); i++)
     {
@@ -112,6 +113,32 @@ template <typename V, typename T> bool remove_one(V &v, const T &t)
         }
     }
     return false;
+}
+
+template <typename V, typename T>
+void vector_vector_add(V &v, const T &t, const size_t index)
+{
+    //ensure that there is room
+    if (index >= v.size())
+    {
+        v.resize(index+1);
+    }
+
+    //add the element
+    v[index].push_back(t);
+}
+
+template <typename V, typename T>
+void vector_vector_remove(V &v, const T &t, const size_t index)
+{
+    //remove the first match found
+    remove_one(v[index], t);
+
+    //trim (dont want trailing empty ones)
+    while (not v.empty() and v.back().empty())
+    {
+        v.resize(v.size()-1);
+    }
 }
 
 } //namespace tsbe

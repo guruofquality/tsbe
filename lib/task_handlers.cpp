@@ -41,34 +41,8 @@ void TaskActor::handle_buffer_message(const TaskBufferMessage &message, const Th
 }
 
 /***********************************************************************
- * connect handler + helpers
+ * connect handler
  **********************************************************************/
-template <typename T>
-void connect(T &t, FlowEndpoint ep, const size_t index)
-{
-    //ensure that there is room
-    if (index >= t.size())
-    {
-        t.resize(index+1);
-    }
-
-    //add the endpoint
-    t[index].push_back(ep);
-}
-
-template <typename T>
-void disconnect(T &t, FlowEndpoint ep, const size_t index)
-{
-    //remove the first match found for this connection
-    remove_one(t[index], ep);
-
-    //trim (dont want trailing empty ones)
-    while (not t.empty() and t.back().empty())
-    {
-        t.resize(t.size()-1);
-    }
-}
-
 void TaskActor::handle_connect_message(const TaskConnectMessage &message, const Theron::Address from)
 {
     const FlowEndpoint &dest_ep = message.connection.dest;
@@ -77,19 +51,19 @@ void TaskActor::handle_connect_message(const TaskConnectMessage &message, const 
     switch(message.action)
     {
     case TaskConnectMessage::CONNECT_SOURCE:
-        connect(task->outputs, dest_ep, message.connection.source.index);
+        vector_vector_add(task->outputs, dest_ep, message.connection.source.index);
         break;
 
     case TaskConnectMessage::CONNECT_DEST:
-        connect(task->inputs, source_ep, message.connection.dest.index);
+        vector_vector_add(task->inputs, source_ep, message.connection.dest.index);
         break;
 
     case TaskConnectMessage::DISCONNECT_SOURCE:
-        disconnect(task->outputs, dest_ep, message.connection.source.index);
+        vector_vector_remove(task->outputs, dest_ep, message.connection.source.index);
         break;
 
     case TaskConnectMessage::DISCONNECT_DEST:
-        disconnect(task->inputs, source_ep, message.connection.dest.index);
+        vector_vector_remove(task->inputs, source_ep, message.connection.dest.index);
         break;
 
     }

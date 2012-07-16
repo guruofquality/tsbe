@@ -106,3 +106,55 @@ std::vector<Connection> ElementImpl::squash_connections(void)
 
     return connections;
 }
+
+void ElementImpl::squash(void)
+{
+    //step 0) squash connections
+    squashed_connections = this->squash_connections();
+
+    //step 1) squash blocks
+    squashed_blocks.clear();
+    BOOST_FOREACH(const Connection &connection, squashed_connections)
+    {
+        //remove one is the laziest way to ensure unique elements
+        //a possible duplicate will always be removed before push_back
+        const Block &src = reinterpret_cast<const Block &>(connection.src.elem);
+        remove_one(squashed_blocks, src);
+        squashed_blocks.push_back(src);
+        const Block &sink = reinterpret_cast<const Block &>(connection.sink.elem);
+        remove_one(squashed_blocks, sink);
+        squashed_blocks.push_back(sink);
+    }
+
+    //step 2) get a unique list of group names
+    std::vector<std::string> group_names;
+    BOOST_FOREACH(const Block &block, squashed_blocks)
+    {
+        const std::string name = block.get_task_group();
+        remove_one(group_names, name);
+        group_names.push_back(name);
+    }
+
+    //step 3) create task groups
+    squashed_tasks.clear();
+    BOOST_FOREACH(const std::string &name, group_names)
+    {
+        TaskGroup tg;
+        tg.name = name;
+        BOOST_FOREACH(const Block &block, squashed_blocks)
+        {
+            if (block.get_task_group() == name)
+            {
+                tg.blocks.push_back(block);
+            }
+        }
+        //TODO set tg.task w/ callback etc
+    }
+
+    //step 4) create the flows
+    BOOST_FOREACH(const Connection &connection, squashed_connections)
+    {
+        TaskGroup src_tg;
+        TaskGroup sink_tg;
+    }
+}

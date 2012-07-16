@@ -84,6 +84,16 @@ void Topology::connect(const Connection &connection_)
     if (connection.sink.elem.get() == this->get()) connection.sink.elem.reset();
 
     (*this)->connections.push_back(connection);
+
+    //increase the block's known connected endpoints
+    if (connection.src.elem->is_block())
+    {
+        vector_vector_add(connection.src.elem->output_endpoints, connection.sink, connection.src.index);
+    }
+    if (connection.sink.elem->is_block())
+    {
+        vector_vector_add(connection.sink.elem->input_endpoints, connection.src, connection.sink.index);
+    }
 }
 
 void Topology::remove_topology(const Topology &topology)
@@ -104,6 +114,16 @@ void Topology::disconnect(const Connection &connection_)
     if (not remove_one((*this)->connections, connection))
     {
         throw std::runtime_error("Topology::disconnect could not find connection");
+    }
+
+    //remove the block's known connected endpoints
+    if (connection.src.elem->is_block())
+    {
+        vector_vector_remove(connection.src.elem->output_endpoints, connection.sink, connection.src.index);
+    }
+    if (connection.sink.elem->is_block())
+    {
+        vector_vector_remove(connection.sink.elem->input_endpoints, connection.src, connection.sink.index);
     }
 }
 

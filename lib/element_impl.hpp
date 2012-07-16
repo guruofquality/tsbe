@@ -19,10 +19,19 @@
 
 #include <tsbe/topology.hpp>
 #include <tsbe/block.hpp>
+#include <tsbe/task.hpp>
+#include <tsbe/flow.hpp>
 #include <vector>
 
 namespace tsbe
 {
+
+struct TaskGroup
+{
+    std::string name;
+    std::vector<Block> blocks;
+    Task task;
+};
 
 //! ElementImpl is both a topology and a block to allow interconnection
 struct ElementImpl
@@ -46,15 +55,26 @@ struct ElementImpl
     BlockConfig block_config;
     std::string group;
 
+    //TODO determine this stuff when squashing, we dont need to update it here
+    std::vector<std::vector<Port> > output_endpoints;
+    std::vector<std::vector<Port> > input_endpoints;
+
     //--------- topology stuff
     TopologyConfig topology_config;
     std::vector<Topology> topologies;
     std::vector<Connection> connections;
 
+    //recursive helpers
     std::vector<Port> resolve_src_ports(const Port &);
     std::vector<Port> resolve_sink_ports(const Port &);
-
     std::vector<Connection> squash_connections(void);
+
+    //the result of a good squashing
+    std::vector<Connection> squashed_connections;
+    std::vector<Block> squashed_blocks;
+    std::vector<TaskGroup> squashed_tasks;
+    std::vector<Flow> squashed_flows;
+    void squash(void);
 };
 
 } //namespace tsbe

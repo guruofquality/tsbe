@@ -60,7 +60,7 @@ struct TSBE_API Block : boost::shared_ptr<ElementImpl>
     void set_task_group(const std::string &group);
 
     //! Get the associated task group
-    std::string get_task_group(void);
+    std::string get_task_group(void) const;
 
     //! How many bytes consumed on the given input port?
     unsigned long long get_bytes_consumed(const size_t index);
