@@ -40,7 +40,7 @@ struct ElementImpl
     }
 
     bool block;
-    bool is_block(void){return block;}
+    bool is_block(void) const {return block;}
 
     //--------- block stuff
     BlockConfig block_config;
@@ -50,6 +50,9 @@ struct ElementImpl
     TopologyConfig topology_config;
     std::vector<Topology> topologies;
     std::vector<Connection> connections;
+
+    std::vector<Port> resolve_src_ports(const Port &);
+    std::vector<Port> resolve_sink_ports(const Port &);
 };
 
 } //namespace tsbe

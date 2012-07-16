@@ -97,9 +97,5 @@ void Topology::disconnect(const Connection &connection_)
 
 void Topology::activate(void)
 {
-    std::vector<Block> all_blocks;
-    BOOST_FOREACH(Connection &connection, (*this)->connections)
-    {
-        
-    }
+    //TODO lol
 }

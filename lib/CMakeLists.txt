@@ -42,6 +42,7 @@ list(APPEND libtsbe_sources
     task.cpp
     task_handlers.cpp
     topology.cpp
+    topology_graph.cpp
 )
 
 ########################################################################
