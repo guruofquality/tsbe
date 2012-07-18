@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "element_impl.hpp"
+#include "vec_utils.hpp"
 #include <boost/foreach.hpp>
 
 using namespace tsbe;
@@ -79,7 +80,7 @@ std::vector<Port> ElementImpl::resolve_sink_ports(const Port &sink)
     return ports;
 }
 
-std::vector<Connection> ElementImpl::squash_connections(void)
+std::vector<Connection> ElementImpl::resolve_connections(void)
 {
     std::vector<Connection> connections;
 
@@ -100,63 +101,11 @@ std::vector<Connection> ElementImpl::squash_connections(void)
     //traverse the sub topologies that arent "connected"
     BOOST_FOREACH(const Topology &topology, this->topologies)
     {
-        const std::vector<Connection> connections_i = topology->squash_connections();
+        const std::vector<Connection> connections_i = topology->resolve_connections();
         connections.insert(connections.end(), connections_i.begin(), connections_i.end());
     }
 
     return connections;
-}
-
-void ElementImpl::squash(void)
-{
-    //step 0) squash connections
-    squashed_connections = this->squash_connections();
-
-    //step 1) squash blocks
-    squashed_blocks.clear();
-    BOOST_FOREACH(const Connection &connection, squashed_connections)
-    {
-        //remove one is the laziest way to ensure unique elements
-        //a possible duplicate will always be removed before push_back
-        const Block &src = reinterpret_cast<const Block &>(connection.src.elem);
-        remove_one(squashed_blocks, src);
-        squashed_blocks.push_back(src);
-        const Block &sink = reinterpret_cast<const Block &>(connection.sink.elem);
-        remove_one(squashed_blocks, sink);
-        squashed_blocks.push_back(sink);
-    }
-
-    //step 2) get a unique list of group names
-    std::vector<std::string> group_names;
-    BOOST_FOREACH(const Block &block, squashed_blocks)
-    {
-        const std::string name = block.get_task_group();
-        remove_one(group_names, name);
-        group_names.push_back(name);
-    }
-
-    //step 3) create task groups
-    squashed_tasks.clear();
-    BOOST_FOREACH(const std::string &name, group_names)
-    {
-        TaskGroup tg;
-        tg.name = name;
-        BOOST_FOREACH(const Block &block, squashed_blocks)
-        {
-            if (block.get_task_group() == name)
-            {
-                tg.blocks.push_back(block);
-            }
-        }
-        //TODO set tg.task w/ callback etc
-    }
-
-    //step 4) create the flows
-    BOOST_FOREACH(const Connection &connection, squashed_connections)
-    {
-        TaskGroup src_tg;
-        TaskGroup sink_tg;
-    }
 }
 
 
@@ -187,4 +136,40 @@ void ElementImpl::reparent(void)
         topology->parent = weak_self;
         topology->reparent();
     }
+}
+
+void ElementImpl::update(void)
+{
+    //step 0) reparent the hierarchy for future calls
+    this->reparent();
+
+    //step 1) resolve actual connections to blocks
+    const std::vector<Connection> connections_ = this->resolve_connections();
+
+    //step 2) remove old connections
+    const std::vector<Connection> connections_to_remove = vector_subtract(this->flat_connections, connections_);
+    BOOST_FOREACH(const Connection &conn, connections_to_remove)
+    {
+        vector_vector_remove(conn.src.elem->outputs, conn.src.index, conn.sink);
+        vector_vector_remove(conn.sink.elem->inputs, conn.sink.index, conn.src);
+
+        //resize the queues to match the new inputs/outputs sizes
+        conn.src.elem->output_buffer_queues.resize(conn.src.elem->outputs.size());
+        conn.sink.elem->input_buffer_queues.resize(conn.sink.elem->inputs.size());
+    }
+
+    //step 3) create new connections
+    const std::vector<Connection> connections_to_add = vector_subtract(connections_, this->flat_connections);
+    BOOST_FOREACH(const Connection &conn, connections_to_add)
+    {
+        vector_vector_add(conn.src.elem->outputs, conn.src.index, conn.sink);
+        vector_vector_add(conn.sink.elem->inputs, conn.sink.index, conn.src);
+
+        //resize the queues to match the new inputs/outputs sizes
+        conn.src.elem->output_buffer_queues.resize(conn.src.elem->outputs.size());
+        conn.sink.elem->input_buffer_queues.resize(conn.sink.elem->inputs.size());
+    }
+
+    //step 4) update new flat connections
+    this->flat_connections = connections_;
 }

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "element_impl.hpp"
+#include "vec_utils.hpp"
 
 using namespace tsbe;
 
@@ -31,8 +32,8 @@ void ElementActor::handle_connect(const TopologyConnectMessage &message, const T
 
     //remove instances of this for outside connections to avoid circular shared ptrs
     Connection connection = message.connection;
-    if (connection.src.elem.get() == self) connection.src.elem.reset();
-    if (connection.sink.elem.get() == self) connection.sink.elem.reset();
+    if (connection.src.elem.get() == message.caller) connection.src.elem.reset();
+    if (connection.sink.elem.get() == message.caller) connection.sink.elem.reset();
 
     switch(message.action)
     {
@@ -41,6 +42,7 @@ void ElementActor::handle_connect(const TopologyConnectMessage &message, const T
         break;
 
     case TopologyConnectMessage::DISCONNECT:
+        //TODO remove parentage, it will be updated below
         if (not remove_one(message.caller->connections, connection))
         {
             //TODO pass error, dont throw here
@@ -53,6 +55,7 @@ void ElementActor::handle_connect(const TopologyConnectMessage &message, const T
         break;
 
     case TopologyConnectMessage::REMOVE:
+        //TODO remove parentage, it will be updated below
         if (not remove_one(message.caller->topologies, message.topology))
         {
             //TODO pass error, dont throw here
@@ -61,7 +64,8 @@ void ElementActor::handle_connect(const TopologyConnectMessage &message, const T
         break;
     }
 
-    self->reparent();
+    //call update after any changes to squash the hierarchy
+    self->update();
 
     self->framework.Send(message, this->GetAddress(), from); //ACK
 }

@@ -109,16 +109,15 @@ struct ElementImpl
     //recursive helpers
     std::vector<Port> resolve_src_ports(const Port &);
     std::vector<Port> resolve_sink_ports(const Port &);
-    std::vector<Connection> squash_connections(void);
-
+    std::vector<Connection> resolve_connections(void);
     void reparent(void);
 
     //the result of a good squashing
-    std::vector<Connection> squashed_connections;
-    std::vector<Block> squashed_blocks;
-    std::vector<TaskGroup> squashed_tasks;
-    std::vector<Flow> squashed_flows;
-    void squash(void);
+    std::vector<Connection> flat_connections;
+    //std::vector<Block> squashed_blocks;
+    //std::vector<TaskGroup> squashed_tasks;
+    //std::vector<Flow> squashed_flows;
+    void update(void);
 };
 
 } //namespace tsbe
