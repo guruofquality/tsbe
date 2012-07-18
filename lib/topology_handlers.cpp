@@ -19,14 +19,16 @@
 
 using namespace tsbe;
 
-void ElementActor::handle_connect(const TopologyConnectMessage &message, const Theron::Address from)
-{
+void ElementActor::handle_connect(
+    const TopologyConnectMessage &message,
+    const Theron::Address from
+){
     boost::shared_ptr<ElementImpl> parent = self->parent.lock();
     if (parent)
     {
-        parent->actor.Push(message, from);
-        
-        //TODO use receiver
+        Theron::Receiver receiver;
+        parent->actor.Push(message, receiver.GetAddress());
+        receiver.Wait();
         return;
     }
 
@@ -42,7 +44,8 @@ void ElementActor::handle_connect(const TopologyConnectMessage &message, const T
         break;
 
     case TopologyConnectMessage::DISCONNECT:
-        //TODO remove parentage, it will be updated below
+        message.connection.src.elem->parent.reset(); //remove heritage, it may be re-added below
+        message.connection.sink.elem->parent.reset(); //remove heritage, it may be re-added below
         if (not remove_one(message.caller->connections, connection))
         {
             //TODO pass error, dont throw here
@@ -55,7 +58,7 @@ void ElementActor::handle_connect(const TopologyConnectMessage &message, const T
         break;
 
     case TopologyConnectMessage::REMOVE:
-        //TODO remove parentage, it will be updated below
+        message.topology->parent.reset(); //remove heritage, it may be re-added below
         if (not remove_one(message.caller->topologies, message.topology))
         {
             //TODO pass error, dont throw here

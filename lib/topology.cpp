@@ -74,62 +74,46 @@ const Element &Topology::self(void) const
 
 void Topology::add_topology(const Topology &topology)
 {
-    (*this)->topologies.push_back(topology);
+    Theron::Receiver receiver;
+    TopologyConnectMessage message;
+    message.action = TopologyConnectMessage::ADD;
+    message.caller = this->get();
+    message.topology = topology;
+    (*this)->actor.Push(message, receiver.GetAddress());
+    receiver.Wait();
 }
 
-void Topology::connect(const Connection &connection_)
+void Topology::connect(const Connection &connection)
 {
-    //remove instances of this for outside connections to avoid circular shared ptrs
-    Connection connection = connection_;
-    if (connection.src.elem.get() == this->get()) connection.src.elem.reset();
-    if (connection.sink.elem.get() == this->get()) connection.sink.elem.reset();
-
-    (*this)->connections.push_back(connection);
-
-    //increase the block's known connected endpoints
-    /*
-    if (connection.src.elem->is_block())
-    {
-        vector_vector_add(connection.src.elem->output_endpoints, connection.sink, connection.src.index);
-    }
-    if (connection.sink.elem->is_block())
-    {
-        vector_vector_add(connection.sink.elem->input_endpoints, connection.src, connection.sink.index);
-    }
-    * */
+    Theron::Receiver receiver;
+    TopologyConnectMessage message;
+    message.action = TopologyConnectMessage::CONNECT;
+    message.caller = this->get();
+    message.connection = connection;
+    (*this)->actor.Push(message, receiver.GetAddress());
+    receiver.Wait();
 }
 
 void Topology::remove_topology(const Topology &topology)
 {
-    if (not remove_one((*this)->topologies, topology))
-    {
-        throw std::runtime_error("Topology::remove_topology could not find topology");
-    }
+    Theron::Receiver receiver;
+    TopologyConnectMessage message;
+    message.action = TopologyConnectMessage::REMOVE;
+    message.caller = this->get();
+    message.topology = topology;
+    (*this)->actor.Push(message, receiver.GetAddress());
+    receiver.Wait();
 }
 
-void Topology::disconnect(const Connection &connection_)
+void Topology::disconnect(const Connection &connection)
 {
-    //remove instances of this for outside connections to avoid circular shared ptrs
-    Connection connection = connection_;
-    if (connection.src.elem.get() == this->get()) connection.src.elem.reset();
-    if (connection.sink.elem.get() == this->get()) connection.sink.elem.reset();
-
-    if (not remove_one((*this)->connections, connection))
-    {
-        throw std::runtime_error("Topology::disconnect could not find connection");
-    }
-
-    //remove the block's known connected endpoints
-    /*
-    if (connection.src.elem->is_block())
-    {
-        vector_vector_remove(connection.src.elem->output_endpoints, connection.sink, connection.src.index);
-    }
-    if (connection.sink.elem->is_block())
-    {
-        vector_vector_remove(connection.sink.elem->input_endpoints, connection.src, connection.sink.index);
-    }
-    * */
+    Theron::Receiver receiver;
+    TopologyConnectMessage message;
+    message.action = TopologyConnectMessage::DISCONNECT;
+    message.caller = this->get();
+    message.connection = connection;
+    (*this)->actor.Push(message, receiver.GetAddress());
+    receiver.Wait();
 }
 
 void Topology::activate(void)

@@ -19,7 +19,6 @@
 ########################################################################
 set(test_sources
     buffer_test.cpp
-    simple_task_test.cpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS})

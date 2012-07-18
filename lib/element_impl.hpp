@@ -17,10 +17,9 @@
 #ifndef INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
 #define INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
 
+#include <tsbe/buffer.hpp>
 #include <tsbe/topology.hpp>
 #include <tsbe/block.hpp>
-#include <tsbe/task.hpp>
-#include <tsbe/flow.hpp>
 #include <Theron/Framework.h>
 #include <Theron/Actor.h>
 #include <Theron/ActorRef.h>
@@ -59,13 +58,6 @@ struct ElementActor : Theron::Actor
     ElementImpl *self;
 };
 
-struct TaskGroup
-{
-    std::string name;
-    std::vector<Block> blocks;
-    Task task;
-};
-
 //! ElementImpl is both a topology and a block to allow interconnection
 struct ElementImpl
 {
@@ -81,6 +73,15 @@ struct ElementImpl
     {
         topology_config = config;
         block = false;
+    }
+
+    ~ElementImpl(void)
+    {
+        inputs.clear();
+        outputs.clear();
+        input_buffer_queues.clear();
+        output_buffer_queues.clear();
+        flat_connections.clear();
     }
 
     boost::weak_ptr<ElementImpl> weak_self;
@@ -105,18 +106,13 @@ struct ElementImpl
     TopologyConfig topology_config;
     std::vector<Topology> topologies;
     std::vector<Connection> connections;
+    std::vector<Connection> flat_connections;
 
     //recursive helpers
     std::vector<Port> resolve_src_ports(const Port &);
     std::vector<Port> resolve_sink_ports(const Port &);
     std::vector<Connection> resolve_connections(void);
     void reparent(void);
-
-    //the result of a good squashing
-    std::vector<Connection> flat_connections;
-    //std::vector<Block> squashed_blocks;
-    //std::vector<TaskGroup> squashed_tasks;
-    //std::vector<Flow> squashed_flows;
     void update(void);
 };
 

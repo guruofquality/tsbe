@@ -38,9 +38,6 @@ link_directories(${Boost_LIBRARY_DIRS})
 list(APPEND libtsbe_sources
     block.cpp
     buffer.cpp
-    flow.cpp
-    task.cpp
-    task_handlers.cpp
     topology.cpp
     topology_graph.cpp
     topology_handlers.cpp
