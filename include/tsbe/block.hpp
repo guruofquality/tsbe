@@ -25,6 +25,12 @@
 namespace tsbe
 {
 
+struct BlockProperties
+{
+    std::string task_group;
+    size_t task_priority;
+};
+
 typedef boost::function<void(const boost::any &)> BlockMsgHandler;
 
 struct InputPattern
@@ -61,6 +67,9 @@ struct TSBE_API Block : boost::shared_ptr<ElementImpl>
 
     //! Get the associated task group
     std::string get_task_group(void) const;
+
+    //! Set a property like task group or group priority
+    void set_property(const std::string &key, const std::string &value);
 
     //! How many bytes consumed on the given input port?
     unsigned long long get_bytes_consumed(const size_t index);

@@ -35,10 +35,10 @@ Task::Task(void)
 Task::Task(const TaskConfig &config)
 {
     this->reset(new TaskImpl(config));
+    (*this)->ptr_self = this;
 
     TaskActor::Parameters actor_params;
-    actor_params.task = this->get();
-    actor_params.task4cb = this;
+    actor_params.self = this->get();
     (*this)->actor = (*this)->framework.CreateActor<TaskActor>(actor_params);
 }
 

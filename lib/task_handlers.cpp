@@ -27,17 +27,17 @@ void TaskActor::handle_buffer_message(const TaskBufferMessage &message, const Th
     //step 1) push the buffer into the appropriate queue
     if (message.input)
     {
-        task->input_buffer_queues[message.index].push(message.buffer);
-        task->inputs_ready.set(message.index);
+        self->input_buffer_queues[message.index].push(message.buffer);
+        self->inputs_ready.set(message.index);
     }
     else
     {
-        task->output_buffer_queues[message.index].push(message.buffer);
-        task->outputs_ready.set(message.index);
+        self->output_buffer_queues[message.index].push(message.buffer);
+        self->outputs_ready.set(message.index);
     }
 
     //step 2) call the task callback since the state changed
-    task->config.callback(*task4cb);
+    self->config.callback(*self->ptr_self);
 }
 
 /***********************************************************************
@@ -51,33 +51,33 @@ void TaskActor::handle_connect_message(const TaskConnectMessage &message, const 
     switch(message.action)
     {
     case TaskConnectMessage::CONNECT_SOURCE:
-        vector_vector_add(task->outputs, dest_ep, message.connection.source.index);
+        vector_vector_add(self->outputs, dest_ep, message.connection.source.index);
         break;
 
     case TaskConnectMessage::CONNECT_DEST:
-        vector_vector_add(task->inputs, source_ep, message.connection.dest.index);
+        vector_vector_add(self->inputs, source_ep, message.connection.dest.index);
         break;
 
     case TaskConnectMessage::DISCONNECT_SOURCE:
-        vector_vector_remove(task->outputs, dest_ep, message.connection.source.index);
+        vector_vector_remove(self->outputs, dest_ep, message.connection.source.index);
         break;
 
     case TaskConnectMessage::DISCONNECT_DEST:
-        vector_vector_remove(task->inputs, source_ep, message.connection.dest.index);
+        vector_vector_remove(self->inputs, source_ep, message.connection.dest.index);
         break;
 
     }
 
     //always resize the input queues, they should match with the connections
-    task->output_buffer_queues.resize(task->outputs.size());
-    task->input_buffer_queues.resize(task->inputs.size());
+    self->output_buffer_queues.resize(self->outputs.size());
+    self->input_buffer_queues.resize(self->inputs.size());
 
     //also resize the ready bitsets to match
-    task->outputs_ready.resize(task->outputs.size());
-    task->inputs_ready.resize(task->inputs.size());
+    self->outputs_ready.resize(self->outputs.size());
+    self->inputs_ready.resize(self->inputs.size());
 
     //send a reply to the receiver
-    task->framework.Send(message, this->GetAddress(), from);
+    self->framework.Send(message, this->GetAddress(), from);
 }
 
 /***********************************************************************

@@ -21,10 +21,43 @@
 #include <tsbe/block.hpp>
 #include <tsbe/task.hpp>
 #include <tsbe/flow.hpp>
+#include <Theron/Framework.h>
+#include <Theron/Actor.h>
+#include <Theron/ActorRef.h>
 #include <vector>
+#include <queue>
 
 namespace tsbe
 {
+
+struct TopologyConnectMessage
+{
+    enum {CONNECT, DISCONNECT, ADD, REMOVE} action;
+    ElementImpl *caller;
+    Connection connection;
+    Topology topology;
+};
+
+/***********************************************************************
+ * The actor that will run inside the element itself
+ **********************************************************************/
+struct ElementActor : Theron::Actor
+{
+    struct Parameters
+    {
+        ElementImpl *self;
+    };
+
+    inline explicit ElementActor(const Parameters &params)
+    {
+        self = params.self;
+        RegisterHandler(this, &ElementActor::handle_connect);
+    }
+
+    void handle_connect(const TopologyConnectMessage &message, const Theron::Address from);
+
+    ElementImpl *self;
+};
 
 struct TaskGroup
 {
@@ -36,17 +69,24 @@ struct TaskGroup
 //! ElementImpl is both a topology and a block to allow interconnection
 struct ElementImpl
 {
-    ElementImpl(const BlockConfig &config)
+    ElementImpl(const BlockConfig &config):
+        framework(1/*thread*/)
     {
         block_config = config;
         block = true;
     }
 
-    ElementImpl(const TopologyConfig &config)
+    ElementImpl(const TopologyConfig &config):
+        framework(1/*thread*/)
     {
         topology_config = config;
         block = false;
     }
+
+    boost::weak_ptr<ElementImpl> weak_self;
+    boost::weak_ptr<ElementImpl> parent;
+    Theron::Framework framework;
+    Theron::ActorRef actor;
 
     bool block;
     bool is_block(void) const {return block;}
@@ -55,9 +95,11 @@ struct ElementImpl
     BlockConfig block_config;
     std::string group;
 
-    //TODO determine this stuff when squashing, we dont need to update it here
-    std::vector<std::vector<Port> > output_endpoints;
-    std::vector<std::vector<Port> > input_endpoints;
+    std::vector<std::vector<Port> > inputs;
+    std::vector<std::vector<Port> > outputs;
+
+    std::vector<std::queue<Buffer> > input_buffer_queues;
+    std::vector<std::queue<Buffer> > output_buffer_queues;
 
     //--------- topology stuff
     TopologyConfig topology_config;
@@ -68,6 +110,8 @@ struct ElementImpl
     std::vector<Port> resolve_src_ports(const Port &);
     std::vector<Port> resolve_sink_ports(const Port &);
     std::vector<Connection> squash_connections(void);
+
+    void reparent(void);
 
     //the result of a good squashing
     std::vector<Connection> squashed_connections;

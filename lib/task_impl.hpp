@@ -53,14 +53,12 @@ struct TaskActor : Theron::Actor
 {
     struct Parameters
     {
-        TaskImpl *task;
-        Task *task4cb;
+        TaskImpl *self;
     };
 
     inline explicit TaskActor(const Parameters &params)
     {
-        task = params.task;
-        task4cb = params.task4cb;
+        self = params.self;
         RegisterHandler(this, &TaskActor::handle_buffer_message);
         RegisterHandler(this, &TaskActor::handle_connect_message);
         RegisterHandler(this, &TaskActor::handle_affinity_message);
@@ -70,8 +68,7 @@ struct TaskActor : Theron::Actor
     void handle_connect_message(const TaskConnectMessage &message, const Theron::Address from);
     void handle_affinity_message(const Affinity &message, const Theron::Address from);
 
-    TaskImpl *task;
-    Task *task4cb;
+    TaskImpl *self;
 };
 
 /***********************************************************************
@@ -91,6 +88,8 @@ struct TaskImpl
     {
         //NOP
     }
+
+    Task *ptr_self;
 
     BitSet inputs_ready;
     BitSet outputs_ready;

@@ -158,3 +158,33 @@ void ElementImpl::squash(void)
         TaskGroup sink_tg;
     }
 }
+
+
+void ElementImpl::reparent(void)
+{
+    BOOST_FOREACH(const Connection &connection, this->connections)
+    {
+        if (connection.src.elem)
+        {
+            connection.src.elem->parent = this->weak_self;
+            if (not connection.src.elem->is_block())
+            {
+                connection.src.elem->reparent();
+            }
+        }
+        if (connection.sink.elem)
+        {
+            connection.sink.elem->parent = this->weak_self;
+            if (not connection.sink.elem->is_block())
+            {
+                connection.sink.elem->reparent();
+            }
+        }
+    }
+
+    BOOST_FOREACH(const Topology &topology, this->topologies)
+    {
+        topology->parent = weak_self;
+        topology->reparent();
+    }
+}
