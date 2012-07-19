@@ -96,6 +96,9 @@ struct ElementImpl
     BlockConfig block_config;
     std::string group;
 
+    BitSet inputs_ready;
+    BitSet outputs_ready;
+
     std::vector<std::vector<Port> > inputs;
     std::vector<std::vector<Port> > outputs;
 

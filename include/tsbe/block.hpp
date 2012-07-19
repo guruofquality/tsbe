@@ -25,28 +25,23 @@
 namespace tsbe
 {
 
-struct BlockProperties
+//! Typedef for a block's incoming port message handler callback
+typedef boost::function<void(const size_t, const boost::any &)> PortMsgHandler;
+
+//! Typedef for a block's regular task handler callback
+typedef boost::function<void(const Block &)> BlockTaskHandler;
+
+struct TSBE_API BlockProperties
 {
     std::string task_group;
     size_t task_priority;
 };
 
-typedef boost::function<void(const boost::any &)> BlockMsgHandler;
-
-struct InputPattern
-{
-    size_t history;
-    size_t multiple;
-};
-
-struct OutputPattern
-{
-    size_t multiple;
-};
-
 struct TSBE_API BlockConfig
 {
     BlockConfig(void);
+    PortMsgHandler port_msg_handler;
+    BlockTaskHandler block_task_handler;
 };
 
 struct TSBE_API Block : boost::shared_ptr<ElementImpl>
@@ -56,32 +51,74 @@ struct TSBE_API Block : boost::shared_ptr<ElementImpl>
 
     Block(const BlockConfig &config);
 
-    //! Get the number of input ports
-    size_t get_num_inputs(void);
+    //! Set various properties on this block
+    void set_properties(const BlockProperties &props);
 
-    //! Get the number of output ports
-    size_t get_num_outputs(void);
+    //! Get the current properties settings
+    BlockProperties get_properties(void) const;
 
-    //! Set the associated task group, or empty for None
-    void set_task_group(const std::string &group);
+    //------------------------------------------------------------------
+    //-- the methods below are not thread safe
+    //-- they are meant to be using with the context of the callback
+    //------------------------------------------------------------------
 
-    //! Get the associated task group
-    std::string get_task_group(void) const;
+    /*!
+     * Get a bitset representing ready inputs.
+     * The bit set will be num inputs wide.
+     * If bitset[index] == 1, index has a buffer.
+     */
+    const BitSet& get_inputs_ready(void);
 
-    //! Set a property like task group or group priority
-    void set_property(const std::string &key, const std::string &value);
+    /*!
+     * Get a bitset representing ready outputs.
+     * The bit set will be num outputs wide.
+     * If bitset[index] == 1, index has a buffer.
+     */
+    const BitSet& get_outputs_ready(void);
 
-    //! How many bytes consumed on the given input port?
-    unsigned long long get_bytes_consumed(const size_t index);
+    /*!
+     * Get access to the buffer in the front of the queue.
+     * The input queue contains filled buffers.
+     * Buffer is NULL if the queue was empty.
+     */
+    Buffer &get_input_buffer(const size_t index);
 
-    //! How many bytes produced on the given output port?
-    unsigned long long get_bytes_produced(const size_t index);
+    /*!
+     * Get access to the buffer in the front of the queue.
+     * The output queue contains empty buffers.
+     * Buffer is NULL if the queue was empty.
+     */
+    Buffer &get_output_buffer(const size_t index);
 
-    //! Send a message to all downstream subscribers
+    /*!
+     * Remove a buffer from the front of the input queue.
+     * The input queue contains filled buffers.
+     */
+    void pop_input_buffer(const size_t index);
+
+    /*!
+     * Pop a buffer from the output queue.
+     * The output queue contains empty buffers.
+     */
+    void pop_output_buffer(const size_t index);
+
+    /*!
+     * Send a buffer to all subscribed outputs on this port.
+     * \param index the output port index
+     */
+    void send_buffer(const size_t index, const Buffer &buff);
+
+    /*!
+     * Send a message to all subscribed outputs on this port.
+     * \param index the output port index
+     */
     void send_msg(const size_t index, const boost::any &any);
 
-    //! Register a handler to be called for incoming messages
-    void register_msg_handler(const size_t index, const BlockMsgHandler &handler);
+    //! Get the number of input ports (buffer consumption by task)
+    size_t get_num_inputs(void);
+
+    //! Get the number of output ports (buffer production by task)
+    size_t get_num_outputs(void);
 
 };
 
