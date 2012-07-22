@@ -36,9 +36,12 @@ link_directories(${Boost_LIBRARY_DIRS})
 # The sources
 ########################################################################
 list(APPEND libtsbe_sources
+    block.cpp
+    block_impl.cpp
     buffer.cpp
     executor.cpp
     executor_impl.cpp
+    task_interface.cpp
     topology.cpp
     topology_impl.cpp
 )

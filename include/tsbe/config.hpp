@@ -81,6 +81,9 @@ struct BlockImpl;
 
 struct ExecutorImpl;
 
+struct TaskInterfaceImpl;
+struct TaskInterface;
+
 struct ElementImpl;
 typedef boost::shared_ptr<ElementImpl> Element;
 
