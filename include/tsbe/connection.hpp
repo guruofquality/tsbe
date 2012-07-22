@@ -23,16 +23,25 @@
 namespace tsbe
 {
 
+/*!
+ * A connection represents a data path between a source port and a sink port.
+ */
 struct TSBE_API Connection
 {
+    //! Create an unitialized connection
     Connection(void);
 
+    //! Create a connection from source and sink
     Connection(const Port &src, const Port &sink);
 
+    //! The source port (provides data)
     Port src;
+
+    //! The sink port (accepts data)
     Port sink;
 };
 
+//! a comparison operator overload for connections
 TSBE_API bool operator==(const Connection &lhs, const Connection &rhs);
 
 } //namespace tsbe
