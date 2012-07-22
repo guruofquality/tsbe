@@ -18,13 +18,8 @@
 #define INCLUDED_LIBTSBE_TOPOLOGY_IMPL_HPP
 
 #include "element_impl.hpp"
-#include <tsbe/buffer.hpp>
 #include <tsbe/topology.hpp>
-#include <Theron/Framework.h>
-#include <Theron/Actor.h>
-#include <Theron/ActorRef.h>
 #include <vector>
-#include <queue>
 
 namespace tsbe
 {
@@ -63,13 +58,18 @@ struct TopologyActor : Theron::Actor
         RegisterHandler(this, &TopologyActor::handle_resolve_conns);
     }
 
+    ~TopologyActor(void)
+    {
+        topologies.clear();
+        connections.clear();
+    }
+
     void handle_connect(const TopologyConnectMessage &message, const Theron::Address from);
     void handle_resolve_ports(const TopologyResolvePortsMessage &message, const Theron::Address from);
     void handle_resolve_conns(const TopologyResolveConnectionsMessage &message, const Theron::Address from);
 
     std::vector<Topology> topologies;
     std::vector<Connection> connections;
-    std::vector<Connection> flat_connections;
 };
 
 } //namespace tsbe

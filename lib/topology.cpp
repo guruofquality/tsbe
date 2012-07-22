@@ -64,6 +64,7 @@ Topology::Topology(void)
 Topology::Topology(const TopologyConfig &)
 {
     this->reset(new ElementImpl());
+    (*this)->block = false;
     (*this)->actor = (*this)->framework.CreateActor<TopologyActor>();
 }
 
@@ -120,9 +121,4 @@ void Topology::disconnect(const Connection &connection_)
     message.connection = connection;
     (*this)->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
-}
-
-void Topology::update(void)
-{
-    //TODO lol
 }

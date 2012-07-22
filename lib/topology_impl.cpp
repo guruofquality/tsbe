@@ -120,8 +120,8 @@ void TopologyActor::handle_resolve_conns(
     const TopologyResolveConnectionsMessage &message,
     const Theron::Address from
 ){
-    std::vector<Connection> &real_connections = *message.result;
-    real_connections.clear();
+    std::vector<Connection> &flat_connections_ = *message.result;
+    flat_connections_.clear();
 
     BOOST_FOREACH(Connection &connection, this->connections)
     {
@@ -169,7 +169,7 @@ void TopologyActor::handle_resolve_conns(
         {
             BOOST_FOREACH(const Port &sink, sinks)
             {
-                real_connections.push_back(Connection(src, sink));
+                flat_connections_.push_back(Connection(src, sink));
             }
         }
     }
@@ -201,12 +201,12 @@ void TopologyActor::handle_resolve_conns(
     BOOST_FOREACH(const Element &topology, sub_topologies)
     {
         Theron::Receiver receiver;
-        std::vector<Connection> real_connections_i;
+        std::vector<Connection> flat_connections_i;
         TopologyResolveConnectionsMessage message_i;
-        message_i.result = &real_connections_i;
+        message_i.result = &flat_connections_i;
         topology->actor.Push(message_i, receiver.GetAddress());
         receiver.Wait();
-        extend(real_connections, real_connections_i);
+        extend(flat_connections_, flat_connections_i);
     }
 
     this->Send(message, from); //ACK

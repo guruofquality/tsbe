@@ -14,37 +14,32 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
-#define INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
+#ifndef INCLUDED_TSBE_EXECUTOR_HPP
+#define INCLUDED_TSBE_EXECUTOR_HPP
 
-#include <Theron/Framework.h>
-#include <Theron/ActorRef.h>
-#include <vector>
-#include <queue>
+#include <tsbe/config.hpp>
+#include <tsbe/topology.hpp>
 
 namespace tsbe
 {
 
-//! ElementImpl is both a topology and a block to allow interconnection
-struct ElementImpl
+struct TSBE_API ExecutorConfig
 {
-    ElementImpl(void):
-        framework(1/*thread*/)
-    {
-        //NOP
-    }
+    ExecutorConfig(void);
 
-    bool block;
+    Topology topology;
+};
 
-    bool is_block(void)
-    {
-        return block;
-    }
+struct TSBE_API Executor : boost::shared_ptr<ExecutorImpl>
+{
+    //! Create a null Executor
+    Executor(void);
 
-    Theron::Framework framework;
-    Theron::ActorRef actor;
+    Executor(const ExecutorConfig &config);
+
+    void update(void);
 };
 
 } //namespace tsbe
 
-#endif /*INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP*/
+#endif /*INCLUDED_TSBE_EXECUTOR_HPP*/

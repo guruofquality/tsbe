@@ -89,20 +89,6 @@ struct TSBE_API Topology : boost::shared_ptr<ElementImpl>
 
     //! Disconnect an output port from an input port
     void disconnect(const Connection &connection);
-
-    //! Call update on topmost topology to commit connection changes
-    void update(void);
-
-    /*!
-     * affinity: CPU node index
-     * parallelism: num workers
-     * etc...
-     */
-    void set_task_group_property(
-        const std::string &group,
-        const std::string &key,
-        const std::string &val
-    );
 };
 
 } //namespace tsbe

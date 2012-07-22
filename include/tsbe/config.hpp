@@ -79,6 +79,8 @@ extern TSBE_API void intrusive_ptr_release(BufferImpl*);
 struct Block;
 struct BlockImpl;
 
+struct ExecutorImpl;
+
 struct ElementImpl;
 typedef boost::shared_ptr<ElementImpl> Element;
 
