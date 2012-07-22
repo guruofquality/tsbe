@@ -108,4 +108,9 @@ struct TSBE_API Affinity
 
 #define TSBE_MAX_ALIGNMENT 32
 
+#include <iostream>
+
+#define TSBE_HERE() {std::cout << __FILE__ << ":" << __LINE__ << std::endl;}
+#define TSBE_VAR(var) {std::cout << #var << " = " << (var) << std::endl;}
+
 #endif /*INCLUDED_TSBE_CONFIG_HPP*/

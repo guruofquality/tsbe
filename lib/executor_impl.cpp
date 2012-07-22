@@ -45,11 +45,11 @@ void ExecutorActor::handle_update(
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
 
-        msg_i.action = BlockConnectMessage::SRC_CON;
+        msg_i.action = BlockConnectMessage::SRC_DIS;
         connection.src.elem->actor.Push(msg_i, receiver.GetAddress());
         receiver.Wait();
 
-        msg_i.action = BlockConnectMessage::SINK_CON;
+        msg_i.action = BlockConnectMessage::SINK_DIS;
         connection.sink.elem->actor.Push(msg_i, receiver.GetAddress());
         receiver.Wait();
     }
@@ -62,11 +62,11 @@ void ExecutorActor::handle_update(
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
 
-        msg_i.action = BlockConnectMessage::SRC_DIS;
+        msg_i.action = BlockConnectMessage::SRC_CON;
         connection.src.elem->actor.Push(msg_i, receiver.GetAddress());
         receiver.Wait();
 
-        msg_i.action = BlockConnectMessage::SINK_DIS;
+        msg_i.action = BlockConnectMessage::SINK_CON;
         connection.sink.elem->actor.Push(msg_i, receiver.GetAddress());
         receiver.Wait();
     }

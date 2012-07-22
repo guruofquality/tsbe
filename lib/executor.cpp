@@ -37,22 +37,9 @@ Executor::Executor(const ExecutorConfig &config)
 }
 
 void Executor::update(void)
-{/*
-    //call the resolve connections to flatten
-    {
-        Theron::Receiver receiver;
-        TopologyResolveConnectionsMessage message;
-        std::vector<Connection> flat_connections;
-        message.result = &flat_connections;
-        (*this)->actor.Push(message, receiver.GetAddress());
-        receiver.Wait();
-    }
-
-    //actually perform the updating of connections
-    {
-        Theron::Receiver receiver;
-        TopologyUpdateMessage message;
-        (*this)->actor.Push(message, receiver.GetAddress());
-        receiver.Wait();
-    }
-*/}
+{
+    Theron::Receiver receiver;
+    ExecutorUpdateMessage message;
+    (*this)->actor.Push(message, receiver.GetAddress());
+    receiver.Wait();
+}

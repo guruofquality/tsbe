@@ -49,7 +49,7 @@ template <typename V, typename T>
 void vector_vector_remove(V &v, const size_t index, const T &t)
 {
     //remove the first match found
-    remove_one(v[index], t);
+    if (v.size() > index) remove_one(v[index], t);
 
     //trim (dont want trailing empty ones)
     while (not v.empty() and v.back().empty())

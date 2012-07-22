@@ -138,13 +138,14 @@ void TopologyActor::handle_resolve_conns(
             srcs.push_back(connection.src);
         }
         //otherwise traverse the port
+        else
         {
             Theron::Receiver receiver;
-            TopologyResolvePortsMessage message;
-            message.action = TopologyResolvePortsMessage::SRC;
-            message.port = connection.src;
-            message.result = &srcs;
-            message.port.elem->actor.Push(message, receiver.GetAddress());
+            TopologyResolvePortsMessage message_i;
+            message_i.action = TopologyResolvePortsMessage::SRC;
+            message_i.port = connection.src;
+            message_i.result = &srcs;
+            message_i.port.elem->actor.Push(message_i, receiver.GetAddress());
             receiver.Wait();
         }
 
@@ -154,13 +155,14 @@ void TopologyActor::handle_resolve_conns(
             sinks.push_back(connection.sink);
         }
         //otherwise traverse the port
+        else
         {
             Theron::Receiver receiver;
-            TopologyResolvePortsMessage message;
-            message.action = TopologyResolvePortsMessage::SINK;
-            message.port = connection.sink;
-            message.result = &sinks;
-            message.port.elem->actor.Push(message, receiver.GetAddress());
+            TopologyResolvePortsMessage message_i;
+            message_i.action = TopologyResolvePortsMessage::SINK;
+            message_i.port = connection.sink;
+            message_i.result = &sinks;
+            message_i.port.elem->actor.Push(message_i, receiver.GetAddress());
             receiver.Wait();
         }
 
