@@ -16,6 +16,7 @@
 
 #include "executor_impl.hpp"
 #include "topology_impl.hpp"
+#include "block_impl.hpp"
 #include "vec_utils.hpp"
 #include <boost/foreach.hpp>
 
@@ -38,16 +39,36 @@ void ExecutorActor::handle_update(
 
     //step 2) remove old connections
     const std::vector<Connection> connections_to_remove = vector_subtract(this->flat_connections, new_flat_connections);
-    BOOST_FOREACH(const Connection &conn, connections_to_remove)
+    BOOST_FOREACH(const Connection &connection, connections_to_remove)
     {
-        //TODO
+        Theron::Receiver receiver;
+        BlockConnectMessage msg_i;
+        msg_i.connection = connection;
+
+        msg_i.action = BlockConnectMessage::SRC_CON;
+        connection.src.elem->actor.Push(msg_i, receiver.GetAddress());
+        receiver.Wait();
+
+        msg_i.action = BlockConnectMessage::SINK_CON;
+        connection.sink.elem->actor.Push(msg_i, receiver.GetAddress());
+        receiver.Wait();
     }
 
     //step 3) create new connections
     const std::vector<Connection> connections_to_add = vector_subtract(new_flat_connections, this->flat_connections);
-    BOOST_FOREACH(const Connection &conn, connections_to_add)
+    BOOST_FOREACH(const Connection &connection, connections_to_add)
     {
-        //TODO
+        Theron::Receiver receiver;
+        BlockConnectMessage msg_i;
+        msg_i.connection = connection;
+
+        msg_i.action = BlockConnectMessage::SRC_DIS;
+        connection.src.elem->actor.Push(msg_i, receiver.GetAddress());
+        receiver.Wait();
+
+        msg_i.action = BlockConnectMessage::SINK_DIS;
+        connection.sink.elem->actor.Push(msg_i, receiver.GetAddress());
+        receiver.Wait();
     }
 
     //step 4) update the flat connections

@@ -19,3 +19,39 @@
 #include <boost/foreach.hpp>
 
 using namespace tsbe;
+
+void BlockActor::handle_connect(
+    const BlockConnectMessage &message,
+    const Theron::Address from
+){
+    const Connection &connection = message.connection;
+
+    //step 1) add or remove the new port connection
+    switch (message.action)
+    {
+    case BlockConnectMessage::SRC_CON:
+        vector_vector_add(interface->inputs, connection.src.index, connection.sink);
+        break;
+
+    case BlockConnectMessage::SINK_CON:
+        vector_vector_add(interface->outputs, connection.sink.index, connection.src);
+        break;
+
+    case BlockConnectMessage::SRC_DIS:
+        vector_vector_remove(interface->inputs, connection.src.index, connection.sink);
+        break;
+
+    case BlockConnectMessage::SINK_DIS:
+        vector_vector_remove(interface->outputs, connection.sink.index, connection.src);
+        break;
+    }
+
+    //step 2) resize other vectors to match new IO size
+    interface->input_buffer_queues.resize(interface->inputs.size());
+    interface->inputs_ready.resize(interface->inputs.size());
+
+    interface->output_buffer_queues.resize(interface->outputs.size());
+    interface->outputs_ready.resize(interface->outputs.size());
+
+    this->Send(message, from); //ACK
+}

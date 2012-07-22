@@ -44,12 +44,12 @@ struct BlockActor : Theron::Actor
     inline explicit BlockActor(void)
     {
         RegisterHandler(this, &BlockActor::handle_connect);
-        task_interface.reset(new TaskInterfaceImpl());
+        interface.reset(new TaskInterfaceImpl());
     }
 
     void handle_connect(const BlockConnectMessage &message, const Theron::Address from);
 
-    TaskInterface task_interface;
+    TaskInterface interface;
 };
 
 } //namespace tsbe
