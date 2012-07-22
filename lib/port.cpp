@@ -14,34 +14,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_LIBTSBE_TASK_GROUP_HPP
-#define INCLUDED_LIBTSBE_TASK_GROUP_HPP
+#include <tsbe/port.hpp>
 
-#include <tsbe/block.hpp>
-#include <Theron/Framework.h>
-#include <Theron/Actor.h>
-#include <Theron/ActorRef.h>
-#include <vector>
+using namespace tsbe;
 
-namespace tsbe
+Port::Port(void)
 {
+    index = 0;
+}
 
-struct BufferMessage
+Port::Port(const Element &elem, const size_t index):
+    elem(elem), index(index)
 {
-    
-};
+    //NOP
+}
 
-struct MsgMessage
+bool tsbe::operator==(const Port &lhs, const Port &rhs)
 {
-    
-};
-
-struct TaskGroup
-{
-    std::vector<block> blocks;
-};
-
-
-} //namespace tsbe
-
-#endif /*INCLUDED_LIBTSBE_TASK_GROUP_HPP*/
+    return (lhs.elem == rhs.elem and lhs.index == rhs.index);
+}

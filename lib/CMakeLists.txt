@@ -39,8 +39,10 @@ list(APPEND libtsbe_sources
     block.cpp
     block_impl.cpp
     buffer.cpp
+    connection.cpp
     executor.cpp
     executor_impl.cpp
+    port.cpp
     task_interface.cpp
     topology.cpp
     topology_impl.cpp

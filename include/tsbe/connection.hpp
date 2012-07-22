@@ -14,43 +14,27 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_LIBTSBE_TASK_INTERFACE_IMPL_HPP
-#define INCLUDED_LIBTSBE_TASK_INTERFACE_IMPL_HPP
+#ifndef INCLUDED_TSBE_CONNECTION_HPP
+#define INCLUDED_TSBE_CONNECTION_HPP
 
-#include <tsbe/task_interface.hpp>
+#include <tsbe/config.hpp>
 #include <tsbe/port.hpp>
-#include <tsbe/buffer.hpp>
-#include <queue>
-#include <vector>
 
 namespace tsbe
 {
 
-struct TaskInterfaceImpl
+struct TSBE_API Connection
 {
-    TaskInterfaceImpl(void)
-    {
-        //NOP
-    }
+    Connection(void);
 
-    ~TaskInterfaceImpl(void)
-    {
-        inputs.clear();
-        input_buffer_queues.clear();
-        outputs.clear();
-        output_buffer_queues.clear();
-    }
+    Connection(const Port &src, const Port &sink);
 
-    BitSet inputs_ready;
-    BitSet outputs_ready;
-
-    std::vector<std::vector<Port> > inputs;
-    std::vector<std::vector<Port> > outputs;
-
-    std::vector<std::queue<Buffer> > input_buffer_queues;
-    std::vector<std::queue<Buffer> > output_buffer_queues;
+    Port src;
+    Port sink;
 };
+
+TSBE_API bool operator==(const Connection &lhs, const Connection &rhs);
 
 } //namespace tsbe
 
-#endif /*INCLUDED_LIBTSBE_TASK_INTERFACE_IMPL_HPP*/
+#endif /*INCLUDED_TSBE_CONNECTION_HPP*/

@@ -23,38 +23,6 @@ TopologyConfig::TopologyConfig(void)
     //NOP
 }
 
-Port::Port(void)
-{
-    index = 0;
-}
-
-Port::Port(const Element &elem, const size_t index):
-    elem(elem), index(index)
-{
-    //NOP
-}
-
-bool tsbe::operator==(const Port &lhs, const Port &rhs)
-{
-    return (lhs.elem == rhs.elem and lhs.index == rhs.index);
-}
-
-Connection::Connection(void)
-{
-    //NOP
-}
-
-Connection::Connection(const Port &src, const Port &sink):
-    src(src), sink(sink)
-{
-    //NOP
-}
-
-bool tsbe::operator==(const Connection &lhs, const Connection &rhs)
-{
-    return (lhs.src == rhs.src and lhs.sink == rhs.sink);
-}
-
 Topology::Topology(void)
 {
     //NOP

@@ -50,6 +50,7 @@ struct TSBE_API Block : boost::shared_ptr<ElementImpl>
     //! Construct a null block
     Block(void);
 
+    //! Create a new block from config params
     Block(const BlockConfig &config);
 
     //! Set various properties on this block

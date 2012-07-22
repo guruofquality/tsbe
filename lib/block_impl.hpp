@@ -19,7 +19,7 @@
 
 #include "element_impl.hpp"
 #include "task_interface_impl.hpp"
-#include <tsbe/topology.hpp>
+#include <tsbe/connection.hpp>
 #include <tsbe/block.hpp>
 #include <vector>
 #include <queue>

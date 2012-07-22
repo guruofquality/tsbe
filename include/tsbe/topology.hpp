@@ -18,33 +18,10 @@
 #define INCLUDED_TSBE_TOPOLOGY_HPP
 
 #include <tsbe/config.hpp>
+#include <tsbe/connection.hpp>
 
 namespace tsbe
 {
-
-struct TSBE_API Port
-{
-    Port(void);
-
-    Port(const Element &elem, const size_t index);
-
-    Element elem;
-    size_t index;
-};
-
-TSBE_API bool operator==(const Port &lhs, const Port &rhs);
-
-struct TSBE_API Connection
-{
-    Connection(void);
-
-    Connection(const Port &src, const Port &sink);
-
-    Port src;
-    Port sink;
-};
-
-TSBE_API bool operator==(const Connection &lhs, const Connection &rhs);
 
 struct TSBE_API TopologyConfig
 {
@@ -66,6 +43,7 @@ struct TSBE_API Topology : boost::shared_ptr<ElementImpl>
     //! Create a null Topology
     Topology(void);
 
+    //! Create a new Topology object
     Topology(const TopologyConfig &config);
 
     //! Get access to this topology as an Element for connect
