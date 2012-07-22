@@ -14,38 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
-#define INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
+#include "block_impl.hpp"
+#include "vec_utils.hpp"
+#include <boost/foreach.hpp>
 
-#include <Theron/Framework.h>
-#include <Theron/Actor.h>
-#include <Theron/ActorRef.h>
-#include <vector>
-#include <queue>
-
-namespace tsbe
-{
-
-//! ElementImpl is both a topology and a block to allow interconnection
-struct ElementImpl
-{
-    ElementImpl(void):
-        framework(1/*thread*/)
-    {
-        //NOP
-    }
-
-    bool block;
-
-    bool is_block(void)
-    {
-        return block;
-    }
-
-    Theron::Framework framework;
-    Theron::ActorRef actor;
-};
-
-} //namespace tsbe
-
-#endif /*INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP*/
+using namespace tsbe;

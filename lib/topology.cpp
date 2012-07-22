@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "element_impl.hpp"
-#include "vec_utils.hpp"
+#include "topology_impl.hpp"
 #include <boost/foreach.hpp>
 
 using namespace tsbe;
@@ -62,9 +61,10 @@ Topology::Topology(void)
     //NOP
 }
 
-Topology::Topology(const TopologyConfig &config)
+Topology::Topology(const TopologyConfig &)
 {
-    this->reset(new ElementImpl(config));
+    this->reset(new ElementImpl());
+    (*this)->actor = (*this)->framework.CreateActor<TopologyActor>();
 }
 
 const Element &Topology::self(void) const
@@ -77,18 +77,21 @@ void Topology::add_topology(const Topology &topology)
     Theron::Receiver receiver;
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::ADD;
-    message.caller = this->get();
     message.topology = topology;
     (*this)->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
 }
 
-void Topology::connect(const Connection &connection)
+void Topology::connect(const Connection &connection_)
 {
+    //remove instances of this for outside connections to avoid circular shared ptrs
+    Connection connection = connection_;
+    if (connection.src.elem.get() == this->get()) connection.src.elem.reset();
+    if (connection.sink.elem.get() == this->get()) connection.sink.elem.reset();
+
     Theron::Receiver receiver;
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::CONNECT;
-    message.caller = this->get();
     message.connection = connection;
     (*this)->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
@@ -99,24 +102,27 @@ void Topology::remove_topology(const Topology &topology)
     Theron::Receiver receiver;
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::REMOVE;
-    message.caller = this->get();
     message.topology = topology;
     (*this)->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
 }
 
-void Topology::disconnect(const Connection &connection)
+void Topology::disconnect(const Connection &connection_)
 {
+    //remove instances of this for outside connections to avoid circular shared ptrs
+    Connection connection = connection_;
+    if (connection.src.elem.get() == this->get()) connection.src.elem.reset();
+    if (connection.sink.elem.get() == this->get()) connection.sink.elem.reset();
+
     Theron::Receiver receiver;
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::DISCONNECT;
-    message.caller = this->get();
     message.connection = connection;
     (*this)->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
 }
 
-void Topology::activate(void)
+void Topology::update(void)
 {
     //TODO lol
 }

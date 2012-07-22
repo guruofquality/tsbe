@@ -70,4 +70,13 @@ V vector_subtract(const V &x, const V &y)
     return result;
 }
 
+template <typename V>
+void extend(V &v, const V &x)
+{
+    for (size_t i = 0; i < x.size(); i++)
+    {
+        v.push_back(x[i]);
+    }
+}
+
 #endif /*INCLUDED_LIBTSBE_VEC_UTILS_HPP*/
