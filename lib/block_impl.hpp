@@ -36,20 +36,53 @@ struct BlockConnectMessage
     Connection connection;
 };
 
+struct BlockDownstreamMessage
+{
+    Buffer buffer;
+    size_t index;
+};
+
+struct BlockReturnMessage
+{
+    Buffer buffer;
+    size_t index;
+};
+
+struct BlockAnyMessage
+{
+    boost::any msg;
+    size_t index;
+};
+
 /***********************************************************************
  * The details of the block actor
  **********************************************************************/
 struct BlockActor : Theron::Actor
 {
-    inline explicit BlockActor(void)
+    struct Parameters
     {
-        RegisterHandler(this, &BlockActor::handle_connect);
+        BlockConfig config;
+    };
+
+    inline explicit BlockActor(const Parameters &params)
+    {
+        config = params.config;
         interface.reset(new TaskInterfaceImpl());
+        RegisterHandler(this, &BlockActor::handle_connect);
+        RegisterHandler(this, &BlockActor::handle_downstream);
+        RegisterHandler(this, &BlockActor::handle_return);
+        RegisterHandler(this, &BlockActor::handle_any);
     }
 
     void handle_connect(const BlockConnectMessage &message, const Theron::Address from);
+    void handle_downstream(const BlockDownstreamMessage &message, const Theron::Address from);
+    void handle_return(const BlockReturnMessage &message, const Theron::Address from);
+    void handle_any(const BlockAnyMessage &message, const Theron::Address from);
+
+    void call_task(void);
 
     TaskInterface interface;
+    BlockConfig config;
 };
 
 } //namespace tsbe

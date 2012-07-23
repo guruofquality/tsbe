@@ -33,6 +33,12 @@ struct TSBE_API TaskInterface : boost::shared_ptr<TaskInterfaceImpl>
     //! Creates a null task interface
     TaskInterface(void);
 
+    //! Get the number of input ports (buffer consumption by task)
+    size_t get_num_inputs(void);
+
+    //! Get the number of output ports (buffer production by task)
+    size_t get_num_outputs(void);
+
     /*!
      * Get a bitset representing ready inputs.
      * The bit set will be num inputs wide.
@@ -77,19 +83,13 @@ struct TSBE_API TaskInterface : boost::shared_ptr<TaskInterfaceImpl>
      * Send a buffer to all subscribed outputs on this port.
      * \param index the output port index
      */
-    void send_buffer(const size_t index, const Buffer &buff);
+    void post_downstream(const size_t index, const Buffer &buffer);
 
     /*!
      * Send a message to all subscribed outputs on this port.
      * \param index the output port index
      */
-    void send_msg(const size_t index, const boost::any &any);
-
-    //! Get the number of input ports (buffer consumption by task)
-    size_t get_num_inputs(void);
-
-    //! Get the number of output ports (buffer production by task)
-    size_t get_num_outputs(void);
+    void post_downstream(const size_t index, const boost::any &msg);
 
 };
 

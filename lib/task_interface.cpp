@@ -14,6 +14,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "task_interface_impl.hpp"
+#include "block_impl.hpp"
 #include <boost/foreach.hpp>
 
 using namespace tsbe;
@@ -49,20 +50,37 @@ void TaskInterface::pop_input_buffer(const size_t index)
 {
     //TODO throw bad index or empty
     (*this)->input_buffer_queues[index].pop();
+    (*this)->inputs_ready.set(index, not (*this)->input_buffer_queues[index].empty());
 }
 
 void TaskInterface::pop_output_buffer(const size_t index)
 {
     //TODO throw bad index or empty
     (*this)->output_buffer_queues[index].pop();
+    (*this)->outputs_ready.set(index, not (*this)->output_buffer_queues[index].empty());
 }
 
-void TaskInterface::send_buffer(const size_t index, const Buffer &buff)
+void TaskInterface::post_downstream(const size_t index, const Buffer &buffer)
 {
     //TODO throw bad index
+    BlockDownstreamMessage message;
+    message.buffer = buffer;
     BOOST_FOREACH(Port &port, (*this)->outputs[index])
     {
-        //ep.task.push_input_buffer(ep.index, buff);
+        message.index = port.index;
+        port.elem->actor.Push(message, Theron::Address());
+    }
+}
+
+void TaskInterface::post_downstream(const size_t index, const boost::any &msg)
+{
+    //TODO throw bad index
+    BlockAnyMessage message;
+    message.msg = msg;
+    BOOST_FOREACH(Port &port, (*this)->outputs[index])
+    {
+        message.index = port.index;
+        port.elem->actor.Push(message, Theron::Address());
     }
 }
 

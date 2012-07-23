@@ -55,3 +55,39 @@ void BlockActor::handle_connect(
 
     this->Send(message, from); //ACK
 }
+
+void BlockActor::handle_downstream(
+    const BlockDownstreamMessage &message,
+    const Theron::Address from
+){
+    interface->input_buffer_queues[message.index].push(message.buffer);
+    interface->inputs_ready.set(message.index, true);
+    this->call_task();
+}
+
+void BlockActor::handle_return(
+    const BlockReturnMessage &message,
+    const Theron::Address from
+){
+    interface->output_buffer_queues[message.index].push(message.buffer);
+    interface->outputs_ready.set(message.index, true);
+    this->call_task();
+}
+
+void BlockActor::handle_any(
+    const BlockAnyMessage &message,
+    const Theron::Address from
+){
+    if (this->config.port_callback)
+    {
+        this->config.port_callback(message.index, message.msg);
+    }
+}
+
+void BlockActor::call_task(void)
+{
+    if ((~interface->outputs_ready).none() and (~interface->inputs_ready).none())
+    {
+        this->config.task_callback(this->interface);
+    }
+}

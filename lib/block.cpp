@@ -32,5 +32,7 @@ Block::Block(const BlockConfig &config)
 {
     this->reset(new ElementImpl());
     (*this)->block = true;
-    (*this)->actor = (*this)->framework.CreateActor<BlockActor>();
+    BlockActor::Parameters params;
+    params.config = config;
+    (*this)->actor = (*this)->framework.CreateActor<BlockActor>(params);
 }
