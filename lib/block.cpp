@@ -36,3 +36,11 @@ Block::Block(const BlockConfig &config)
     params.config = config;
     (*this)->actor = (*this)->framework.CreateActor<BlockActor>(params);
 }
+
+void Block::set_output_port_allocator(const size_t index, const PortAllocator &allocator)
+{
+    BlockAllocatorMessage message;
+    message.alloc = allocator;
+    message.index = index;
+    (*this)->actor.Push(message, Theron::Address());
+}

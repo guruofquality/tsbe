@@ -54,6 +54,12 @@ struct BlockAnyMessage
     size_t index;
 };
 
+struct BlockAllocatorMessage
+{
+    PortAllocator alloc;
+    size_t index;
+};
+
 /***********************************************************************
  * The details of the block actor
  **********************************************************************/
@@ -72,12 +78,16 @@ struct BlockActor : Theron::Actor
         RegisterHandler(this, &BlockActor::handle_downstream);
         RegisterHandler(this, &BlockActor::handle_return);
         RegisterHandler(this, &BlockActor::handle_any);
+        RegisterHandler(this, &BlockActor::handle_allocator);
     }
 
     void handle_connect(const BlockConnectMessage &message, const Theron::Address from);
     void handle_downstream(const BlockDownstreamMessage &message, const Theron::Address from);
     void handle_return(const BlockReturnMessage &message, const Theron::Address from);
     void handle_any(const BlockAnyMessage &message, const Theron::Address from);
+    void handle_allocator(const BlockAllocatorMessage &message, const Theron::Address from);
+
+    void post_return_buffer(const size_t index, Buffer &buffer);
 
     void call_task(void);
 

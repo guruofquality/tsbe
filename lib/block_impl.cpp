@@ -91,3 +91,27 @@ void BlockActor::call_task(void)
         this->config.task_callback(this->interface);
     }
 }
+
+void BlockActor::post_return_buffer(const size_t index, Buffer &buffer)
+{
+    BlockReturnMessage message;
+    message.buffer = buffer;
+    message.index = index;
+    this->Send(message, this->GetAddress()); //send to self
+}
+
+void BlockActor::handle_allocator(
+    const BlockAllocatorMessage &message,
+    const Theron::Address from
+){
+    //make a new token
+    BufferToken tok(new BufferDeleter(boost::bind(
+        &BlockActor::post_return_buffer, this, message.index, _1)));
+
+    //save the token
+    interface->output_buffer_tokens.resize(interface->outputs.size());
+    interface->output_buffer_tokens[message.index] = tok;
+
+    //actually allocate
+    message.alloc(tok);
+}

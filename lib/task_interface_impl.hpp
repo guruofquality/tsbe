@@ -19,6 +19,7 @@
 
 #include <tsbe/task_interface.hpp>
 #include <tsbe/port.hpp>
+#include <tsbe/block.hpp>
 #include <tsbe/buffer.hpp>
 #include <queue>
 #include <vector>
@@ -49,6 +50,8 @@ struct TaskInterfaceImpl
 
     std::vector<std::queue<Buffer> > input_buffer_queues;
     std::vector<std::queue<Buffer> > output_buffer_queues;
+
+    std::vector<BufferToken> output_buffer_tokens;
 };
 
 } //namespace tsbe

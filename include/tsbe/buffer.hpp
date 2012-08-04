@@ -26,6 +26,12 @@ namespace tsbe
 //! The callback function type when buffers dereference
 typedef boost::function<void(Buffer &)> BufferDeleter;
 
+//! The token type held by the caller
+typedef boost::shared_ptr<BufferDeleter> BufferToken;
+
+//! The token type weak ptr help by buffer
+typedef boost::weak_ptr<BufferDeleter> BufferTokenWeak;
+
 struct TSBE_API BufferConfig
 {
     //! Default constructor zeros out buffer config
@@ -44,7 +50,7 @@ struct TSBE_API BufferConfig
     BufferDeleter deleter;
 
     //! token object, called if set under deref condition
-    boost::weak_ptr<BufferDeleter> token;
+    BufferTokenWeak token;
 };
 
 /*!

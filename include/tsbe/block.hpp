@@ -18,10 +18,10 @@
 #define INCLUDED_TSBE_BLOCK_HPP
 
 #include <tsbe/config.hpp>
+#include <tsbe/buffer.hpp>
 #include <tsbe/task_interface.hpp>
 #include <boost/any.hpp>
 #include <boost/function.hpp>
-#include <string>
 
 namespace tsbe
 {
@@ -31,6 +31,8 @@ typedef boost::function<void(const size_t, const boost::any &)> PortCallback;
 
 //! Typedef for a block's regular task handler callback
 typedef boost::function<void(const TaskInterface &)> TaskCallback;
+
+typedef boost::function<void(BufferToken)> PortAllocator;
 
 struct TSBE_API BlockConfig
 {
@@ -55,6 +57,15 @@ struct TSBE_API Block : boost::shared_ptr<ElementImpl>
 
     //! Create a new block from config params
     Block(const BlockConfig &config);
+
+    /*!
+     * Set an allocator object on the given output port index.
+     * The allocator, when called, creates a vector of buffers.
+     * These buffers are bounds to the allocation caller.
+     * \param index the output port index
+     * \param allocator the allocation call
+     */
+    void set_output_port_allocator(const size_t index, const PortAllocator &allocator);
 };
 
 } //namespace tsbe
