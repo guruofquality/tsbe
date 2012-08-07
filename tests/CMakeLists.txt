@@ -26,7 +26,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 #turn each test cpp file into an executable with an int main() function
-add_definitions(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
+add_definitions(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN -DTSBE_DLL=1)
 
 #for each source: build an executable, register it as a test
 foreach(test_source ${test_sources})

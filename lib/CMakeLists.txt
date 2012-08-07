@@ -15,6 +15,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ########################################################################
+# Compiler specific setup
+########################################################################
+if(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
+    #http://gcc.gnu.org/wiki/Visibility
+    add_definitions(-fvisibility=hidden)
+    add_definitions(-fvisibility-inlines-hidden)
+endif()
+
+########################################################################
 # Check for support
 ########################################################################
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
@@ -48,18 +57,29 @@ list(APPEND libtsbe_sources
     topology_impl.cpp
 )
 
+list(APPEND libtsbe_libs
+    ${Boost_LIBRARIES}
+    ${NUMANUMA_LIBRARIES}
+)
+
 ########################################################################
-# Build the library
+# Build the shared library
 ########################################################################
-add_definitions(-DTSBE_DLL) #defined when building dynamic libraries
 add_library(tsbe SHARED ${libtsbe_sources})
-target_link_libraries(tsbe ${Boost_LIBRARIES} ${NUMANUMA_LIBRARIES})
+target_link_libraries(tsbe ${libtsbe_libs})
 set_target_properties(tsbe PROPERTIES DEFINE_SYMBOL "TSBE_DLL_EXPORTS")
+set_target_properties(tsbe PROPERTIES COMPILE_DEFINITIONS "TSBE_DLL=1")
+
+########################################################################
+# Build the static library
+########################################################################
+add_library(tsbe_static STATIC ${libtsbe_sources})
+target_link_libraries(tsbe_static ${libtsbe_libs})
 
 ########################################################################
 # Install the library
 ########################################################################
-install(TARGETS tsbe
+install(TARGETS tsbe tsbe_static
     LIBRARY DESTINATION lib/${LIB_SUFFIX} COMPONENT "devel" # .so file
     ARCHIVE DESTINATION lib/${LIB_SUFFIX} COMPONENT "runtime" # .lib file
     RUNTIME DESTINATION bin COMPONENT "runtime" # .dll file

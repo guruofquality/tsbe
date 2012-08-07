@@ -19,7 +19,14 @@
 ########################################################################
 install(FILES
     config.hpp
-    #TODO put them here
+    block.hpp
+    buffer.hpp
+    config.hpp
+    connection.hpp
+    executor.hpp
+    port.hpp
+    task_interface.hpp
+    topology.hpp
     DESTINATION include/tsbe
     COMPONENT "devel"
 )
