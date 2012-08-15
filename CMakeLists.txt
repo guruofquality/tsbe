@@ -48,7 +48,6 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/numanuma/cmake)
 include_directories(${CMAKE_SOURCE_DIR}/numanuma/include)
 find_package(NumaNuma)
-message(STATUS "NUMANUMA_LIBRARIES: ${NUMANUMA_LIBRARIES}")
 
 ########################################################################
 # Setup Boost
