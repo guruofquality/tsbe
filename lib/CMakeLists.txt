@@ -66,14 +66,15 @@ list(APPEND libtsbe_libs
 # Build the shared library
 ########################################################################
 add_library(tsbe SHARED ${libtsbe_sources})
-target_link_libraries(tsbe ${libtsbe_libs})
+target_link_libraries(tsbe ${libtsbe_libs} theron)
 set_target_properties(tsbe PROPERTIES DEFINE_SYMBOL "TSBE_DLL_EXPORTS")
 set_target_properties(tsbe PROPERTIES COMPILE_DEFINITIONS "TSBE_DLL=1")
 
 ########################################################################
 # Build the static library
 ########################################################################
-add_library(tsbe_static STATIC ${libtsbe_sources})
+file(GLOB theron_sources "${CMAKE_SOURCE_DIR}/Theron/Source/*.cpp")
+add_library(tsbe_static STATIC ${libtsbe_sources} ${theron_sources})
 target_link_libraries(tsbe_static ${libtsbe_libs})
 
 ########################################################################

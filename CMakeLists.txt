@@ -28,6 +28,11 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 
+if(CMAKE_COMPILER_IS_GNUCXX AND "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fPIC")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} -fPIC")
+endif()
+
 ########################################################################
 # Setup Theron
 ########################################################################
@@ -43,6 +48,7 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/numanuma/cmake)
 include_directories(${CMAKE_SOURCE_DIR}/numanuma/include)
 find_package(NumaNuma)
+message(STATUS "NUMANUMA_LIBRARIES: ${NUMANUMA_LIBRARIES}")
 
 ########################################################################
 # Setup Boost
