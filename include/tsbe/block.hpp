@@ -20,14 +20,14 @@
 #include <tsbe/config.hpp>
 #include <tsbe/buffer.hpp>
 #include <tsbe/task_interface.hpp>
-#include <boost/any.hpp>
+#include <tsbe/wax.hpp>
 #include <boost/function.hpp>
 
 namespace tsbe
 {
 
 //! Typedef for a block's incoming port message handler callback
-typedef boost::function<void(const size_t, const boost::any &)> PortCallback;
+typedef boost::function<void(const size_t, const Wax &)> PortCallback;
 
 //! Typedef for a block's regular task handler callback
 typedef boost::function<void(const TaskInterface &)> TaskCallback;

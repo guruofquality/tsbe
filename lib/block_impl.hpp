@@ -50,7 +50,7 @@ struct BlockReturnMessage
 
 struct BlockAnyMessage
 {
-    boost::any msg;
+    Wax msg;
     size_t index;
 };
 
