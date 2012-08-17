@@ -28,16 +28,17 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 
-if(CMAKE_COMPILER_IS_GNUCXX AND "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fPIC")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} -fPIC")
-endif()
-
 ########################################################################
 # Setup Theron
 ########################################################################
 add_subdirectory(Theron)
-include_directories(${CMAKE_SOURCE_DIR}/Theron/Include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Theron/Include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Theron/Include/External)
+
+if(MSVC)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Theron/Include/External/Standard)
+endif(MSVC)
+
 if (NOT WIN32) #not on windows? tell theron headers to use boost
     add_definitions(-DTHERON_USE_BOOST_THREADS)
 endif()

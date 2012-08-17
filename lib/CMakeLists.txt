@@ -23,6 +23,10 @@ if(CMAKE_COMPILER_IS_GNUCXX AND NOT WIN32)
     add_definitions(-fvisibility-inlines-hidden)
 endif()
 
+if(CMAKE_COMPILER_IS_GNUCXX AND "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
+    add_definitions("-fPIC")
+endif()
+
 ########################################################################
 # Check for support
 ########################################################################
@@ -66,14 +70,14 @@ list(APPEND libtsbe_libs
 # Build the shared library
 ########################################################################
 add_library(tsbe SHARED ${libtsbe_sources})
-target_link_libraries(tsbe ${libtsbe_libs} theron)
+target_link_libraries(tsbe ${libtsbe_libs})
 set_target_properties(tsbe PROPERTIES DEFINE_SYMBOL "TSBE_DLL_EXPORTS")
 set_target_properties(tsbe PROPERTIES COMPILE_DEFINITIONS "TSBE_DLL=1")
 
 ########################################################################
 # Build the static library
 ########################################################################
-file(GLOB theron_sources "${CMAKE_SOURCE_DIR}/Theron/Source/*.cpp")
+file(GLOB theron_sources "${CMAKE_SOURCE_DIR}/Theron/Theron/*.cpp")
 add_library(tsbe_static STATIC ${libtsbe_sources} ${theron_sources})
 target_link_libraries(tsbe_static ${libtsbe_libs})
 

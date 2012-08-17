@@ -18,6 +18,7 @@
 #define INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
 
 #include <Theron/Framework.h>
+#include <Theron/Actor.h>
 #include <Theron/ActorRef.h>
 #include <vector>
 #include <queue>
