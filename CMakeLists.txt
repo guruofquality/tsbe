@@ -29,28 +29,6 @@ endif(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 
 ########################################################################
-# Setup Theron
-########################################################################
-add_subdirectory(Theron)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Theron/Include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Theron/Include/External)
-
-if(MSVC)
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Theron/Include/External/Standard)
-endif(MSVC)
-
-if (NOT WIN32) #not on windows? tell theron headers to use boost
-    add_definitions(-DTHERON_USE_BOOST_THREADS)
-endif()
-
-########################################################################
-# Setup NumaNuma
-########################################################################
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/numanuma/cmake)
-include_directories(${CMAKE_SOURCE_DIR}/numanuma/include)
-find_package(NumaNuma)
-
-########################################################################
 # Setup Boost
 ########################################################################
 if(UNIX AND EXISTS "/usr/lib64")

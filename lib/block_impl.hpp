@@ -73,7 +73,7 @@ struct BlockActor : Theron::Actor
     inline explicit BlockActor(const Parameters &params)
     {
         config = params.config;
-        interface.reset(new TaskInterfaceImpl());
+        task_iface.reset(new TaskInterfaceImpl());
         RegisterHandler(this, &BlockActor::handle_connect);
         RegisterHandler(this, &BlockActor::handle_downstream);
         RegisterHandler(this, &BlockActor::handle_return);
@@ -91,7 +91,7 @@ struct BlockActor : Theron::Actor
 
     void call_task(void);
 
-    TaskInterface interface;
+    TaskInterface task_iface;
     BlockConfig config;
 };
 

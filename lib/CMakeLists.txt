@@ -27,17 +27,38 @@ if(CMAKE_COMPILER_IS_GNUCXX AND "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
     add_definitions("-fPIC")
 endif()
 
+if(CMAKE_COMPILER_IS_GNUCXX)
+    add_definitions(-Wall)
+endif()
+
+########################################################################
+# Setup Theron
+########################################################################
+include_directories(${CMAKE_SOURCE_DIR}/Theron/Include)
+include_directories(${CMAKE_SOURCE_DIR}/Theron/Include/External)
+
+if(MSVC)
+    include_directories(${CMAKE_SOURCE_DIR}/Theron/Include/External/Standard)
+endif(MSVC)
+
+if (NOT WIN32) #not on windows? tell theron headers to use boost
+    add_definitions(-DTHERON_USE_BOOST_THREADS)
+endif()
+
+file(GLOB theron_sources "${CMAKE_SOURCE_DIR}/Theron/Theron/*.cpp")
+
+########################################################################
+# Setup NumaNuma
+########################################################################
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/numanuma/cmake)
+include_directories(${CMAKE_SOURCE_DIR}/numanuma/include)
+find_package(NumaNuma)
+
 ########################################################################
 # Check for support
 ########################################################################
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-
 if(NOT Boost_FOUND)
     message(FATAL_ERROR "no boost found!")
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX)
-    add_definitions(-Wall)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -59,6 +80,7 @@ list(APPEND libtsbe_sources
     task_interface.cpp
     topology.cpp
     topology_impl.cpp
+    ${theron_sources}
 )
 
 list(APPEND libtsbe_libs
@@ -67,24 +89,18 @@ list(APPEND libtsbe_libs
 )
 
 ########################################################################
-# Build the shared library
+# Build the library
 ########################################################################
-add_library(tsbe SHARED ${libtsbe_sources})
+add_library(tsbe STATIC ${libtsbe_sources})
 target_link_libraries(tsbe ${libtsbe_libs})
-set_target_properties(tsbe PROPERTIES DEFINE_SYMBOL "TSBE_DLL_EXPORTS")
-set_target_properties(tsbe PROPERTIES COMPILE_DEFINITIONS "TSBE_DLL=1")
-
-########################################################################
-# Build the static library
-########################################################################
-file(GLOB theron_sources "${CMAKE_SOURCE_DIR}/Theron/Theron/*.cpp")
-add_library(tsbe_static STATIC ${libtsbe_sources} ${theron_sources})
-target_link_libraries(tsbe_static ${libtsbe_libs})
+#uncomment for SHARED library
+#set_target_properties(tsbe PROPERTIES DEFINE_SYMBOL "TSBE_DLL_EXPORTS")
+#set_target_properties(tsbe PROPERTIES COMPILE_DEFINITIONS "TSBE_DLL=1")
 
 ########################################################################
 # Install the library
 ########################################################################
-install(TARGETS tsbe tsbe_static
+install(TARGETS tsbe
     LIBRARY DESTINATION lib/${LIB_SUFFIX} COMPONENT "devel" # .so file
     ARCHIVE DESTINATION lib/${LIB_SUFFIX} COMPONENT "runtime" # .lib file
     RUNTIME DESTINATION bin COMPONENT "runtime" # .dll file

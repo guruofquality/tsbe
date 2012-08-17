@@ -17,6 +17,7 @@
 #include "block_impl.hpp"
 #include "vec_utils.hpp"
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
 
 using namespace tsbe;
 
@@ -30,28 +31,28 @@ void BlockActor::handle_connect(
     switch (message.action)
     {
     case BlockConnectMessage::SRC_CON:
-        vector_vector_add(interface->inputs, connection.src.index, connection.sink);
+        vector_vector_add(task_iface->inputs, connection.src.index, connection.sink);
         break;
 
     case BlockConnectMessage::SINK_CON:
-        vector_vector_add(interface->outputs, connection.sink.index, connection.src);
+        vector_vector_add(task_iface->outputs, connection.sink.index, connection.src);
         break;
 
     case BlockConnectMessage::SRC_DIS:
-        vector_vector_remove(interface->inputs, connection.src.index, connection.sink);
+        vector_vector_remove(task_iface->inputs, connection.src.index, connection.sink);
         break;
 
     case BlockConnectMessage::SINK_DIS:
-        vector_vector_remove(interface->outputs, connection.sink.index, connection.src);
+        vector_vector_remove(task_iface->outputs, connection.sink.index, connection.src);
         break;
     }
 
     //step 2) resize other vectors to match new IO size
-    interface->input_buffer_queues.resize(interface->inputs.size());
-    interface->inputs_ready.resize(interface->inputs.size());
+    task_iface->input_buffer_queues.resize(task_iface->inputs.size());
+    task_iface->inputs_ready.resize(task_iface->inputs.size());
 
-    interface->output_buffer_queues.resize(interface->outputs.size());
-    interface->outputs_ready.resize(interface->outputs.size());
+    task_iface->output_buffer_queues.resize(task_iface->outputs.size());
+    task_iface->outputs_ready.resize(task_iface->outputs.size());
 
     this->Send(message, from); //ACK
 }
@@ -60,8 +61,8 @@ void BlockActor::handle_downstream(
     const BlockDownstreamMessage &message,
     const Theron::Address from
 ){
-    interface->input_buffer_queues[message.index].push(message.buffer);
-    interface->inputs_ready.set(message.index, true);
+    task_iface->input_buffer_queues[message.index].push(message.buffer);
+    task_iface->inputs_ready.set(message.index, true);
     this->call_task();
 }
 
@@ -69,8 +70,8 @@ void BlockActor::handle_return(
     const BlockReturnMessage &message,
     const Theron::Address from
 ){
-    interface->output_buffer_queues[message.index].push(message.buffer);
-    interface->outputs_ready.set(message.index, true);
+    task_iface->output_buffer_queues[message.index].push(message.buffer);
+    task_iface->outputs_ready.set(message.index, true);
     this->call_task();
 }
 
@@ -86,9 +87,9 @@ void BlockActor::handle_any(
 
 void BlockActor::call_task(void)
 {
-    if ((~interface->outputs_ready).none() and (~interface->inputs_ready).none())
+    if ((~task_iface->outputs_ready).none() and (~task_iface->inputs_ready).none())
     {
-        this->config.task_callback(this->interface);
+        this->config.task_callback(this->task_iface);
     }
 }
 
@@ -109,8 +110,8 @@ void BlockActor::handle_allocator(
         &BlockActor::post_return_buffer, this, message.index, _1)));
 
     //save the token
-    interface->output_buffer_tokens.resize(interface->outputs.size());
-    interface->output_buffer_tokens[message.index] = tok;
+    task_iface->output_buffer_tokens.resize(task_iface->outputs.size());
+    task_iface->output_buffer_tokens[message.index] = tok;
 
     //actually allocate
     message.alloc(tok);
