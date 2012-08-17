@@ -27,6 +27,7 @@ install(FILES
     port.hpp
     task_interface.hpp
     topology.hpp
+    wax.hpp
     DESTINATION include/tsbe
     COMPONENT "devel"
 )

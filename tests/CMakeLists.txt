@@ -20,6 +20,7 @@
 set(test_sources
     buffer_test.cpp
     topology_test.cpp
+    wax_test.cpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS})
