@@ -39,6 +39,7 @@ struct TSBE_API BlockConfig
     BlockConfig(void);
     PortCallback port_callback;
     TaskCallback task_callback;
+    TaskCallback update_callback;
 };
 
 /*!

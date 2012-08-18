@@ -74,5 +74,23 @@ void ExecutorActor::handle_update(
     //step 4) update the flat connections
     this->flat_connections = new_flat_connections;
 
+    //step 5) get a unique list of blocks
+    std::vector<Element> block_set;
+    block_set.reserve(this->flat_connections.size());
+    BOOST_FOREACH(const Connection &connection, this->flat_connections)
+    {
+        remove_one(block_set, connection.src.elem);
+        block_set.push_back(connection.src.elem);
+        remove_one(block_set, connection.sink.elem);
+        block_set.push_back(connection.sink.elem);
+    }
+
+    //step 6) pass the update message to blocks
+    BOOST_FOREACH(const Element &block, block_set)
+    {
+        BlockUpdateMessage message;
+        block->actor.Push(message, Theron::Address());
+    }
+
     this->Send(message, from); //ACK
 }

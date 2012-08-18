@@ -116,3 +116,13 @@ void BlockActor::handle_allocator(
     //actually allocate
     message.alloc(tok);
 }
+
+void BlockActor::handle_update(
+    const BlockUpdateMessage &,
+    const Theron::Address from
+){
+    if (this->config.update_callback)
+    {
+        this->config.update_callback(this->task_iface);
+    }
+}

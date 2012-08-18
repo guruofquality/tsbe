@@ -60,6 +60,11 @@ struct BlockAllocatorMessage
     size_t index;
 };
 
+struct BlockUpdateMessage
+{
+    //empty
+};
+
 /***********************************************************************
  * The details of the block actor
  **********************************************************************/
@@ -79,6 +84,7 @@ struct BlockActor : Theron::Actor
         RegisterHandler(this, &BlockActor::handle_return);
         RegisterHandler(this, &BlockActor::handle_any);
         RegisterHandler(this, &BlockActor::handle_allocator);
+        RegisterHandler(this, &BlockActor::handle_update);
     }
 
     void handle_connect(const BlockConnectMessage &message, const Theron::Address from);
@@ -86,6 +92,7 @@ struct BlockActor : Theron::Actor
     void handle_return(const BlockReturnMessage &message, const Theron::Address from);
     void handle_any(const BlockAnyMessage &message, const Theron::Address from);
     void handle_allocator(const BlockAllocatorMessage &message, const Theron::Address from);
+    void handle_update(const BlockUpdateMessage &message, const Theron::Address from);
 
     void post_return_buffer(const size_t index, Buffer &buffer);
 
