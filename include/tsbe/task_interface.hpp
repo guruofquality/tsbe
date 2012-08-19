@@ -34,62 +34,62 @@ struct TSBE_API TaskInterface : boost::shared_ptr<TaskInterfaceImpl>
     TaskInterface(void);
 
     //! Get the number of input ports (buffer consumption by task)
-    size_t get_num_inputs(void);
+    size_t get_num_inputs(void) const;
 
     //! Get the number of output ports (buffer production by task)
-    size_t get_num_outputs(void);
+    size_t get_num_outputs(void) const;
 
     /*!
      * Get a bitset representing ready inputs.
      * The bit set will be num inputs wide.
      * If bitset[index] == 1, index has a buffer.
      */
-    const BitSet& get_inputs_ready(void);
+    const BitSet& get_inputs_ready(void) const;
 
     /*!
      * Get a bitset representing ready outputs.
      * The bit set will be num outputs wide.
      * If bitset[index] == 1, index has a buffer.
      */
-    const BitSet& get_outputs_ready(void);
+    const BitSet& get_outputs_ready(void) const;
 
     /*!
      * Get access to the buffer in the front of the queue.
      * The input queue contains filled buffers.
      * Buffer is NULL if the queue was empty.
      */
-    Buffer &get_input_buffer(const size_t index);
+    Buffer &get_input_buffer(const size_t index) const;
 
     /*!
      * Get access to the buffer in the front of the queue.
      * The output queue contains empty buffers.
      * Buffer is NULL if the queue was empty.
      */
-    Buffer &get_output_buffer(const size_t index);
+    Buffer &get_output_buffer(const size_t index) const;
 
     /*!
      * Remove a buffer from the front of the input queue.
      * The input queue contains filled buffers.
      */
-    void pop_input_buffer(const size_t index);
+    void pop_input_buffer(const size_t index) const;
 
     /*!
      * Pop a buffer from the output queue.
      * The output queue contains empty buffers.
      */
-    void pop_output_buffer(const size_t index);
+    void pop_output_buffer(const size_t index) const;
 
     /*!
      * Send a buffer to all subscribed outputs on this port.
      * \param index the output port index
      */
-    void post_downstream(const size_t index, const Buffer &buffer);
+    void post_downstream(const size_t index, const Buffer &buffer) const;
 
     /*!
      * Send a message to all subscribed outputs on this port.
      * \param index the output port index
      */
-    void post_downstream(const size_t index, const boost::any &msg);
+    void post_downstream(const size_t index, const boost::any &msg) const;
 
 };
 

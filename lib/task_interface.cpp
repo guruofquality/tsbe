@@ -24,43 +24,43 @@ TaskInterface::TaskInterface(void)
     //NOP
 }
 
-const BitSet& TaskInterface::get_inputs_ready(void)
+const BitSet& TaskInterface::get_inputs_ready(void) const
 {
     return (*this)->inputs_ready;
 }
 
-const BitSet& TaskInterface::get_outputs_ready(void)
+const BitSet& TaskInterface::get_outputs_ready(void) const
 {
     return (*this)->outputs_ready;
 }
 
-Buffer &TaskInterface::get_input_buffer(const size_t index)
+Buffer &TaskInterface::get_input_buffer(const size_t index) const
 {
     //TODO throw bad index or empty
     return (*this)->input_buffer_queues[index].front();
 }
 
-Buffer &TaskInterface::get_output_buffer(const size_t index)
+Buffer &TaskInterface::get_output_buffer(const size_t index) const
 {
     //TODO throw bad index or empty
     return (*this)->output_buffer_queues[index].front();
 }
 
-void TaskInterface::pop_input_buffer(const size_t index)
+void TaskInterface::pop_input_buffer(const size_t index) const
 {
     //TODO throw bad index or empty
     (*this)->input_buffer_queues[index].pop();
     (*this)->inputs_ready.set(index, not (*this)->input_buffer_queues[index].empty());
 }
 
-void TaskInterface::pop_output_buffer(const size_t index)
+void TaskInterface::pop_output_buffer(const size_t index) const
 {
     //TODO throw bad index or empty
     (*this)->output_buffer_queues[index].pop();
     (*this)->outputs_ready.set(index, not (*this)->output_buffer_queues[index].empty());
 }
 
-void TaskInterface::post_downstream(const size_t index, const Buffer &buffer)
+void TaskInterface::post_downstream(const size_t index, const Buffer &buffer) const
 {
     //TODO throw bad index
     BlockDownstreamMessage message;
@@ -72,7 +72,7 @@ void TaskInterface::post_downstream(const size_t index, const Buffer &buffer)
     }
 }
 
-void TaskInterface::post_downstream(const size_t index, const boost::any &msg)
+void TaskInterface::post_downstream(const size_t index, const boost::any &msg) const
 {
     //TODO throw bad index
     BlockAnyMessage message;
@@ -84,12 +84,12 @@ void TaskInterface::post_downstream(const size_t index, const boost::any &msg)
     }
 }
 
-size_t TaskInterface::get_num_inputs(void)
+size_t TaskInterface::get_num_inputs(void) const
 {
     return (*this)->inputs.size();
 }
 
-size_t TaskInterface::get_num_outputs(void)
+size_t TaskInterface::get_num_outputs(void) const
 {
     return (*this)->outputs.size();
 }
