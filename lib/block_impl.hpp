@@ -62,7 +62,7 @@ struct BlockAllocatorMessage
 
 struct BlockUpdateMessage
 {
-    //empty
+    Wax state;
 };
 
 /***********************************************************************

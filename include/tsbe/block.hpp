@@ -32,6 +32,8 @@ typedef boost::function<void(const size_t, const Wax &)> PortCallback;
 //! Typedef for a block's regular task handler callback
 typedef boost::function<void(const TaskInterface &)> TaskCallback;
 
+typedef boost::function<void(const TaskInterface &, const Wax &)> UpdateCallback;
+
 typedef boost::function<void(BufferToken)> PortAllocator;
 
 struct TSBE_API BlockConfig
@@ -39,7 +41,7 @@ struct TSBE_API BlockConfig
     BlockConfig(void);
     PortCallback port_callback;
     TaskCallback task_callback;
-    TaskCallback update_callback;
+    UpdateCallback update_callback;
 };
 
 /*!

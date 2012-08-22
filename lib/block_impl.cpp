@@ -118,11 +118,11 @@ void BlockActor::handle_allocator(
 }
 
 void BlockActor::handle_update(
-    const BlockUpdateMessage &,
+    const BlockUpdateMessage &message,
     const Theron::Address from
 ){
     if (this->config.update_callback)
     {
-        this->config.update_callback(this->task_iface);
+        this->config.update_callback(this->task_iface, message.state);
     }
 }

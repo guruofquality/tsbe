@@ -43,3 +43,12 @@ void Executor::update(void)
     (*this)->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
 }
+
+void Executor::set_state(const Wax &state)
+{
+    Theron::Receiver receiver;
+    ExecutorStateMessage message;
+    message.state = state;
+    (*this)->actor.Push(message, receiver.GetAddress());
+    receiver.Wait();
+}
