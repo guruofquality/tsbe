@@ -55,7 +55,7 @@ public:
     //! Copy constructor for Wax object
     Wax(const Wax &obj)
     {
-        item = obj.item->clone(buff);
+        item = (obj.empty())? NULL : obj.item->clone(buff);
     }
 
     //! Deconstructor
@@ -97,7 +97,7 @@ public:
     Wax &operator=(const Wax &rhs)
     {
         this->reset();
-        item = rhs.item->clone(buff);
+        if (not rhs.empty()) item = rhs.item->clone(buff);
         return *this;
     }
 
