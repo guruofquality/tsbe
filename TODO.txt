@@ -6,3 +6,8 @@ because source blocks can potentially block forever on IO
 * set affinity calls for each task
 * affinity for each buffer
 * tasks can be smart about affinity and downstream
+
+* allocators for input ports
+(where topology is smart and replaces upstream block's output allocators)
+
+* create the concept of task groups -> 1 thread per group of tasks
