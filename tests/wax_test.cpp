@@ -22,8 +22,9 @@
 
 BOOST_AUTO_TEST_CASE(test_wax_size)
 {
-    BOOST_CHECK(sizeof(tsbe::Wax) >= sizeof(boost::shared_ptr<void *>));
-    BOOST_CHECK(sizeof(tsbe::Wax) >= sizeof(boost::intrusive_ptr<void *>));
+    BOOST_CHECK(tsbe::Wax::buff_size >= sizeof(boost::shared_ptr<void *>));
+    BOOST_CHECK(tsbe::Wax::buff_size >= sizeof(boost::intrusive_ptr<void *>));
+    BOOST_CHECK(tsbe::Wax::buff_size >= (sizeof(boost::intrusive_ptr<void *>)*3 + sizeof(long long)));
 }
 
 BOOST_AUTO_TEST_CASE(test_wax_assign)

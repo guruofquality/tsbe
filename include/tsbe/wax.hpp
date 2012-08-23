@@ -39,6 +39,10 @@ namespace tsbe
 class TSBE_API Wax
 {
 public:
+
+    //! The fixed size of the storage buffer in bytes
+    static const unsigned buff_size = 64;
+
     //! Create an empty Wax object
     Wax(void)
     {
@@ -155,7 +159,7 @@ private:
         ValueType value;
     };
 
-    char buff[64];
+    char buff[buff_size];
 };
 
 } //namespace tsbe
