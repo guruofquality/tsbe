@@ -41,15 +41,9 @@ struct TSBE_API Executor : boost::shared_ptr<ExecutorImpl>
     /*!
      * Call update after changing the topology to commit the changes.
      * This will add/remove any connections from the previous state,
-     * and send the update message to all blocks involved.
+     * and send the update message (with state) to all blocks involved.
      */
-    void update(void);
-
-    /*!
-     * Set the state of the executor.
-     * No changes will be made until the user calls update().
-     */
-    void set_state(const Wax &state);
+    void update(const Wax &state);
 };
 
 } //namespace tsbe

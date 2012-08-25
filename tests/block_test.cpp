@@ -14,33 +14,30 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "executor_impl.hpp"
+#include <boost/test/unit_test.hpp>
+#include <tsbe/block.hpp>
+#include <iostream>
 
-using namespace tsbe;
-
-ExecutorConfig::ExecutorConfig(void)
+BOOST_AUTO_TEST_CASE(test_copy_empty_block)
 {
-    //NOP
+    tsbe::Block block;
+    BOOST_CHECK(not block);
+
+    tsbe::Block block_copy0 = block;
+    BOOST_CHECK(not block_copy0);
+
+    BOOST_CHECK_EQUAL(block.get(), block_copy0.get());
 }
 
-Executor::Executor(void)
+BOOST_AUTO_TEST_CASE(test_copy_allocated_block)
 {
-    //NOP
+    tsbe::BlockConfig config;
+    tsbe::Block block(config);
+    BOOST_CHECK(block);
+
+    tsbe::Block block_copy0 = block;
+    BOOST_CHECK(block_copy0);
+
+    BOOST_CHECK_EQUAL(block.get(), block_copy0.get());
 }
 
-Executor::Executor(const ExecutorConfig &config)
-{
-    this->reset(new ExecutorImpl());
-    ExecutorActor::Parameters params;
-    params.config = config;
-    (*this)->actor = (*this)->framework.CreateActor<ExecutorActor>(params);
-}
-
-void Executor::update(const Wax &state)
-{
-    Theron::Receiver receiver;
-    ExecutorUpdateMessage message;
-    message.state = state;
-    (*this)->actor.Push(message, receiver.GetAddress());
-    receiver.Wait();
-}

@@ -88,18 +88,10 @@ void ExecutorActor::handle_update(
     //step 6) pass the update message to blocks
     BOOST_FOREACH(const Element &block, block_set)
     {
-        BlockUpdateMessage message;
-        message.state = this->executor_state;
-        block->actor.Push(message, Theron::Address());
+        BlockUpdateMessage msg;
+        msg.state = message.state;
+        block->actor.Push(msg, Theron::Address());
     }
 
-    this->Send(message, from); //ACK
-}
-
-void ExecutorActor::handle_state(
-    const ExecutorStateMessage &message,
-    const Theron::Address from
-){
-    this->executor_state = message.state;
     this->Send(message, from); //ACK
 }

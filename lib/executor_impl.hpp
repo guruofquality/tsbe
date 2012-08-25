@@ -31,11 +31,6 @@ namespace tsbe
  **********************************************************************/
 struct ExecutorUpdateMessage
 {
-    //empty
-};
-
-struct ExecutorStateMessage
-{
     Wax state;
 };
 
@@ -53,7 +48,6 @@ struct ExecutorActor : Theron::Actor
     {
         config = params.config;
         RegisterHandler(this, &ExecutorActor::handle_update);
-        RegisterHandler(this, &ExecutorActor::handle_state);
     }
 
     ~ExecutorActor(void)
@@ -62,7 +56,6 @@ struct ExecutorActor : Theron::Actor
     }
 
     void handle_update(const ExecutorUpdateMessage &message, const Theron::Address from);
-    void handle_state(const ExecutorStateMessage &message, const Theron::Address from);
 
     std::vector<Connection> flat_connections;
     Wax executor_state;
