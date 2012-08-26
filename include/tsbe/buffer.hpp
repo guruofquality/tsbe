@@ -117,6 +117,9 @@ struct TSBE_API Buffer : boost::intrusive_ptr<BufferImpl>
 
     //! Get the affinity of the memory
     Affinity get_affinity(void) const;
+
+    //! Unique if caller holds the only reference count
+    bool unique(void) const;
 };
 
 } //namespace tsbe

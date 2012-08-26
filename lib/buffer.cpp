@@ -150,3 +150,8 @@ Affinity Buffer::get_affinity(void) const
 {
     return (*this)->config.affinity;
 }
+
+bool Buffer::unique(void) const
+{
+    return (*this)->count == 1;
+}

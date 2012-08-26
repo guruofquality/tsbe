@@ -32,6 +32,19 @@ BOOST_AUTO_TEST_CASE(test_simple_buffer)
     BOOST_CHECK(b1.get_memory() != NULL);
 }
 
+BOOST_AUTO_TEST_CASE(test_unique_buffer)
+{
+    tsbe::BufferConfig c;
+    c.length = 100;
+    tsbe::Buffer b(c);
+
+    BOOST_CHECK(b.unique());
+
+    tsbe::Buffer b2 = b;
+
+    BOOST_CHECK(not b.unique());
+}
+
 static tsbe::Buffer b2;
 
 static void b2_deleter(tsbe::Buffer &b)
