@@ -96,8 +96,6 @@ struct BlockActor : Theron::Actor
 
     void post_return_buffer(const size_t index, Buffer &buffer);
 
-    void call_task(void);
-
     TaskInterface task_iface;
     BlockConfig config;
 };

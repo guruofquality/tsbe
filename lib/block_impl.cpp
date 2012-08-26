@@ -63,7 +63,7 @@ void BlockActor::handle_downstream(
 ){
     task_iface->input_buffer_queues[message.index].push(message.buffer);
     task_iface->inputs_ready.set(message.index, true);
-    this->call_task();
+    this->config.task_callback(this->task_iface);
 }
 
 void BlockActor::handle_return(
@@ -72,7 +72,7 @@ void BlockActor::handle_return(
 ){
     task_iface->output_buffer_queues[message.index].push(message.buffer);
     task_iface->outputs_ready.set(message.index, true);
-    this->call_task();
+    this->config.task_callback(this->task_iface);
 }
 
 void BlockActor::handle_any(
@@ -82,14 +82,6 @@ void BlockActor::handle_any(
     if (this->config.port_callback)
     {
         this->config.port_callback(message.index, message.msg);
-    }
-}
-
-void BlockActor::call_task(void)
-{
-    if ((~task_iface->outputs_ready).none() and (~task_iface->inputs_ready).none())
-    {
-        this->config.task_callback(this->task_iface);
     }
 }
 
