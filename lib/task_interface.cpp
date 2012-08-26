@@ -72,7 +72,7 @@ void TaskInterface::post_downstream(const size_t index, const Buffer &buffer) co
     }
 }
 
-void TaskInterface::post_downstream(const size_t index, const boost::any &msg) const
+void TaskInterface::post_downstream(const size_t index, const Wax &msg) const
 {
     //TODO throw bad index
     BlockAnyMessage message;

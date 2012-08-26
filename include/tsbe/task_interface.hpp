@@ -18,7 +18,7 @@
 #define INCLUDED_TSBE_TASK_INTERFACE_HPP
 
 #include <tsbe/config.hpp>
-#include <boost/any.hpp>
+#include <tsbe/wax.hpp>
 
 namespace tsbe
 {
@@ -89,7 +89,7 @@ struct TSBE_API TaskInterface : boost::shared_ptr<TaskInterfaceImpl>
      * Send a message to all subscribed outputs on this port.
      * \param index the output port index
      */
-    void post_downstream(const size_t index, const boost::any &msg) const;
+    void post_downstream(const size_t index, const Wax &msg) const;
 
 };
 
