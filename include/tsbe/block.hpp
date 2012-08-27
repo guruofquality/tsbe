@@ -34,7 +34,7 @@ typedef boost::function<void(const TaskInterface &)> TaskCallback;
 
 typedef boost::function<void(const TaskInterface &, const Wax &)> UpdateCallback;
 
-typedef boost::function<void(BufferToken)> PortAllocator;
+typedef boost::function<void(const BufferToken&)> PortAllocator;
 
 struct TSBE_API BlockConfig
 {

@@ -31,19 +31,19 @@ void BlockActor::handle_connect(
     switch (message.action)
     {
     case BlockConnectMessage::SRC_CON:
-        vector_vector_add(task_iface->inputs, connection.src.index, connection.sink);
+        vector_vector_add(task_iface->outputs, connection.src.index, connection.sink);
         break;
 
     case BlockConnectMessage::SINK_CON:
-        vector_vector_add(task_iface->outputs, connection.sink.index, connection.src);
+        vector_vector_add(task_iface->inputs, connection.sink.index, connection.src);
         break;
 
     case BlockConnectMessage::SRC_DIS:
-        vector_vector_remove(task_iface->inputs, connection.src.index, connection.sink);
+        vector_vector_remove(task_iface->outputs, connection.src.index, connection.sink);
         break;
 
     case BlockConnectMessage::SINK_DIS:
-        vector_vector_remove(task_iface->outputs, connection.sink.index, connection.src);
+        vector_vector_remove(task_iface->inputs, connection.sink.index, connection.src);
         break;
     }
 
