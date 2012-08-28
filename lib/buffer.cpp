@@ -141,7 +141,17 @@ void *&Buffer::get_memory(void)
     return (*this)->memory;
 }
 
+void *Buffer::get_memory(void) const
+{
+    return (*this)->memory;
+}
+
 size_t &Buffer::get_length(void)
+{
+    return (*this)->length;
+}
+
+size_t Buffer::get_length(void) const
 {
     return (*this)->length;
 }

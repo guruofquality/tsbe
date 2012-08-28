@@ -107,6 +107,9 @@ struct TSBE_API Buffer : boost::intrusive_ptr<BufferImpl>
      */
     void *&get_memory(void);
 
+    //! Get a pointer to the start of memory
+    void *get_memory(void) const;
+
     /*!
      * Get the length of the memory in bytes.
      * This value defaults to the get_actual_length(),
@@ -114,6 +117,9 @@ struct TSBE_API Buffer : boost::intrusive_ptr<BufferImpl>
      * When the token is invoked, this value will be reset.
      */
     size_t &get_length(void);
+
+    //! Get the length of the memory in bytes
+    size_t get_length(void) const;
 
     //! Get the affinity of the memory
     Affinity get_affinity(void) const;
