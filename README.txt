@@ -13,7 +13,7 @@
 ------------------------------------------------------------------------
 -- Get the source code
 ------------------------------------------------------------------------
-git clone <todo git source url> tsbe
+git clone https://github.com/guruofquality/tsbe.git
 cd tsbe
 git submodule init
 git submodule update
