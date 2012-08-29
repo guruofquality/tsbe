@@ -75,9 +75,21 @@ void TaskInterface::post_downstream(const size_t index, const Buffer &buffer) co
 void TaskInterface::post_downstream(const size_t index, const Wax &msg) const
 {
     //TODO throw bad index
-    BlockAnyMessage message;
+    BlockInputMessage message;
     message.msg = msg;
     BOOST_FOREACH(Port &port, (*this)->outputs[index])
+    {
+        message.index = port.index;
+        port.elem->actor.Push(message, Theron::Address());
+    }
+}
+
+void TaskInterface::post_upstream(const size_t index, const Wax &msg) const
+{
+    //TODO throw bad index
+    BlockOutputMessage message;
+    message.msg = msg;
+    BOOST_FOREACH(Port &port, (*this)->inputs[index])
     {
         message.index = port.index;
         port.elem->actor.Push(message, Theron::Address());

@@ -75,13 +75,23 @@ void BlockActor::handle_return(
     this->config.task_callback(this->task_iface);
 }
 
-void BlockActor::handle_any(
-    const BlockAnyMessage &message,
+void BlockActor::handle_input_msg(
+    const BlockInputMessage &message,
     const Theron::Address from
 ){
-    if (this->config.port_callback)
+    if (this->config.input_callback)
     {
-        this->config.port_callback(message.index, message.msg);
+        this->config.input_callback(message.index, message.msg);
+    }
+}
+
+void BlockActor::handle_output_msg(
+    const BlockOutputMessage &message,
+    const Theron::Address from
+){
+    if (this->config.output_callback)
+    {
+        this->config.output_callback(message.index, message.msg);
     }
 }
 

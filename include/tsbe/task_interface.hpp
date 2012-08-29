@@ -86,10 +86,16 @@ struct TSBE_API TaskInterface : boost::shared_ptr<TaskInterfaceImpl>
     void post_downstream(const size_t index, const Buffer &buffer) const;
 
     /*!
-     * Send a message to all subscribed outputs on this port.
+     * Send a message to all downstream blocks on this output port.
      * \param index the output port index
      */
     void post_downstream(const size_t index, const Wax &msg) const;
+
+    /*!
+     * Send a message to all upstream blocks on this input port.
+     * \param index the input port index
+     */
+    void post_upstream(const size_t index, const Wax &msg) const;
 
 };
 

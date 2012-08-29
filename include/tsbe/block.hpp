@@ -39,7 +39,8 @@ typedef boost::function<void(const BufferToken&)> PortAllocator;
 struct TSBE_API BlockConfig
 {
     BlockConfig(void);
-    PortCallback port_callback;
+    PortCallback input_callback;
+    PortCallback output_callback;
     TaskCallback task_callback;
     UpdateCallback update_callback;
 };
