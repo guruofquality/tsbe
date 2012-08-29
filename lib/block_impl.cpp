@@ -81,7 +81,7 @@ void BlockActor::handle_input_msg(
 ){
     if (this->config.input_callback)
     {
-        this->config.input_callback(message.index, message.msg);
+        this->config.input_callback(this->task_iface, message.index, message.msg);
     }
 }
 
@@ -91,7 +91,7 @@ void BlockActor::handle_output_msg(
 ){
     if (this->config.output_callback)
     {
-        this->config.output_callback(message.index, message.msg);
+        this->config.output_callback(this->task_iface, message.index, message.msg);
     }
 }
 

@@ -27,7 +27,7 @@ namespace tsbe
 {
 
 //! Typedef for a block's incoming port message handler callback
-typedef boost::function<void(const size_t, const Wax &)> PortCallback;
+typedef boost::function<void(const TaskInterface &, const size_t, const Wax &)> PortCallback;
 
 //! Typedef for a block's regular task handler callback
 typedef boost::function<void(const TaskInterface &)> TaskCallback;
