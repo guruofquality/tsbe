@@ -33,6 +33,20 @@ bool remove_one(V &v, const T &t)
 }
 
 template <typename V, typename T>
+bool insert_unique(V &v, const T &t)
+{
+    for (size_t i = 0; i < v.size(); i++)
+    {
+        if (v[i] == t)
+        {
+            return false;
+        }
+    }
+    v.push_back(t);
+    return true;
+}
+
+template <typename V, typename T>
 void vector_vector_add(V &v, const size_t index, const T &t)
 {
     //ensure that there is room

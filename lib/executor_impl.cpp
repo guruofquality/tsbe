@@ -79,10 +79,14 @@ void ExecutorActor::handle_update(
     block_set.reserve(this->flat_connections.size());
     BOOST_FOREACH(const Connection &connection, this->flat_connections)
     {
-        remove_one(block_set, connection.src.elem);
-        block_set.push_back(connection.src.elem);
-        remove_one(block_set, connection.sink.elem);
-        block_set.push_back(connection.sink.elem);
+        insert_unique(block_set, connection.src.elem);
+        insert_unique(block_set, connection.sink.elem);
+    }
+    //also include removed connections so we can message disconnected blocks
+    BOOST_FOREACH(const Connection &connection, connections_to_remove)
+    {
+        insert_unique(block_set, connection.src.elem);
+        insert_unique(block_set, connection.sink.elem);
     }
 
     //step 6) pass the update message to blocks
