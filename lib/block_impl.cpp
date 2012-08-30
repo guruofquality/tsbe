@@ -27,7 +27,6 @@ void BlockActor::handle_connect(
 ){
     const Connection &connection = message.connection;
 
-    //step 1) add or remove the new port connection
     switch (message.action)
     {
     case BlockConnectMessage::SRC_CON:
@@ -47,32 +46,7 @@ void BlockActor::handle_connect(
         break;
     }
 
-    //step 2) resize other vectors to match new IO size
-    task_iface->input_buffer_queues.resize(task_iface->inputs.size());
-    task_iface->inputs_ready.resize(task_iface->inputs.size());
-
-    task_iface->output_buffer_queues.resize(task_iface->outputs.size());
-    task_iface->outputs_ready.resize(task_iface->outputs.size());
-
     this->Send(message, from); //ACK
-}
-
-void BlockActor::handle_downstream(
-    const BlockDownstreamMessage &message,
-    const Theron::Address from
-){
-    task_iface->input_buffer_queues[message.index].push(message.buffer);
-    task_iface->inputs_ready.set(message.index, true);
-    this->config.task_callback(this->task_iface);
-}
-
-void BlockActor::handle_return(
-    const BlockReturnMessage &message,
-    const Theron::Address from
-){
-    task_iface->output_buffer_queues[message.index].push(message.buffer);
-    task_iface->outputs_ready.set(message.index, true);
-    this->config.task_callback(this->task_iface);
 }
 
 void BlockActor::handle_input_msg(
@@ -95,36 +69,12 @@ void BlockActor::handle_output_msg(
     }
 }
 
-void BlockActor::post_return_buffer(const size_t index, Buffer &buffer)
-{
-    BlockReturnMessage message;
-    message.buffer = buffer;
-    message.index = index;
-    this->Send(message, this->GetAddress()); //send to self
-}
-
-void BlockActor::handle_allocator(
-    const BlockAllocatorMessage &message,
-    const Theron::Address from
-){
-    //make a new token
-    BufferToken tok(new BufferDeleter(boost::bind(
-        &BlockActor::post_return_buffer, this, message.index, _1)));
-
-    //save the token
-    task_iface->output_buffer_tokens.resize(task_iface->outputs.size());
-    task_iface->output_buffer_tokens[message.index] = tok;
-
-    //actually allocate
-    message.alloc(tok);
-}
-
 void BlockActor::handle_update(
     const BlockUpdateMessage &message,
     const Theron::Address from
 ){
     if (this->config.update_callback)
     {
-        this->config.update_callback(this->task_iface, message.state);
+        this->config.update_callback(this->task_iface, message.msg);
     }
 }

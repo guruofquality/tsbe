@@ -37,21 +37,11 @@ struct TaskInterfaceImpl
     ~TaskInterfaceImpl(void)
     {
         inputs.clear();
-        input_buffer_queues.clear();
         outputs.clear();
-        output_buffer_queues.clear();
     }
-
-    BitSet inputs_ready;
-    BitSet outputs_ready;
 
     std::vector<std::vector<Port> > inputs;
     std::vector<std::vector<Port> > outputs;
-
-    std::vector<std::queue<Buffer> > input_buffer_queues;
-    std::vector<std::queue<Buffer> > output_buffer_queues;
-
-    std::vector<BufferToken> output_buffer_tokens;
 };
 
 } //namespace tsbe

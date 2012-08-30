@@ -36,18 +36,6 @@ struct BlockConnectMessage
     Connection connection;
 };
 
-struct BlockDownstreamMessage
-{
-    Buffer buffer;
-    size_t index;
-};
-
-struct BlockReturnMessage
-{
-    Buffer buffer;
-    size_t index;
-};
-
 struct BlockInputMessage
 {
     Wax msg;
@@ -60,15 +48,9 @@ struct BlockOutputMessage
     size_t index;
 };
 
-struct BlockAllocatorMessage
-{
-    PortAllocator alloc;
-    size_t index;
-};
-
 struct BlockUpdateMessage
 {
-    Wax state;
+    Wax msg;
 };
 
 /***********************************************************************
@@ -86,23 +68,15 @@ struct BlockActor : Theron::Actor
         config = params.config;
         task_iface.reset(new TaskInterfaceImpl());
         RegisterHandler(this, &BlockActor::handle_connect);
-        RegisterHandler(this, &BlockActor::handle_downstream);
-        RegisterHandler(this, &BlockActor::handle_return);
         RegisterHandler(this, &BlockActor::handle_input_msg);
         RegisterHandler(this, &BlockActor::handle_output_msg);
-        RegisterHandler(this, &BlockActor::handle_allocator);
         RegisterHandler(this, &BlockActor::handle_update);
     }
 
     void handle_connect(const BlockConnectMessage &message, const Theron::Address from);
-    void handle_downstream(const BlockDownstreamMessage &message, const Theron::Address from);
-    void handle_return(const BlockReturnMessage &message, const Theron::Address from);
     void handle_input_msg(const BlockInputMessage &message, const Theron::Address from);
     void handle_output_msg(const BlockOutputMessage &message, const Theron::Address from);
-    void handle_allocator(const BlockAllocatorMessage &message, const Theron::Address from);
     void handle_update(const BlockUpdateMessage &message, const Theron::Address from);
-
-    void post_return_buffer(const size_t index, Buffer &buffer);
 
     TaskInterface task_iface;
     BlockConfig config;

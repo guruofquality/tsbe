@@ -63,9 +63,6 @@
 #include <boost/intrusive_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
-// include bitset here for the typedef below
-#include <boost/dynamic_bitset.hpp>
-
 //forward declares and stuff for library implementation
 namespace tsbe
 {
@@ -86,8 +83,6 @@ struct TaskInterface;
 
 struct ElementImpl;
 typedef boost::shared_ptr<ElementImpl> Element;
-
-typedef boost::dynamic_bitset<> BitSet;
 
 struct TSBE_API Affinity
 {

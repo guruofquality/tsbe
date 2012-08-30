@@ -24,54 +24,6 @@ TaskInterface::TaskInterface(void)
     //NOP
 }
 
-const BitSet& TaskInterface::get_inputs_ready(void) const
-{
-    return (*this)->inputs_ready;
-}
-
-const BitSet& TaskInterface::get_outputs_ready(void) const
-{
-    return (*this)->outputs_ready;
-}
-
-Buffer &TaskInterface::get_input_buffer(const size_t index) const
-{
-    //TODO throw bad index or empty
-    return (*this)->input_buffer_queues[index].front();
-}
-
-Buffer &TaskInterface::get_output_buffer(const size_t index) const
-{
-    //TODO throw bad index or empty
-    return (*this)->output_buffer_queues[index].front();
-}
-
-void TaskInterface::pop_input_buffer(const size_t index) const
-{
-    //TODO throw bad index or empty
-    (*this)->input_buffer_queues[index].pop();
-    (*this)->inputs_ready.set(index, not (*this)->input_buffer_queues[index].empty());
-}
-
-void TaskInterface::pop_output_buffer(const size_t index) const
-{
-    //TODO throw bad index or empty
-    (*this)->output_buffer_queues[index].pop();
-    (*this)->outputs_ready.set(index, not (*this)->output_buffer_queues[index].empty());
-}
-
-void TaskInterface::post_downstream(const size_t index, const Buffer &buffer) const
-{
-    //TODO throw bad index
-    BlockDownstreamMessage message;
-    message.buffer = buffer;
-    BOOST_FOREACH(Port &port, (*this)->outputs[index])
-    {
-        message.index = port.index;
-        port.elem->actor.Push(message, Theron::Address());
-    }
-}
-
 void TaskInterface::post_downstream(const size_t index, const Wax &msg) const
 {
     //TODO throw bad index

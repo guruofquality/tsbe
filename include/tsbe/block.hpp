@@ -29,19 +29,13 @@ namespace tsbe
 //! Typedef for a block's incoming port message handler callback
 typedef boost::function<void(const TaskInterface &, const size_t, const Wax &)> PortCallback;
 
-//! Typedef for a block's regular task handler callback
-typedef boost::function<void(const TaskInterface &)> TaskCallback;
-
 typedef boost::function<void(const TaskInterface &, const Wax &)> UpdateCallback;
-
-typedef boost::function<void(const BufferToken&)> PortAllocator;
 
 struct TSBE_API BlockConfig
 {
     BlockConfig(void);
     PortCallback input_callback;
     PortCallback output_callback;
-    TaskCallback task_callback;
     UpdateCallback update_callback;
 };
 
@@ -63,13 +57,9 @@ struct TSBE_API Block : boost::shared_ptr<ElementImpl>
     Block(const BlockConfig &config);
 
     /*!
-     * Set an allocator object on the given output port index.
-     * The allocator, when called, creates a vector of buffers.
-     * These buffers are bounds to the allocation caller.
-     * \param index the output port index
-     * \param allocator the allocation call
+     * Post a message to this block to be handled by the update callback
      */
-    void set_output_port_allocator(const size_t index, const PortAllocator &allocator);
+    void post_msg(const Wax &msg);
 };
 
 } //namespace tsbe

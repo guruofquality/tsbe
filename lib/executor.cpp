@@ -36,11 +36,11 @@ Executor::Executor(const ExecutorConfig &config)
     (*this)->actor = (*this)->framework.CreateActor<ExecutorActor>(params);
 }
 
-void Executor::update(const Wax &state)
+void Executor::update(const Wax &msg)
 {
     Theron::Receiver receiver;
     ExecutorUpdateMessage message;
-    message.state = state;
+    message.msg = msg;
     (*this)->actor.Push(message, receiver.GetAddress());
     receiver.Wait();
 }

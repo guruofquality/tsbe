@@ -37,10 +37,9 @@ Block::Block(const BlockConfig &config)
     (*this)->actor = (*this)->framework.CreateActor<BlockActor>(params);
 }
 
-void Block::set_output_port_allocator(const size_t index, const PortAllocator &allocator)
+void Block::post_msg(const Wax &msg)
 {
-    BlockAllocatorMessage message;
-    message.alloc = allocator;
-    message.index = index;
+    BlockUpdateMessage message;
+    message.msg = msg;
     (*this)->actor.Push(message, Theron::Address());
 }
