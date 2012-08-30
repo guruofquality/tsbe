@@ -77,6 +77,7 @@ void BlockActor::handle_post_msg(
     {
         this->config.block_callback(this->task_iface, message.msg);
     }
+    if (from != Theron::Address::Null()) this->Send(message, from); //ACK
 }
 
 void BlockActor::handle_changed(

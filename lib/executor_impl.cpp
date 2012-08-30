@@ -22,11 +22,23 @@
 
 using namespace tsbe;
 
+static void send_topology_update(const std::vector<Element> &changed_block_set)
+{
+    BOOST_FOREACH(const Element &block, changed_block_set)
+    {
+        Theron::Receiver receiver;
+        BlockChangedMessage message_i;
+        block->actor.Push(message_i, receiver.GetAddress());
+        receiver.Wait();
+    }
+}
+
 void ExecutorActor::handle_commit(
     const ExecutorCommitMessage &message,
     const Theron::Address from
 ){
     std::vector<Connection> new_flat_connections;
+    std::vector<Element> changed_block_set;
 
     //step 1) resolve all connections in the topology
     {
@@ -37,67 +49,72 @@ void ExecutorActor::handle_commit(
         receiver.Wait();
     }
 
-    //step 2) remove old connections
-    const std::vector<Connection> connections_to_remove = vector_subtract(this->flat_connections, new_flat_connections);
-    BOOST_FOREACH(const Connection &connection, connections_to_remove)
-    {
-        Theron::Receiver receiver;
-        BlockConnectMessage msg_i;
-        msg_i.connection = connection;
-
-        msg_i.action = BlockConnectMessage::SRC_DIS;
-        connection.src.elem->actor.Push(msg_i, receiver.GetAddress());
-        receiver.Wait();
-
-        msg_i.action = BlockConnectMessage::SINK_DIS;
-        connection.sink.elem->actor.Push(msg_i, receiver.GetAddress());
-        receiver.Wait();
-    }
-
-    //step 3) create new connections
+    //step 2) determine new connections
     const std::vector<Connection> connections_to_add = vector_subtract(new_flat_connections, this->flat_connections);
+
+    //step 3) add new inputs
+    changed_block_set.clear();
     BOOST_FOREACH(const Connection &connection, connections_to_add)
     {
         Theron::Receiver receiver;
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
-
-        msg_i.action = BlockConnectMessage::SRC_CON;
-        connection.src.elem->actor.Push(msg_i, receiver.GetAddress());
-        receiver.Wait();
-
         msg_i.action = BlockConnectMessage::SINK_CON;
         connection.sink.elem->actor.Push(msg_i, receiver.GetAddress());
         receiver.Wait();
+        insert_unique(changed_block_set, connection.sink.elem);
     }
+    send_topology_update(changed_block_set);
 
-    //step 4) get a unique list of changed blocks
-    std::vector<Element> changed_block_set;
-    changed_block_set.reserve(connections_to_add.size() + connections_to_remove.size());
+    //step 4) add new outputs
+    changed_block_set.clear();
     BOOST_FOREACH(const Connection &connection, connections_to_add)
     {
+        Theron::Receiver receiver;
+        BlockConnectMessage msg_i;
+        msg_i.connection = connection;
+        msg_i.action = BlockConnectMessage::SRC_CON;
+        connection.src.elem->actor.Push(msg_i, receiver.GetAddress());
+        receiver.Wait();
         insert_unique(changed_block_set, connection.src.elem);
-        insert_unique(changed_block_set, connection.sink.elem);
     }
+    send_topology_update(changed_block_set);
+
+    //step 5) determine old connections
+    const std::vector<Connection> connections_to_remove = vector_subtract(this->flat_connections, new_flat_connections);
+
+    //step 6) remove old outputs
+    changed_block_set.clear();
     BOOST_FOREACH(const Connection &connection, connections_to_remove)
     {
+        Theron::Receiver receiver;
+        BlockConnectMessage msg_i;
+        msg_i.connection = connection;
+        msg_i.action = BlockConnectMessage::SRC_DIS;
+        connection.src.elem->actor.Push(msg_i, receiver.GetAddress());
+        receiver.Wait();
         insert_unique(changed_block_set, connection.src.elem);
-        insert_unique(changed_block_set, connection.sink.elem);
     }
+    send_topology_update(changed_block_set);
 
-    //step 5) send topology update to changed blocks
-    BOOST_FOREACH(const Element &block, changed_block_set)
+    //step 7) remove old inputs
+    changed_block_set.clear();
+    BOOST_FOREACH(const Connection &connection, connections_to_remove)
     {
         Theron::Receiver receiver;
-        BlockChangedMessage message_i;
-        block->actor.Push(message_i, receiver.GetAddress());
+        BlockConnectMessage msg_i;
+        msg_i.connection = connection;
+        msg_i.action = BlockConnectMessage::SINK_DIS;
+        connection.sink.elem->actor.Push(msg_i, receiver.GetAddress());
         receiver.Wait();
+        insert_unique(changed_block_set, connection.sink.elem);
     }
+    send_topology_update(changed_block_set);
 
-    //step 6) update the flat connections
+    //step 8) update the flat connections
     this->flat_connections = new_flat_connections;
 
-    //step 7) get a unique list of blocks
+    //step 9) get a unique list of blocks
     this->block_set.clear();
     this->block_set.reserve(this->flat_connections.size());
     BOOST_FOREACH(const Connection &connection, this->flat_connections)
@@ -115,9 +132,11 @@ void ExecutorActor::handle_post_msg(
 ){
     BOOST_FOREACH(const Element &block, this->block_set)
     {
+        Theron::Receiver receiver;
         BlockPostMessage message_i;
         message_i.msg = message.msg;
-        block->actor.Push(message_i, Theron::Address());
+        block->actor.Push(message_i, receiver.GetAddress());
+        receiver.Wait();
     }
 
     this->Send(message, from); //ACK
