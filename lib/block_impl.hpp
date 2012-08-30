@@ -36,6 +36,11 @@ struct BlockConnectMessage
     Connection connection;
 };
 
+struct BlockChangedMessage
+{
+    //empty
+};
+
 struct BlockInputMessage
 {
     Wax msg;
@@ -48,7 +53,7 @@ struct BlockOutputMessage
     size_t index;
 };
 
-struct BlockUpdateMessage
+struct BlockPostMessage
 {
     Wax msg;
 };
@@ -70,13 +75,15 @@ struct BlockActor : Theron::Actor
         RegisterHandler(this, &BlockActor::handle_connect);
         RegisterHandler(this, &BlockActor::handle_input_msg);
         RegisterHandler(this, &BlockActor::handle_output_msg);
-        RegisterHandler(this, &BlockActor::handle_update);
+        RegisterHandler(this, &BlockActor::handle_post_msg);
+        RegisterHandler(this, &BlockActor::handle_changed);
     }
 
     void handle_connect(const BlockConnectMessage &message, const Theron::Address from);
     void handle_input_msg(const BlockInputMessage &message, const Theron::Address from);
     void handle_output_msg(const BlockOutputMessage &message, const Theron::Address from);
-    void handle_update(const BlockUpdateMessage &message, const Theron::Address from);
+    void handle_post_msg(const BlockPostMessage &message, const Theron::Address from);
+    void handle_changed(const BlockChangedMessage &message, const Theron::Address from);
 
     TaskInterface task_iface;
     BlockConfig config;

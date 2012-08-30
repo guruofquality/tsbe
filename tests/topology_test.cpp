@@ -61,5 +61,5 @@ BOOST_AUTO_TEST_CASE(test_simple_connections)
     tsbe::ExecutorConfig executor_config;
     executor_config.topology = topology;
     tsbe::Executor executor(executor_config);
-    executor.update(tsbe::Wax());
+    executor.commit();
 }

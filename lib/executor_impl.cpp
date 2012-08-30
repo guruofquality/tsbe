@@ -22,8 +22,8 @@
 
 using namespace tsbe;
 
-void ExecutorActor::handle_update(
-    const ExecutorUpdateMessage &message,
+void ExecutorActor::handle_commit(
+    const ExecutorCommitMessage &message,
     const Theron::Address from
 ){
     std::vector<Connection> new_flat_connections;
@@ -71,28 +71,51 @@ void ExecutorActor::handle_update(
         receiver.Wait();
     }
 
-    //step 4) update the flat connections
-    this->flat_connections = new_flat_connections;
-
-    //step 5) get a unique list of blocks
-    std::vector<Element> block_set;
-    block_set.reserve(this->flat_connections.size());
-    BOOST_FOREACH(const Connection &connection, this->flat_connections)
+    //step 4) get a unique list of changed blocks
+    std::vector<Element> changed_block_set;
+    changed_block_set.reserve(connections_to_add.size() + connections_to_remove.size());
+    BOOST_FOREACH(const Connection &connection, connections_to_add)
     {
-        insert_unique(block_set, connection.src.elem);
-        insert_unique(block_set, connection.sink.elem);
+        insert_unique(changed_block_set, connection.src.elem);
+        insert_unique(changed_block_set, connection.sink.elem);
     }
-    //also include removed connections so we can message disconnected blocks
     BOOST_FOREACH(const Connection &connection, connections_to_remove)
     {
-        insert_unique(block_set, connection.src.elem);
-        insert_unique(block_set, connection.sink.elem);
+        insert_unique(changed_block_set, connection.src.elem);
+        insert_unique(changed_block_set, connection.sink.elem);
     }
 
-    //step 6) pass the update message to blocks
-    BOOST_FOREACH(const Element &block, block_set)
+    //step 5) send topology update to changed blocks
+    BOOST_FOREACH(const Element &block, changed_block_set)
     {
-        BlockUpdateMessage message_i;
+        Theron::Receiver receiver;
+        BlockChangedMessage message_i;
+        block->actor.Push(message_i, receiver.GetAddress());
+        receiver.Wait();
+    }
+
+    //step 6) update the flat connections
+    this->flat_connections = new_flat_connections;
+
+    //step 7) get a unique list of blocks
+    this->block_set.clear();
+    this->block_set.reserve(this->flat_connections.size());
+    BOOST_FOREACH(const Connection &connection, this->flat_connections)
+    {
+        insert_unique(this->block_set, connection.src.elem);
+        insert_unique(this->block_set, connection.sink.elem);
+    }
+
+    this->Send(message, from); //ACK
+}
+
+void ExecutorActor::handle_post_msg(
+    const ExecutorPostMessage &message,
+    const Theron::Address from
+){
+    BOOST_FOREACH(const Element &block, this->block_set)
+    {
+        BlockPostMessage message_i;
         message_i.msg = message.msg;
         block->actor.Push(message_i, Theron::Address());
     }

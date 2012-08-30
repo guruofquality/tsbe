@@ -29,7 +29,12 @@ namespace tsbe
 /***********************************************************************
  * Messages that can be sent to this actor
  **********************************************************************/
-struct ExecutorUpdateMessage
+struct ExecutorCommitMessage
+{
+    //empty
+};
+
+struct ExecutorPostMessage
 {
     Wax msg;
 };
@@ -47,18 +52,21 @@ struct ExecutorActor : Theron::Actor
     inline explicit ExecutorActor(const Parameters &params)
     {
         config = params.config;
-        RegisterHandler(this, &ExecutorActor::handle_update);
+        RegisterHandler(this, &ExecutorActor::handle_commit);
+        RegisterHandler(this, &ExecutorActor::handle_post_msg);
     }
 
     ~ExecutorActor(void)
     {
         flat_connections.clear();
+        block_set.clear();
     }
 
-    void handle_update(const ExecutorUpdateMessage &message, const Theron::Address from);
+    void handle_commit(const ExecutorCommitMessage &message, const Theron::Address from);
+    void handle_post_msg(const ExecutorPostMessage &message, const Theron::Address from);
 
     std::vector<Connection> flat_connections;
-    Wax executor_state;
+    std::vector<Element> block_set;
 
     ExecutorConfig config;
 };

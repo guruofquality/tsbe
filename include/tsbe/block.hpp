@@ -29,14 +29,19 @@ namespace tsbe
 //! Typedef for a block's incoming port message handler callback
 typedef boost::function<void(const TaskInterface &, const size_t, const Wax &)> PortCallback;
 
-typedef boost::function<void(const TaskInterface &, const Wax &)> UpdateCallback;
+//! Typedef for a block's general input message handler callback
+typedef boost::function<void(const TaskInterface &, const Wax &)> BlockCallback;
+
+//! Typedef for topological changes on the block handler callback
+typedef boost::function<void(const TaskInterface &)> ChangedCallback;
 
 struct TSBE_API BlockConfig
 {
     BlockConfig(void);
     PortCallback input_callback;
     PortCallback output_callback;
-    UpdateCallback update_callback;
+    BlockCallback block_callback;
+    ChangedCallback changed_callback;
 };
 
 /*!
@@ -57,7 +62,7 @@ struct TSBE_API Block : boost::shared_ptr<ElementImpl>
     Block(const BlockConfig &config);
 
     /*!
-     * Post a message to this block to be handled by the update callback
+     * Post a message to this block to be handled by the message callback
      */
     void post_msg(const Wax &msg);
 };

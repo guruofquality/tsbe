@@ -39,11 +39,17 @@ struct TSBE_API Executor : boost::shared_ptr<ExecutorImpl>
     Executor(const ExecutorConfig &config);
 
     /*!
-     * Call update after changing the topology to commit the changes.
+     * Commit any topological changes to the design.
+     * Call this method after calling changing connections.
      * This will add/remove any connections from the previous state,
-     * and send the update message to all blocks involved.
+     * and send an update topology message to any changed blocks.
      */
-    void update(const Wax &msg);
+    void commit(void);
+
+    /*!
+     * Post a message to all blocks in the topology.
+     */
+    void post_msg(const Wax &msg);
 };
 
 } //namespace tsbe

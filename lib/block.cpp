@@ -39,7 +39,7 @@ Block::Block(const BlockConfig &config)
 
 void Block::post_msg(const Wax &msg)
 {
-    BlockUpdateMessage message;
+    BlockPostMessage message;
     message.msg = msg;
     (*this)->actor.Push(message, Theron::Address());
 }

@@ -69,12 +69,23 @@ void BlockActor::handle_output_msg(
     }
 }
 
-void BlockActor::handle_update(
-    const BlockUpdateMessage &message,
+void BlockActor::handle_post_msg(
+    const BlockPostMessage &message,
     const Theron::Address from
 ){
-    if (this->config.update_callback)
+    if (this->config.block_callback)
     {
-        this->config.update_callback(this->task_iface, message.msg);
+        this->config.block_callback(this->task_iface, message.msg);
     }
+}
+
+void BlockActor::handle_changed(
+    const BlockChangedMessage &message,
+    const Theron::Address from
+){
+    if (this->config.changed_callback)
+    {
+        this->config.changed_callback(this->task_iface);
+    }
+    this->Send(message, from); //ACK
 }
