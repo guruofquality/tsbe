@@ -45,7 +45,10 @@ if (NOT WIN32) #not on windows? tell theron headers to use boost
     add_definitions(-DTHERON_USE_BOOST_THREADS)
 endif()
 
-file(GLOB theron_sources "${CMAKE_SOURCE_DIR}/Theron/Theron/*.cpp")
+file(GLOB theron_sources
+    "${CMAKE_SOURCE_DIR}/Theron/Theron/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Theron/Source/*.cpp"
+)
 
 ########################################################################
 # Setup NumaNuma
