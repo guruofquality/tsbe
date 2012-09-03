@@ -16,6 +16,14 @@
 
 #include "block_impl.hpp"
 
+#include <iostream>
+
+Theron::Framework &tsbe::FooBar::get(void)
+{
+    static Theron::Framework fw(10);
+    return fw;
+}
+
 using namespace tsbe;
 
 BlockConfig::BlockConfig(void)
@@ -34,7 +42,9 @@ Block::Block(const BlockConfig &config)
     (*this)->block = true;
     BlockActor::Parameters params;
     params.config = config;
-    (*this)->actor = (*this)->framework.CreateActor<BlockActor>(params);
+    //std::cout << __LINE__ << std::endl;
+    (*this)->actor = FooBar::get().CreateActor<BlockActor>(params);
+    //std::cout << __LINE__ << std::endl;
 }
 
 void Block::post_msg(const Wax &msg)

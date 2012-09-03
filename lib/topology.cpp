@@ -28,11 +28,17 @@ Topology::Topology(void)
     //NOP
 }
 
+#include <iostream>
+
 Topology::Topology(const TopologyConfig &)
 {
     this->reset(new ElementImpl());
     (*this)->block = false;
-    (*this)->actor = (*this)->framework.CreateActor<TopologyActor>();
+    
+    //std::cout << __LINE__ << std::endl;
+    (*this)->actor = FooBar::get().CreateActor<TopologyActor>();
+    
+    //std::cout << __LINE__ << std::endl;
 }
 
 const Element &Topology::self(void) const

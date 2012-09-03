@@ -28,12 +28,16 @@ Executor::Executor(void)
     //NOP
 }
 
+#include <iostream>
+
 Executor::Executor(const ExecutorConfig &config)
 {
     this->reset(new ExecutorImpl());
     ExecutorActor::Parameters params;
     params.config = config;
-    (*this)->actor = (*this)->framework.CreateActor<ExecutorActor>(params);
+    //std::cout << __LINE__ << std::endl;
+    (*this)->actor = FooBar::get().CreateActor<ExecutorActor>(params);
+    //std::cout << __LINE__ << std::endl;
 }
 
 void Executor::commit(void)

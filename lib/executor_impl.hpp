@@ -17,14 +17,18 @@
 #ifndef INCLUDED_LIBTSBE_EXECUTOR_IMPL_HPP
 #define INCLUDED_LIBTSBE_EXECUTOR_IMPL_HPP
 
+#include "element_impl.hpp"
 #include <tsbe/executor.hpp>
 #include <Theron/Framework.h>
 #include <Theron/Actor.h>
 #include <Theron/ActorRef.h>
 #include <vector>
 
+
 namespace tsbe
 {
+
+
 
 /***********************************************************************
  * Messages that can be sent to this actor
@@ -79,13 +83,11 @@ struct ExecutorActor : Theron::Actor
  **********************************************************************/
 struct ExecutorImpl
 {
-    ExecutorImpl(void):
-        framework(1/*thread*/)
+    ExecutorImpl(void)
     {
         //NOP
     }
 
-    Theron::Framework framework;
     Theron::ActorRef actor;
 };
 

@@ -23,14 +23,21 @@
 #include <vector>
 #include <queue>
 
+
 namespace tsbe
 {
+
+
+struct FooBar
+{
+    static Theron::Framework &get(void);
+};
+
 
 //! ElementImpl is both a topology and a block to allow interconnection
 struct ElementImpl
 {
-    ElementImpl(void):
-        framework(1/*thread*/)
+    ElementImpl(void)
     {
         //NOP
     }
@@ -42,7 +49,6 @@ struct ElementImpl
         return block;
     }
 
-    Theron::Framework framework;
     Theron::ActorRef actor;
 };
 
