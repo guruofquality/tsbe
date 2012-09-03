@@ -47,6 +47,8 @@ BOOST_AUTO_TEST_CASE(test_make_block)
     BOOST_CHECK(block);
 }
 
+#include <numanuma.hpp>
+
 BOOST_AUTO_TEST_CASE(test_simple_connections)
 {
     tsbe::BlockConfig block_config;
@@ -58,8 +60,19 @@ BOOST_AUTO_TEST_CASE(test_simple_connections)
     tsbe::Topology topology(topology_config);
     topology.connect(connection);
 
-    tsbe::ExecutorConfig executor_config;
-    executor_config.topology = topology;
-    tsbe::Executor executor(executor_config);
-    executor.commit();
+    const size_t num_iters = 100;
+    long long start = numanuma::get_time_now();
+    for (size_t i = 0; i < num_iters; i++)
+    {
+        tsbe::ExecutorConfig executor_config;
+        executor_config.topology = topology;
+        tsbe::Executor executor(executor_config);
+        executor.commit();
+    }
+    long long stop = numanuma::get_time_now();
+    long long num_ticks = stop-start;
+    //std::cout << "num ticks " << num_ticks << std::endl;
+    num_ticks *= 1000; //millis
+    num_ticks /= num_iters;
+    std::cout << "it took this many: " << (double(num_ticks)/numanuma::get_time_tps()) << " millisecs per run" << std::endl;
 }

@@ -24,6 +24,12 @@ set(test_sources
     wax_test.cpp
 )
 
+
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/numanuma/cmake)
+include_directories(${CMAKE_SOURCE_DIR}/numanuma/include)
+find_package(NumaNuma)
+
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
@@ -34,6 +40,6 @@ add_definitions(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
 foreach(test_source ${test_sources})
     get_filename_component(test_name ${test_source} NAME_WE)
     add_executable(${test_name} ${test_source})
-    target_link_libraries(${test_name} tsbe ${Boost_LIBRARIES})
+    target_link_libraries(${test_name} tsbe ${Boost_LIBRARIES} ${NUMANUMA_LIBRARIES})
     add_test(${test_name} ${test_name})
 endforeach(test_source)
