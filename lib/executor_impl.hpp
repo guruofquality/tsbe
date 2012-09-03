@@ -20,7 +20,6 @@
 #include <tsbe/executor.hpp>
 #include <Theron/Framework.h>
 #include <Theron/Actor.h>
-#include <Theron/ActorRef.h>
 #include <vector>
 
 namespace tsbe
@@ -44,14 +43,9 @@ struct ExecutorPostMessage
  **********************************************************************/
 struct ExecutorActor : Theron::Actor
 {
-    struct Parameters
+    inline explicit ExecutorActor(Theron::Framework &framework, const ExecutorConfig &config):
+        Theron::Actor(framework), config(config)
     {
-        ExecutorConfig config;
-    };
-
-    inline explicit ExecutorActor(const Parameters &params)
-    {
-        config = params.config;
         RegisterHandler(this, &ExecutorActor::handle_commit);
         RegisterHandler(this, &ExecutorActor::handle_post_msg);
     }
@@ -80,13 +74,19 @@ struct ExecutorActor : Theron::Actor
 struct ExecutorImpl
 {
     ExecutorImpl(void):
-        framework(1/*thread*/)
+        framework(1/*thread*/),
+        actor(NULL)
     {
         //NOP
     }
 
+    ~ExecutorImpl(void)
+    {
+        if (actor) delete actor;
+    }
+
     Theron::Framework framework;
-    Theron::ActorRef actor;
+    Theron::Actor *actor;
 };
 
 } //namespace tsbe

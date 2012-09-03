@@ -32,14 +32,12 @@ Block::Block(const BlockConfig &config)
 {
     this->reset(new ElementImpl());
     (*this)->block = true;
-    BlockActor::Parameters params;
-    params.config = config;
-    (*this)->actor = (*this)->framework.CreateActor<BlockActor>(params);
+    (*this)->actor = new BlockActor((*this)->framework, config);
 }
 
 void Block::post_msg(const Wax &msg)
 {
     BlockPostMessage message;
     message.msg = msg;
-    (*this)->actor.Push(message, Theron::Address());
+    (*this)->framework.Send(message, Theron::Address(), (*this)->actor->GetAddress());
 }

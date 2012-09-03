@@ -32,7 +32,7 @@ Topology::Topology(const TopologyConfig &)
 {
     this->reset(new ElementImpl());
     (*this)->block = false;
-    (*this)->actor = (*this)->framework.CreateActor<TopologyActor>();
+    (*this)->actor = new TopologyActor((*this)->framework);
 }
 
 const Element &Topology::self(void) const
@@ -46,7 +46,7 @@ void Topology::add_topology(const Topology &topology)
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::ADD;
     message.topology = topology;
-    (*this)->actor.Push(message, receiver.GetAddress());
+    (*this)->framework.Send(message, receiver.GetAddress(), (*this)->actor->GetAddress());
     receiver.Wait();
 }
 
@@ -61,7 +61,7 @@ void Topology::connect(const Connection &connection_)
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::CONNECT;
     message.connection = connection;
-    (*this)->actor.Push(message, receiver.GetAddress());
+    (*this)->framework.Send(message, receiver.GetAddress(), (*this)->actor->GetAddress());
     receiver.Wait();
 }
 
@@ -71,7 +71,7 @@ void Topology::remove_topology(const Topology &topology)
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::REMOVE;
     message.topology = topology;
-    (*this)->actor.Push(message, receiver.GetAddress());
+    (*this)->framework.Send(message, receiver.GetAddress(), (*this)->actor->GetAddress());
     receiver.Wait();
 }
 
@@ -86,6 +86,6 @@ void Topology::disconnect(const Connection &connection_)
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::DISCONNECT;
     message.connection = connection;
-    (*this)->actor.Push(message, receiver.GetAddress());
+    (*this)->framework.Send(message, receiver.GetAddress(), (*this)->actor->GetAddress());
     receiver.Wait();
 }

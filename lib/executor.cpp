@@ -31,16 +31,14 @@ Executor::Executor(void)
 Executor::Executor(const ExecutorConfig &config)
 {
     this->reset(new ExecutorImpl());
-    ExecutorActor::Parameters params;
-    params.config = config;
-    (*this)->actor = (*this)->framework.CreateActor<ExecutorActor>(params);
+    (*this)->actor = new ExecutorActor((*this)->framework, config);
 }
 
 void Executor::commit(void)
 {
     Theron::Receiver receiver;
     ExecutorCommitMessage message;
-    (*this)->actor.Push(message, receiver.GetAddress());
+    (*this)->framework.Send(message, receiver.GetAddress(), (*this)->actor->GetAddress());
     receiver.Wait();
 }
 
@@ -50,6 +48,6 @@ void Executor::post_msg(const Wax &msg)
     Theron::Receiver receiver;
     ExecutorPostMessage message;
     message.msg = msg;
-    (*this)->actor.Push(message, receiver.GetAddress());
+    (*this)->framework.Send(message, receiver.GetAddress(), (*this)->actor->GetAddress());
     receiver.Wait();
 }

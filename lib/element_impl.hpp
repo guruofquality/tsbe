@@ -19,7 +19,6 @@
 
 #include <Theron/Framework.h>
 #include <Theron/Actor.h>
-#include <Theron/ActorRef.h>
 #include <vector>
 #include <queue>
 
@@ -30,9 +29,15 @@ namespace tsbe
 struct ElementImpl
 {
     ElementImpl(void):
-        framework(1/*thread*/)
+        framework(1/*thread*/),
+        actor(NULL)
     {
         //NOP
+    }
+
+    ~ElementImpl(void)
+    {
+        if (actor) delete actor;
     }
 
     bool block;
@@ -43,7 +48,7 @@ struct ElementImpl
     }
 
     Theron::Framework framework;
-    Theron::ActorRef actor;
+    Theron::Actor *actor;
 };
 
 } //namespace tsbe

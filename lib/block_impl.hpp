@@ -63,14 +63,9 @@ struct BlockPostMessage
  **********************************************************************/
 struct BlockActor : Theron::Actor
 {
-    struct Parameters
+    inline explicit BlockActor(Theron::Framework &framework, const BlockConfig &config):
+        Theron::Actor(framework), config(config)
     {
-        BlockConfig config;
-    };
-
-    inline explicit BlockActor(const Parameters &params)
-    {
-        config = params.config;
         task_iface.reset(new TaskInterfaceImpl());
         RegisterHandler(this, &BlockActor::handle_connect);
         RegisterHandler(this, &BlockActor::handle_input_msg);
