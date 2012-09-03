@@ -22,11 +22,11 @@
 
 using namespace tsbe;
 
-static void send_topology_update(const std::vector<Element> &changed_block_set)
-{
+inline void ExecutorActor::send_topology_update(
+    const std::vector<Element> &changed_block_set
+){
     BOOST_FOREACH(const Element &block, changed_block_set)
     {
-        Theron::Receiver receiver;
         BlockChangedMessage message_i;
         block->actor.Push(message_i, receiver.GetAddress());
         receiver.Wait();
@@ -42,7 +42,6 @@ void ExecutorActor::handle_commit(
 
     //step 1) resolve all connections in the topology
     {
-        Theron::Receiver receiver;
         TopologyResolveConnectionsMessage message;
         message.result = &new_flat_connections;
         this->config.topology->actor.Push(message, receiver.GetAddress());
@@ -56,7 +55,6 @@ void ExecutorActor::handle_commit(
     changed_block_set.clear();
     BOOST_FOREACH(const Connection &connection, connections_to_add)
     {
-        Theron::Receiver receiver;
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SINK_CON;
@@ -70,7 +68,6 @@ void ExecutorActor::handle_commit(
     changed_block_set.clear();
     BOOST_FOREACH(const Connection &connection, connections_to_add)
     {
-        Theron::Receiver receiver;
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SRC_CON;
@@ -87,7 +84,6 @@ void ExecutorActor::handle_commit(
     changed_block_set.clear();
     BOOST_FOREACH(const Connection &connection, connections_to_remove)
     {
-        Theron::Receiver receiver;
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SRC_DIS;
@@ -101,7 +97,6 @@ void ExecutorActor::handle_commit(
     changed_block_set.clear();
     BOOST_FOREACH(const Connection &connection, connections_to_remove)
     {
-        Theron::Receiver receiver;
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SINK_DIS;
@@ -123,7 +118,7 @@ void ExecutorActor::handle_commit(
         insert_unique(this->block_set, connection.sink.elem);
     }
 
-    this->Send(message, from); //ACK
+    if (from != Theron::Address()) this->Send(message, from); //ACK
 }
 
 void ExecutorActor::handle_post_msg(
@@ -132,12 +127,11 @@ void ExecutorActor::handle_post_msg(
 ){
     BOOST_FOREACH(const Element &block, this->block_set)
     {
-        Theron::Receiver receiver;
         BlockPostMessage message_i;
         message_i.msg = message.msg;
         block->actor.Push(message_i, receiver.GetAddress());
         receiver.Wait();
     }
 
-    this->Send(message, from); //ACK
+    if (from != Theron::Address()) this->Send(message, from); //ACK
 }

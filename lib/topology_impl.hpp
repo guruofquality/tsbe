@@ -70,6 +70,8 @@ struct TopologyActor : Theron::Actor
 
     std::vector<Topology> topologies;
     std::vector<Connection> connections;
+
+    Theron::Receiver receiver;
 };
 
 } //namespace tsbe

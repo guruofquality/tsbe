@@ -69,6 +69,9 @@ struct ExecutorActor : Theron::Actor
     std::vector<Element> block_set;
 
     ExecutorConfig config;
+    Theron::Receiver receiver;
+
+    void send_topology_update(const std::vector<Element> &);
 };
 
 /***********************************************************************

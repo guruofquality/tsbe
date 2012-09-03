@@ -51,7 +51,7 @@ void TopologyActor::handle_connect(
         break;
     }
 
-    this->Send(message, from); //ACK
+    if (from != Theron::Address()) this->Send(message, from); //ACK
 }
 
 void TopologyActor::handle_resolve_ports(
@@ -106,7 +106,6 @@ void TopologyActor::handle_resolve_ports(
             std::vector<Port> ports_i;
             message_i.action = message.action;
             message_i.result = &ports_i;
-            Theron::Receiver receiver;
             message_i.port.elem->actor.Push(message_i, receiver.GetAddress());
             receiver.Wait();
             extend(ports, ports_i);
@@ -140,7 +139,6 @@ void TopologyActor::handle_resolve_conns(
         //otherwise traverse the port
         else
         {
-            Theron::Receiver receiver;
             TopologyResolvePortsMessage message_i;
             message_i.action = TopologyResolvePortsMessage::SRC;
             message_i.port = connection.src;
@@ -157,7 +155,6 @@ void TopologyActor::handle_resolve_conns(
         //otherwise traverse the port
         else
         {
-            Theron::Receiver receiver;
             TopologyResolvePortsMessage message_i;
             message_i.action = TopologyResolvePortsMessage::SINK;
             message_i.port = connection.sink;
@@ -202,7 +199,6 @@ void TopologyActor::handle_resolve_conns(
     //now recurse through all sub-topologies
     BOOST_FOREACH(const Element &topology, sub_topologies)
     {
-        Theron::Receiver receiver;
         std::vector<Connection> flat_connections_i;
         TopologyResolveConnectionsMessage message_i;
         message_i.result = &flat_connections_i;
