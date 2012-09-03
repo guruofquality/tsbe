@@ -74,5 +74,8 @@ BOOST_AUTO_TEST_CASE(test_simple_connections)
     //std::cout << "num ticks " << num_ticks << std::endl;
     num_ticks *= 1000; //millis
     num_ticks /= num_iters;
-    std::cout << "it took this many: " << (double(num_ticks)/numanuma::get_time_tps()) << " millisecs per run" << std::endl;
+    std::cout << "\n\n\n";
+    std::cout << "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV\n";
+    std::cout << "----------> " << (double(num_ticks)/numanuma::get_time_tps()) << " millisecs per run <------" << std::endl;
+    std::cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
 }
