@@ -17,6 +17,7 @@
 #include "topology_impl.hpp"
 #include "vec_utils.hpp"
 #include <boost/foreach.hpp>
+#include <stdexcept>
 
 using namespace tsbe;
 
