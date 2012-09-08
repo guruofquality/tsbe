@@ -75,12 +75,12 @@ struct ExecutorActor : Theron::Actor
 struct ExecutorImpl
 {
     ExecutorImpl(void):
-        framework(1/*thread*/)
+        framework(get_master_framework())
     {
         //NOP
     }
 
-    Theron::Framework framework;
+    Theron::Framework &framework;
     boost::shared_ptr<Theron::Actor> actor;
 };
 

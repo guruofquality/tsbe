@@ -1,4 +1,3 @@
-//
 // Copyright 2012 Josh Blum
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,23 +13,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_LIBTSBE_COMMON_IMPL_HPP
-#define INCLUDED_LIBTSBE_COMMON_IMPL_HPP
+#include "common_impl.hpp"
+#include <boost/thread/thread.hpp>
 
-#include <Theron/Framework.h>
-#include <Theron/Actor.h>
-
-namespace tsbe
+static Theron::Framework::Parameters get_params(void)
 {
-
-Theron::Framework &get_master_framework(void);
-
-template <class ActorPtr, class ValueType>
-inline bool ActorSend(const ActorPtr &actor, const ValueType &value, const Theron::Address &address)
-{
-    return actor->GetFramework().Send(value, address, actor->GetAddress());
+    const size_t n = boost::thread::hardware_concurrency();
+    Theron::Framework::Parameters params(n?n:1);
+    return params;
 }
 
-} //namespace tsbe
-
-#endif /*INCLUDED_LIBTSBE_COMMON_IMPL_HPP*/
+Theron::Framework &tsbe::get_master_framework(void)
+{
+    static Theron::Framework framework(get_params());
+    return framework;
+}
