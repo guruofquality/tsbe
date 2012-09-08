@@ -32,7 +32,7 @@ Block::Block(const BlockConfig &config)
 {
     this->reset(new ElementImpl());
     (*this)->block = true;
-    (*this)->actor = new BlockActor((*this)->framework, config);
+    (*this)->actor = boost::shared_ptr<Theron::Actor>(new BlockActor((*this)->framework, config));
 }
 
 void Block::post_msg(const Wax &msg)

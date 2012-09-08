@@ -31,7 +31,7 @@ Executor::Executor(void)
 Executor::Executor(const ExecutorConfig &config)
 {
     this->reset(new ExecutorImpl());
-    (*this)->actor = new ExecutorActor((*this)->framework, config);
+    (*this)->actor = boost::shared_ptr<Theron::Actor>(new ExecutorActor((*this)->framework, config));
 }
 
 void Executor::commit(void)

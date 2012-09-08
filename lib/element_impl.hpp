@@ -29,15 +29,9 @@ namespace tsbe
 struct ElementImpl
 {
     ElementImpl(void):
-        framework(1/*thread*/),
-        actor(NULL)
+        framework(1/*thread*/)
     {
         //NOP
-    }
-
-    ~ElementImpl(void)
-    {
-        if (actor) delete actor;
     }
 
     bool block;
@@ -48,7 +42,7 @@ struct ElementImpl
     }
 
     Theron::Framework framework;
-    Theron::Actor *actor;
+    boost::shared_ptr<Theron::Actor> actor;
 };
 
 } //namespace tsbe

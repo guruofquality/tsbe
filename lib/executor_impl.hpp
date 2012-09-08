@@ -74,19 +74,13 @@ struct ExecutorActor : Theron::Actor
 struct ExecutorImpl
 {
     ExecutorImpl(void):
-        framework(1/*thread*/),
-        actor(NULL)
+        framework(1/*thread*/)
     {
         //NOP
     }
 
-    ~ExecutorImpl(void)
-    {
-        if (actor) delete actor;
-    }
-
     Theron::Framework framework;
-    Theron::Actor *actor;
+    boost::shared_ptr<Theron::Actor> actor;
 };
 
 } //namespace tsbe

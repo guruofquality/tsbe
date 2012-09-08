@@ -32,7 +32,7 @@ Topology::Topology(const TopologyConfig &)
 {
     this->reset(new ElementImpl());
     (*this)->block = false;
-    (*this)->actor = new TopologyActor((*this)->framework);
+    (*this)->actor = boost::shared_ptr<Theron::Actor>(new TopologyActor((*this)->framework));
 }
 
 const Element &Topology::self(void) const
