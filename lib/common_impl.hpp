@@ -14,30 +14,21 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "block_impl.hpp"
+#ifndef INCLUDED_LIBTSBE_COMMON_IMPL_HPP
+#define INCLUDED_LIBTSBE_COMMON_IMPL_HPP
 
-using namespace tsbe;
+#include <Theron/Framework.h>
+#include <Theron/Actor.h>
 
-BlockConfig::BlockConfig(void)
+namespace tsbe
 {
-    //NOP
+
+template <class ActorPtr, class ValueType>
+inline bool ActorSend(const ActorPtr &actor, const ValueType &value, const Theron::Address &address)
+{
+    return actor->GetFramework().Send(value, address, actor->GetAddress());
 }
 
-Block::Block(void)
-{
-    //NOP
-}
+} //namespace tsbe
 
-Block::Block(const BlockConfig &config)
-{
-    this->reset(new ElementImpl());
-    (*this)->block = true;
-    (*this)->actor = boost::shared_ptr<Theron::Actor>(new BlockActor((*this)->framework, config));
-}
-
-void Block::post_msg(const Wax &msg)
-{
-    BlockPostMessage message;
-    message.msg = msg;
-    ActorSend((*this)->actor, message, Theron::Address());
-}
+#endif /*INCLUDED_LIBTSBE_COMMON_IMPL_HPP*/

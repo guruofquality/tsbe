@@ -32,7 +32,7 @@ void TaskInterface::post_downstream(const size_t index, const Wax &msg) const
     BOOST_FOREACH(Port &port, (*this)->outputs[index])
     {
         message.index = port.index;
-        port.elem->framework.Send(message, Theron::Address(), port.elem->actor->GetAddress());
+        ActorSend(port.elem->actor, message, Theron::Address());
     }
 }
 
@@ -44,7 +44,7 @@ void TaskInterface::post_upstream(const size_t index, const Wax &msg) const
     BOOST_FOREACH(Port &port, (*this)->inputs[index])
     {
         message.index = port.index;
-        port.elem->framework.Send(message, Theron::Address(), port.elem->actor->GetAddress());
+        ActorSend(port.elem->actor, message, Theron::Address());
     }
 }
 

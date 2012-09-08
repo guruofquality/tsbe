@@ -107,7 +107,7 @@ void TopologyActor::handle_resolve_ports(
             std::vector<Port> ports_i;
             message_i.action = message.action;
             message_i.result = &ports_i;
-            message_i.port.elem->framework.Send(message_i, receiver.GetAddress(), message_i.port.elem->actor->GetAddress());
+            ActorSend(message_i.port.elem->actor, message_i, receiver.GetAddress());
             receiver.Wait();
             extend(ports, ports_i);
         }
@@ -144,7 +144,7 @@ void TopologyActor::handle_resolve_conns(
             message_i.action = TopologyResolvePortsMessage::SRC;
             message_i.port = connection.src;
             message_i.result = &srcs;
-            message_i.port.elem->framework.Send(message_i, receiver.GetAddress(), message_i.port.elem->actor->GetAddress());
+            ActorSend(message_i.port.elem->actor, message_i, receiver.GetAddress());
             receiver.Wait();
         }
 
@@ -160,7 +160,7 @@ void TopologyActor::handle_resolve_conns(
             message_i.action = TopologyResolvePortsMessage::SINK;
             message_i.port = connection.sink;
             message_i.result = &sinks;
-            message_i.port.elem->framework.Send(message_i, receiver.GetAddress(), message_i.port.elem->actor->GetAddress());
+            ActorSend(message_i.port.elem->actor, message_i, receiver.GetAddress());
             receiver.Wait();
         }
 
@@ -203,7 +203,7 @@ void TopologyActor::handle_resolve_conns(
         std::vector<Connection> flat_connections_i;
         TopologyResolveConnectionsMessage message_i;
         message_i.result = &flat_connections_i;
-        topology->framework.Send(message_i, receiver.GetAddress(), topology->actor->GetAddress());
+        ActorSend(topology->actor, message_i, receiver.GetAddress());
         receiver.Wait();
         extend(flat_connections_, flat_connections_i);
     }

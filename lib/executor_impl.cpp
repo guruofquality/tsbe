@@ -28,7 +28,7 @@ inline void ExecutorActor::send_topology_update(
     BOOST_FOREACH(const Element &block, changed_block_set)
     {
         BlockChangedMessage message_i;
-        block->framework.Send(message_i, receiver.GetAddress(), block->actor->GetAddress());
+        ActorSend(block->actor, message_i, receiver.GetAddress());
         receiver.Wait();
     }
 }
@@ -44,7 +44,7 @@ void ExecutorActor::handle_commit(
     {
         TopologyResolveConnectionsMessage message;
         message.result = &new_flat_connections;
-        this->config.topology->framework.Send(message, receiver.GetAddress(), this->config.topology->actor->GetAddress());
+        ActorSend(this->config.topology->actor, message, receiver.GetAddress());
         receiver.Wait();
     }
 
@@ -58,7 +58,7 @@ void ExecutorActor::handle_commit(
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SINK_CON;
-        connection.sink.elem->framework.Send(msg_i, receiver.GetAddress(), connection.sink.elem->actor->GetAddress());
+        ActorSend(connection.sink.elem->actor, msg_i, receiver.GetAddress());
         receiver.Wait();
         insert_unique(changed_block_set, connection.sink.elem);
     }
@@ -71,7 +71,7 @@ void ExecutorActor::handle_commit(
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SRC_CON;
-        connection.src.elem->framework.Send(msg_i, receiver.GetAddress(), connection.src.elem->actor->GetAddress());
+        ActorSend(connection.src.elem->actor, msg_i, receiver.GetAddress());
         receiver.Wait();
         insert_unique(changed_block_set, connection.src.elem);
     }
@@ -87,7 +87,7 @@ void ExecutorActor::handle_commit(
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SRC_DIS;
-        connection.src.elem->framework.Send(msg_i, receiver.GetAddress(), connection.src.elem->actor->GetAddress());
+        ActorSend(connection.src.elem->actor, msg_i, receiver.GetAddress());
         receiver.Wait();
         insert_unique(changed_block_set, connection.src.elem);
     }
@@ -100,7 +100,7 @@ void ExecutorActor::handle_commit(
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SINK_DIS;
-        connection.sink.elem->framework.Send(msg_i, receiver.GetAddress(), connection.sink.elem->actor->GetAddress());
+        ActorSend(connection.sink.elem->actor, msg_i, receiver.GetAddress());
         receiver.Wait();
         insert_unique(changed_block_set, connection.sink.elem);
     }
@@ -129,7 +129,7 @@ void ExecutorActor::handle_post_msg(
     {
         BlockPostMessage message_i;
         message_i.msg = message.msg;
-        block->framework.Send(message_i, receiver.GetAddress(), block->actor->GetAddress());
+        ActorSend(block->actor, message_i, receiver.GetAddress());
         receiver.Wait();
     }
 

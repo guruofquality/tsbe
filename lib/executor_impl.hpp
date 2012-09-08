@@ -17,6 +17,7 @@
 #ifndef INCLUDED_LIBTSBE_EXECUTOR_IMPL_HPP
 #define INCLUDED_LIBTSBE_EXECUTOR_IMPL_HPP
 
+#include "common_impl.hpp"
 #include <tsbe/executor.hpp>
 #include <Theron/Framework.h>
 #include <Theron/Actor.h>
