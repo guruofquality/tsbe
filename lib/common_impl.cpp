@@ -15,11 +15,13 @@
 
 #include "common_impl.hpp"
 #include <boost/thread/thread.hpp>
+#include <iostream>
 
 static Theron::Framework::Parameters get_params(void)
 {
     const size_t n = boost::thread::hardware_concurrency();
-    Theron::Framework::Parameters params(n?n:1);
+    std::cerr << "boost::thread::hardware_concurrency() = " << n << std::endl;
+    Theron::Framework::Parameters params((n < 2)?2:n);
     return params;
 }
 
