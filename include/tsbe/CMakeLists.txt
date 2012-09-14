@@ -20,7 +20,6 @@
 install(FILES
     config.hpp
     block.hpp
-    buffer.hpp
     config.hpp
     connection.hpp
     executor.hpp

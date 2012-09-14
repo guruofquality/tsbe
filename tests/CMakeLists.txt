@@ -19,7 +19,6 @@
 ########################################################################
 set(test_sources
     block_test.cpp
-    buffer_test.cpp
     topology_test.cpp
     wax_test.cpp
 )

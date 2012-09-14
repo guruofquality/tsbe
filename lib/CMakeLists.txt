@@ -51,13 +51,6 @@ file(GLOB theron_sources
 )
 
 ########################################################################
-# Setup NumaNuma
-########################################################################
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/numanuma/cmake)
-include_directories(${CMAKE_SOURCE_DIR}/numanuma/include)
-find_package(NumaNuma)
-
-########################################################################
 # Check for support
 ########################################################################
 if(NOT Boost_FOUND)
@@ -75,7 +68,6 @@ link_directories(${Boost_LIBRARY_DIRS})
 list(APPEND libtsbe_sources
     block.cpp
     block_impl.cpp
-    buffer.cpp
     connection.cpp
     executor.cpp
     executor_impl.cpp
@@ -89,7 +81,6 @@ list(APPEND libtsbe_sources
 
 list(APPEND libtsbe_libs
     ${Boost_LIBRARIES}
-    ${NUMANUMA_LIBRARIES}
 )
 
 ########################################################################
