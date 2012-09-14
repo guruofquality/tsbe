@@ -25,6 +25,7 @@ install(FILES
     executor.hpp
     port.hpp
     task_interface.hpp
+    thread_pool.hpp
     topology.hpp
     wax.hpp
     DESTINATION include/tsbe

@@ -75,7 +75,7 @@ list(APPEND libtsbe_sources
     task_interface.cpp
     topology.cpp
     topology_impl.cpp
-    common_impl.cpp
+    thread_pool.cpp
     ${theron_sources}
 )
 

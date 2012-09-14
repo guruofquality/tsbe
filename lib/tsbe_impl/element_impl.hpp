@@ -28,8 +28,7 @@ namespace tsbe
 //! ElementImpl is both a topology and a block to allow interconnection
 struct ElementImpl
 {
-    ElementImpl(void):
-        framework(get_master_framework())
+    ElementImpl(void)
     {
         //NOP
     }
@@ -41,7 +40,7 @@ struct ElementImpl
         return block;
     }
 
-    Theron::Framework &framework;
+    boost::shared_ptr<Theron::Framework> framework;
     boost::shared_ptr<Theron::Actor> actor;
 };
 

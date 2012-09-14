@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <tsbe_impl/common_impl.hpp>
 #include <tsbe_impl/executor_impl.hpp>
 #include <tsbe_impl/topology_impl.hpp>
 #include <tsbe_impl/block_impl.hpp>

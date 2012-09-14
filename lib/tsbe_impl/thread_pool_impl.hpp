@@ -1,3 +1,4 @@
+//
 // Copyright 2012 Josh Blum
 //
 // This program is free software: you can redistribute it and/or modify
@@ -13,20 +14,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <tsbe_impl/common_impl.hpp>
-#include <boost/thread/thread.hpp>
-#include <iostream>
+#ifndef INCLUDED_LIBTSBE_THREAD_POOL_IMPL_HPP
+#define INCLUDED_LIBTSBE_THREAD_POOL_IMPL_HPP
 
-static Theron::Framework::Parameters get_params(void)
-{
-    const size_t n = boost::thread::hardware_concurrency();
-    std::cerr << "boost::thread::hardware_concurrency() = " << n << std::endl;
-    Theron::Framework::Parameters params((n < 2)?2:n);
-    return params;
-}
+#include <tsbe/thread_pool.hpp>
+#include <Theron/Framework.h>
 
-Theron::Framework &tsbe::get_master_framework(void)
+namespace tsbe
 {
-    static Theron::Framework framework(get_params());
-    return framework;
-}
+
+struct ThreadPoolImpl
+{
+    ThreadPoolImpl(const ThreadPoolConfig &config);
+
+    boost::shared_ptr<Theron::Framework> framework;
+};
+
+} //namespace tsbe
+
+#endif /*INCLUDED_LIBTSBE_THREAD_POOL_IMPL_HPP*/

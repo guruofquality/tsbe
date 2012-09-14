@@ -69,13 +69,17 @@ namespace tsbe
 struct Block;
 struct BlockImpl;
 
+struct Executor;
 struct ExecutorImpl;
 
-struct TaskInterfaceImpl;
 struct TaskInterface;
+struct TaskInterfaceImpl;
 
 struct ElementImpl;
 typedef boost::shared_ptr<ElementImpl> Element;
+
+struct ThreadPool;
+struct ThreadPoolImpl;
 
 } //namespace tsbe
 

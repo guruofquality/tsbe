@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <tsbe_impl/common_impl.hpp>
+#include <tsbe_impl/thread_pool_impl.hpp>
 #include <tsbe_impl/executor_impl.hpp>
 
 using namespace tsbe;
@@ -31,7 +33,8 @@ Executor::Executor(void)
 Executor::Executor(const ExecutorConfig &config)
 {
     this->reset(new ExecutorImpl());
-    (*this)->actor = boost::shared_ptr<Theron::Actor>(new ExecutorActor((*this)->framework, config));
+    (*this)->framework = ThreadPool::get_active()->framework;
+    (*this)->actor = boost::shared_ptr<Theron::Actor>(new ExecutorActor(*((*this)->framework), config));
 }
 
 void Executor::commit(void)

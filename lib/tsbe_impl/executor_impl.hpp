@@ -17,7 +17,6 @@
 #ifndef INCLUDED_LIBTSBE_EXECUTOR_IMPL_HPP
 #define INCLUDED_LIBTSBE_EXECUTOR_IMPL_HPP
 
-#include <tsbe_impl/common_impl.hpp>
 #include <tsbe/executor.hpp>
 #include <Theron/Framework.h>
 #include <Theron/Actor.h>
@@ -74,13 +73,12 @@ struct ExecutorActor : Theron::Actor
  **********************************************************************/
 struct ExecutorImpl
 {
-    ExecutorImpl(void):
-        framework(get_master_framework())
+    ExecutorImpl(void)
     {
         //NOP
     }
 
-    Theron::Framework &framework;
+    boost::shared_ptr<Theron::Framework> framework;
     boost::shared_ptr<Theron::Actor> actor;
 };
 

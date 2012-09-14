@@ -17,13 +17,10 @@
 #ifndef INCLUDED_LIBTSBE_COMMON_IMPL_HPP
 #define INCLUDED_LIBTSBE_COMMON_IMPL_HPP
 
-#include <Theron/Framework.h>
-#include <Theron/Actor.h>
+#include <Theron/Address.h>
 
 namespace tsbe
 {
-
-Theron::Framework &get_master_framework(void);
 
 template <class ActorPtr, class ValueType>
 inline bool ActorSend(const ActorPtr &actor, const ValueType &value, const Theron::Address &address)

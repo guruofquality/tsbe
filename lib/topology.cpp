@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <tsbe_impl/common_impl.hpp>
+#include <tsbe_impl/thread_pool_impl.hpp>
 #include <tsbe_impl/topology_impl.hpp>
 
 using namespace tsbe;
@@ -31,8 +33,9 @@ Topology::Topology(void)
 Topology::Topology(const TopologyConfig &)
 {
     this->reset(new ElementImpl());
+    (*this)->framework = ThreadPool::get_active()->framework;
     (*this)->block = false;
-    (*this)->actor = boost::shared_ptr<Theron::Actor>(new TopologyActor((*this)->framework));
+    (*this)->actor = boost::shared_ptr<Theron::Actor>(new TopologyActor(*((*this)->framework)));
 }
 
 const Element &Topology::self(void) const
