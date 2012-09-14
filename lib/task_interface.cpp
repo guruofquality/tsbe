@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "task_interface_impl.hpp"
-#include "block_impl.hpp"
+#include <tsbe_impl/task_interface_impl.hpp>
+#include <tsbe_impl/block_impl.hpp>
 #include <boost/foreach.hpp>
 
 using namespace tsbe;

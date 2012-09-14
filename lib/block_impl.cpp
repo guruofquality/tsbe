@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "block_impl.hpp"
-#include "vec_utils.hpp"
+#include <tsbe_impl/block_impl.hpp>
+#include <tsbe_impl/vec_utils.hpp>
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 

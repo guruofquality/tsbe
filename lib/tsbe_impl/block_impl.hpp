@@ -17,9 +17,9 @@
 #ifndef INCLUDED_LIBTSBE_BLOCK_IMPL_HPP
 #define INCLUDED_LIBTSBE_BLOCK_IMPL_HPP
 
-#include "common_impl.hpp"
-#include "element_impl.hpp"
-#include "task_interface_impl.hpp"
+#include <tsbe_impl/common_impl.hpp>
+#include <tsbe_impl/element_impl.hpp>
+#include <tsbe_impl/task_interface_impl.hpp>
 #include <tsbe/connection.hpp>
 #include <tsbe/block.hpp>
 #include <vector>
