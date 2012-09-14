@@ -18,7 +18,6 @@
 #define INCLUDED_TSBE_BLOCK_HPP
 
 #include <tsbe/config.hpp>
-#include <tsbe/buffer.hpp>
 #include <tsbe/task_interface.hpp>
 #include <tsbe/wax.hpp>
 #include <boost/function.hpp>
