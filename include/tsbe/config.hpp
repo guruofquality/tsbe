@@ -60,18 +60,11 @@
 
 // include smart pointer stuff for typedefs below
 #include <boost/shared_ptr.hpp>
-#include <boost/intrusive_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
 //forward declares and stuff for library implementation
 namespace tsbe
 {
-
-struct Buffer;
-struct BufferImpl;
-
-extern TSBE_API void intrusive_ptr_add_ref(BufferImpl*);
-extern TSBE_API void intrusive_ptr_release(BufferImpl*);
 
 struct Block;
 struct BlockImpl;
@@ -84,24 +77,7 @@ struct TaskInterface;
 struct ElementImpl;
 typedef boost::shared_ptr<ElementImpl> Element;
 
-struct TSBE_API Affinity
-{
-    Affinity(void)
-    {
-        value = -1;
-    }
-
-    operator long long(void) const
-    {
-        return value;
-    }
-
-    long long value;
-};
-
 } //namespace tsbe
-
-#define TSBE_MAX_ALIGNMENT 32
 
 #include <iostream>
 
