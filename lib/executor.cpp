@@ -33,7 +33,7 @@ Executor::Executor(const ExecutorConfig &config)
 {
     this->reset(new ExecutorImpl());
     (*this)->actor = boost::shared_ptr<Actor>(new ExecutorActor(config));
-    (*this)->thread_pool = (*this)->actor->_thread_pool;
+    (*this)->thread_pool = (*this)->actor->get_thread_pool();
 }
 
 void Executor::commit(void)

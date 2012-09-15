@@ -36,10 +36,15 @@ struct Actor : Theron::Actor
     template <class ValueType>
     inline bool Send(const ValueType &value, const Theron::Address &address)
     {
-        return this->GetFramework().Send(value, address, this->GetAddress());
+        return this->GetFramework().Send(value, this->GetAddress(), address);
     }
 
     ThreadPool _thread_pool;
+
+    const ThreadPool &get_thread_pool() const
+    {
+        return _thread_pool;
+    }
 };
 
 } //namespace tsbe

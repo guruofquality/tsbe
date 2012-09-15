@@ -34,7 +34,7 @@ Topology::Topology(const TopologyConfig &)
     this->reset(new ElementImpl());
     (*this)->block = false;
     (*this)->actor = boost::shared_ptr<Actor>(new TopologyActor());
-    (*this)->thread_pool = (*this)->actor->_thread_pool;
+    (*this)->thread_pool = (*this)->actor->get_thread_pool();
 }
 
 const Element &Topology::self(void) const

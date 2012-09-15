@@ -34,7 +34,7 @@ Block::Block(const BlockConfig &config)
     this->reset(new ElementImpl());
     (*this)->block = true;
     (*this)->actor = boost::shared_ptr<Actor>(new BlockActor(config));
-    (*this)->thread_pool = (*this)->actor->_thread_pool;
+    (*this)->thread_pool = (*this)->actor->get_thread_pool();
 }
 
 void Block::post_msg(const Wax &msg)
