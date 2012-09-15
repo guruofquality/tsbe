@@ -27,7 +27,7 @@ struct ThreadPoolImpl
 {
     ThreadPoolImpl(const ThreadPoolConfig &config);
 
-    boost::shared_ptr<Theron::Framework> framework;
+    Theron::Framework framework;
 };
 
 } //namespace tsbe

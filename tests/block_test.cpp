@@ -16,6 +16,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <tsbe/block.hpp>
+#include <tsbe/thread_pool.hpp>
 #include <iostream>
 
 BOOST_AUTO_TEST_CASE(test_copy_empty_block)
@@ -39,5 +40,7 @@ BOOST_AUTO_TEST_CASE(test_copy_allocated_block)
     BOOST_CHECK(block_copy0);
 
     BOOST_CHECK_EQUAL(block.get(), block_copy0.get());
+
+    //tsbe::ThreadPool::kill();
 }
 

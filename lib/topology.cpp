@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <tsbe_impl/common_impl.hpp>
-#include <tsbe_impl/thread_pool_impl.hpp>
 #include <tsbe_impl/topology_impl.hpp>
 
 using namespace tsbe;
@@ -33,9 +32,9 @@ Topology::Topology(void)
 Topology::Topology(const TopologyConfig &)
 {
     this->reset(new ElementImpl());
-    (*this)->framework = ThreadPool::get_active()->framework;
     (*this)->block = false;
-    (*this)->actor = boost::shared_ptr<Theron::Actor>(new TopologyActor(*((*this)->framework)));
+    (*this)->actor = boost::shared_ptr<Actor>(new TopologyActor());
+    (*this)->thread_pool = (*this)->actor->_thread_pool;
 }
 
 const Element &Topology::self(void) const
@@ -49,7 +48,7 @@ void Topology::add_topology(const Topology &topology)
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::ADD;
     message.topology = topology;
-    ActorSend((*this)->actor, message, receiver.GetAddress());
+    (*this)->actor->Send(message, receiver.GetAddress());
     receiver.Wait();
 }
 
@@ -64,7 +63,7 @@ void Topology::connect(const Connection &connection_)
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::CONNECT;
     message.connection = connection;
-    ActorSend((*this)->actor, message, receiver.GetAddress());
+    (*this)->actor->Send(message, receiver.GetAddress());
     receiver.Wait();
 }
 
@@ -74,7 +73,7 @@ void Topology::remove_topology(const Topology &topology)
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::REMOVE;
     message.topology = topology;
-    ActorSend((*this)->actor, message, receiver.GetAddress());
+    (*this)->actor->Send(message, receiver.GetAddress());
     receiver.Wait();
 }
 
@@ -89,6 +88,6 @@ void Topology::disconnect(const Connection &connection_)
     TopologyConnectMessage message;
     message.action = TopologyConnectMessage::DISCONNECT;
     message.connection = connection;
-    ActorSend((*this)->actor, message, receiver.GetAddress());
+    (*this)->actor->Send(message, receiver.GetAddress());
     receiver.Wait();
 }

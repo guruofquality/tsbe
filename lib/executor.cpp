@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <tsbe_impl/common_impl.hpp>
-#include <tsbe_impl/thread_pool_impl.hpp>
 #include <tsbe_impl/executor_impl.hpp>
 
 using namespace tsbe;
@@ -33,15 +32,15 @@ Executor::Executor(void)
 Executor::Executor(const ExecutorConfig &config)
 {
     this->reset(new ExecutorImpl());
-    (*this)->framework = ThreadPool::get_active()->framework;
-    (*this)->actor = boost::shared_ptr<Theron::Actor>(new ExecutorActor(*((*this)->framework), config));
+    (*this)->actor = boost::shared_ptr<Actor>(new ExecutorActor(config));
+    (*this)->thread_pool = (*this)->actor->_thread_pool;
 }
 
 void Executor::commit(void)
 {
     Theron::Receiver receiver;
     ExecutorCommitMessage message;
-    ActorSend((*this)->actor, message, receiver.GetAddress());
+    (*this)->actor->Send(message, receiver.GetAddress());
     receiver.Wait();
 }
 
@@ -51,6 +50,6 @@ void Executor::post_msg(const Wax &msg)
     Theron::Receiver receiver;
     ExecutorPostMessage message;
     message.msg = msg;
-    ActorSend((*this)->actor, message, receiver.GetAddress());
+    (*this)->actor->Send(message, receiver.GetAddress());
     receiver.Wait();
 }

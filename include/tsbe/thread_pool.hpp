@@ -50,6 +50,9 @@ struct TSBE_API ThreadPool : boost::shared_ptr<ThreadPoolImpl>
     //! Creates an empty thread pool
     ThreadPool(void);
 
+    //! Create a from a weak pointer
+    ThreadPool(boost::weak_ptr<ThreadPoolImpl>);
+
     //! Create a new thread pool from config
     ThreadPool(const ThreadPoolConfig &config);
 

@@ -17,10 +17,10 @@
 #ifndef INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
 #define INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
 
-#include <Theron/Framework.h>
-#include <Theron/Actor.h>
+#include <tsbe_impl/common_impl.hpp>
 #include <vector>
 #include <queue>
+#include <iostream>
 
 namespace tsbe
 {
@@ -33,6 +33,11 @@ struct ElementImpl
         //NOP
     }
 
+    ~ElementImpl(void)
+    {
+        this->actor.reset();
+    }
+
     bool block;
 
     bool is_block(void)
@@ -40,8 +45,8 @@ struct ElementImpl
         return block;
     }
 
-    boost::shared_ptr<Theron::Framework> framework;
-    boost::shared_ptr<Theron::Actor> actor;
+    boost::shared_ptr<Actor> actor;
+    ThreadPool thread_pool;
 };
 
 } //namespace tsbe

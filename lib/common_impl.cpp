@@ -14,34 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_LIBTSBE_COMMON_IMPL_HPP
-#define INCLUDED_LIBTSBE_COMMON_IMPL_HPP
+#include <tsbe_impl/common_impl.hpp>
+#include <tsbe_impl/thread_pool_impl.hpp>
+#include <Theron/Framework.h>
 
-#include <tsbe/thread_pool.hpp>
-#include <Theron/Address.h>
-#include <Theron/Actor.h>
+using namespace tsbe;
 
-namespace tsbe
+Actor::Actor(ThreadPool thread_pool):
+    Theron::Actor(thread_pool->framework),
+    _thread_pool(thread_pool)
 {
-
-struct Actor : Theron::Actor
-{
-    Actor(ThreadPool thread_pool);
-
-    virtual ~Actor(void)
-    {
-        _thread_pool.reset();
-    }
-
-    template <class ValueType>
-    inline bool Send(const ValueType &value, const Theron::Address &address)
-    {
-        return this->GetFramework().Send(value, address, this->GetAddress());
-    }
-
-    ThreadPool _thread_pool;
-};
-
-} //namespace tsbe
-
-#endif /*INCLUDED_LIBTSBE_COMMON_IMPL_HPP*/
+    //NOP
+}

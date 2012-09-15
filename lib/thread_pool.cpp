@@ -14,7 +14,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <tsbe_impl/thread_pool_impl.hpp>
-#include <Theron/Framework.h>
 #include <boost/thread/thread.hpp>
 #include <iostream>
 
@@ -36,7 +35,7 @@ static Theron::Framework::Parameters get_params(const ThreadPoolConfig &config)
 }
 
 ThreadPoolImpl::ThreadPoolImpl(const ThreadPoolConfig &config):
-    framework(new Theron::Framework(get_params(config)))
+    framework(get_params(config))
 {
     //NOP
 }
@@ -59,20 +58,30 @@ ThreadPool::ThreadPool(void)
     //NOP
 }
 
+ThreadPool::ThreadPool(boost::weak_ptr<ThreadPoolImpl> p):
+    boost::shared_ptr<ThreadPoolImpl>(p.lock())
+{
+    //NOP
+}
+
 ThreadPool::ThreadPool(const ThreadPoolConfig &config)
 {
     this->reset(new ThreadPoolImpl(config));
 }
 
-static ThreadPool active_thread_pool;
+static boost::weak_ptr<ThreadPoolImpl> active_thread_pool;
 
 ThreadPool ThreadPool::get_active(void)
 {
-    if (not active_thread_pool)
+    if (not active_thread_pool.lock())
     {
         ThreadPoolConfig config;
         std::cerr << "Creating default thread pool with " << config.num_threads << " num threads..." << std::endl;
-        ThreadPool(config).activate();
+        ThreadPool tp(config);
+        tp.activate();
+        return tp;
+        
+        //TODO dont store this, store the framework sptr
     }
     return active_thread_pool;
 }

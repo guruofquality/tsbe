@@ -17,7 +17,6 @@
 #ifndef INCLUDED_LIBTSBE_BLOCK_IMPL_HPP
 #define INCLUDED_LIBTSBE_BLOCK_IMPL_HPP
 
-#include <tsbe_impl/thread_pool_impl.hpp>
 #include <tsbe_impl/element_impl.hpp>
 #include <tsbe_impl/task_interface_impl.hpp>
 #include <tsbe/connection.hpp>
@@ -62,10 +61,11 @@ struct BlockPostMessage
 /***********************************************************************
  * The details of the block actor
  **********************************************************************/
-struct BlockActor : Theron::Actor
+struct BlockActor : Actor
 {
-    inline explicit BlockActor(Theron::Framework &framework, const BlockConfig &config):
-        Theron::Actor(framework), config(config)
+    BlockActor(const BlockConfig &config):
+        Actor(ThreadPool::get_active()),
+        config(config)
     {
         task_iface.reset(new TaskInterfaceImpl());
         RegisterHandler(this, &BlockActor::handle_connect);
