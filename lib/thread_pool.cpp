@@ -80,8 +80,6 @@ ThreadPool ThreadPool::get_active(void)
         ThreadPool tp(config);
         tp.activate();
         return tp;
-        
-        //TODO dont store this, store the framework sptr
     }
     return active_thread_pool;
 }
