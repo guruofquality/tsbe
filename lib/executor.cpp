@@ -40,7 +40,7 @@ void Executor::commit(void)
 {
     Theron::Receiver receiver;
     ExecutorCommitMessage message;
-    (*this)->actor->Send(message, receiver.GetAddress());
+    (*this)->actor->Push(message, receiver.GetAddress());
     receiver.Wait();
 }
 
@@ -50,6 +50,6 @@ void Executor::post_msg(const Wax &msg)
     Theron::Receiver receiver;
     ExecutorPostMessage message;
     message.msg = msg;
-    (*this)->actor->Send(message, receiver.GetAddress());
+    (*this)->actor->Push(message, receiver.GetAddress());
     receiver.Wait();
 }

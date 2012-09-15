@@ -29,7 +29,7 @@ inline void ExecutorActor::send_topology_update(
     BOOST_FOREACH(const Element &block, changed_block_set)
     {
         BlockChangedMessage message_i;
-        block->actor->Send(message_i, receiver.GetAddress());
+        block->actor->Push(message_i, receiver.GetAddress());
         receiver.Wait();
     }
 }
@@ -45,7 +45,7 @@ void ExecutorActor::handle_commit(
     {
         TopologyResolveConnectionsMessage message;
         message.result = &new_flat_connections;
-        this->config.topology->actor->Send(message, receiver.GetAddress());
+        this->config.topology->actor->Push(message, receiver.GetAddress());
         receiver.Wait();
     }
 
@@ -59,7 +59,7 @@ void ExecutorActor::handle_commit(
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SINK_CON;
-        connection.sink.elem->actor->Send(msg_i, receiver.GetAddress());
+        connection.sink.elem->actor->Push(msg_i, receiver.GetAddress());
         receiver.Wait();
         insert_unique(changed_block_set, connection.sink.elem);
     }
@@ -72,7 +72,7 @@ void ExecutorActor::handle_commit(
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SRC_CON;
-        connection.src.elem->actor->Send(msg_i, receiver.GetAddress());
+        connection.src.elem->actor->Push(msg_i, receiver.GetAddress());
         receiver.Wait();
         insert_unique(changed_block_set, connection.src.elem);
     }
@@ -88,7 +88,7 @@ void ExecutorActor::handle_commit(
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SRC_DIS;
-        connection.src.elem->actor->Send(msg_i, receiver.GetAddress());
+        connection.src.elem->actor->Push(msg_i, receiver.GetAddress());
         receiver.Wait();
         insert_unique(changed_block_set, connection.src.elem);
     }
@@ -101,7 +101,7 @@ void ExecutorActor::handle_commit(
         BlockConnectMessage msg_i;
         msg_i.connection = connection;
         msg_i.action = BlockConnectMessage::SINK_DIS;
-        connection.sink.elem->actor->Send(msg_i, receiver.GetAddress());
+        connection.sink.elem->actor->Push(msg_i, receiver.GetAddress());
         receiver.Wait();
         insert_unique(changed_block_set, connection.sink.elem);
     }
@@ -130,7 +130,7 @@ void ExecutorActor::handle_post_msg(
     {
         BlockPostMessage message_i;
         message_i.msg = message.msg;
-        block->actor->Send(message_i, receiver.GetAddress());
+        block->actor->Push(message_i, receiver.GetAddress());
         receiver.Wait();
     }
 

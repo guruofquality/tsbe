@@ -34,9 +34,9 @@ struct Actor : Theron::Actor
     }
 
     template <class ValueType>
-    inline bool Send(const ValueType &value, const Theron::Address &address)
+    inline bool Push(const ValueType &value, const Theron::Address &address)
     {
-        return this->GetFramework().Send(value, this->GetAddress(), address);
+        return this->GetFramework().Send(value, address, this->GetAddress());
     }
 
     ThreadPool _thread_pool;

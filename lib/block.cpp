@@ -41,5 +41,5 @@ void Block::post_msg(const Wax &msg)
 {
     BlockPostMessage message;
     message.msg = msg;
-    (*this)->actor->Send(message, Theron::Address());
+    (*this)->actor->Push(message, Theron::Address());
 }
