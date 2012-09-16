@@ -17,7 +17,7 @@
 #ifndef INCLUDED_LIBTSBE_COMMON_IMPL_HPP
 #define INCLUDED_LIBTSBE_COMMON_IMPL_HPP
 
-#include <tsbe/thread_pool.hpp>
+#include <Theron/Framework.h>
 #include <Theron/Address.h>
 #include <Theron/Actor.h>
 
@@ -26,24 +26,13 @@ namespace tsbe
 
 struct Actor : Theron::Actor
 {
-    Actor(ThreadPool thread_pool);
-
-    virtual ~Actor(void)
-    {
-        _thread_pool.reset();
-    }
+    Actor(Theron::Framework &framework):
+        Theron::Actor(framework){}
 
     template <class ValueType>
     inline bool Push(const ValueType &value, const Theron::Address &address)
     {
         return this->GetFramework().Send(value, address, this->GetAddress());
-    }
-
-    ThreadPool _thread_pool;
-
-    const ThreadPool &get_thread_pool() const
-    {
-        return _thread_pool;
     }
 };
 

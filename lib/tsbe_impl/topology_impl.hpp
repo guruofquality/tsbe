@@ -51,8 +51,8 @@ struct TopologyResolveConnectionsMessage
  **********************************************************************/
 struct TopologyActor : Actor
 {
-    inline explicit TopologyActor(void):
-        Actor(ThreadPool::get_active())
+    inline explicit TopologyActor(Theron::Framework &framework):
+        Actor(framework)
     {
         RegisterHandler(this, &TopologyActor::handle_connect);
         RegisterHandler(this, &TopologyActor::handle_resolve_ports);

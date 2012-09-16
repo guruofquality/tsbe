@@ -17,6 +17,7 @@
 #ifndef INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
 #define INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
 
+#include <tsbe/thread_pool.hpp>
 #include <tsbe_impl/common_impl.hpp>
 #include <vector>
 #include <queue>
@@ -46,6 +47,7 @@ struct ElementImpl
     }
 
     boost::shared_ptr<Actor> actor;
+    boost::shared_ptr<Theron::Framework> framework;
     ThreadPool thread_pool;
 };
 

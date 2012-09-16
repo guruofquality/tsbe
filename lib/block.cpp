@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <tsbe_impl/thread_pool_impl.hpp>
 #include <tsbe_impl/common_impl.hpp>
 #include <tsbe_impl/block_impl.hpp>
 
@@ -33,8 +34,8 @@ Block::Block(const BlockConfig &config)
 {
     this->reset(new ElementImpl());
     (*this)->block = true;
-    (*this)->actor = boost::shared_ptr<Actor>(new BlockActor(config));
-    (*this)->thread_pool = (*this)->actor->get_thread_pool();
+    (*this)->thread_pool = ThreadPool::get_active();
+    (*this)->actor = boost::shared_ptr<Actor>(new BlockActor((*this)->thread_pool->framework, config));
 }
 
 void Block::post_msg(const Wax &msg)

@@ -63,8 +63,8 @@ struct BlockPostMessage
  **********************************************************************/
 struct BlockActor : Actor
 {
-    BlockActor(const BlockConfig &config):
-        Actor(ThreadPool::get_active()),
+    BlockActor(Theron::Framework &framework, const BlockConfig &config):
+        Actor(framework),
         config(config)
     {
         task_iface.reset(new TaskInterfaceImpl());

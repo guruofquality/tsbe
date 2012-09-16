@@ -17,6 +17,7 @@
 #ifndef INCLUDED_LIBTSBE_EXECUTOR_IMPL_HPP
 #define INCLUDED_LIBTSBE_EXECUTOR_IMPL_HPP
 
+#include <tsbe/thread_pool.hpp>
 #include <tsbe_impl/common_impl.hpp>
 #include <tsbe/executor.hpp>
 #include <vector>
@@ -42,8 +43,8 @@ struct ExecutorPostMessage
  **********************************************************************/
 struct ExecutorActor : Actor
 {
-    inline explicit ExecutorActor(const ExecutorConfig &config):
-        Actor(ThreadPool::get_active()),
+    inline explicit ExecutorActor(Theron::Framework &framework, const ExecutorConfig &config):
+        Actor(framework),
         config(config)
     {
         RegisterHandler(this, &ExecutorActor::handle_commit);
@@ -84,6 +85,7 @@ struct ExecutorImpl
     }
 
     boost::shared_ptr<Actor> actor;
+    boost::shared_ptr<Theron::Framework> framework;
     ThreadPool thread_pool;
 };
 
