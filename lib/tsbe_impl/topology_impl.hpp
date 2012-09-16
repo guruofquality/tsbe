@@ -46,6 +46,11 @@ struct TopologyResolveConnectionsMessage
     std::vector<Connection> *result;
 };
 
+struct TopologyClearMessage
+{
+    //NOP
+};
+
 /***********************************************************************
  * The details of the topology actor
  **********************************************************************/
@@ -57,6 +62,7 @@ struct TopologyActor : Actor
         RegisterHandler(this, &TopologyActor::handle_connect);
         RegisterHandler(this, &TopologyActor::handle_resolve_ports);
         RegisterHandler(this, &TopologyActor::handle_resolve_conns);
+        RegisterHandler(this, &TopologyActor::handle_clear);
     }
 
     ~TopologyActor(void)
@@ -68,6 +74,7 @@ struct TopologyActor : Actor
     void handle_connect(const TopologyConnectMessage &message, const Theron::Address from);
     void handle_resolve_ports(const TopologyResolvePortsMessage &message, const Theron::Address from);
     void handle_resolve_conns(const TopologyResolveConnectionsMessage &message, const Theron::Address from);
+    void handle_clear(const TopologyClearMessage &message, const Theron::Address from);
 
     std::vector<Topology> topologies;
     std::vector<Connection> connections;

@@ -211,3 +211,12 @@ void TopologyActor::handle_resolve_conns(
 
     this->Send(message, from); //ACK
 }
+
+void TopologyActor::handle_clear(
+    const TopologyClearMessage &message,
+    const Theron::Address from
+){
+    this->topologies.clear();
+    this->connections.clear();
+    this->Send(message, from); //ACK
+}

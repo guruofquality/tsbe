@@ -67,6 +67,12 @@ struct TSBE_API Topology : boost::shared_ptr<ElementImpl>
 
     //! Disconnect an output port from an input port
     void disconnect(const Connection &connection);
+
+    /*!
+     * Reset this topology to factory state.
+     * In other words, remove all connections and sub-topologies.
+     */
+    void clear_all(void);
 };
 
 } //namespace tsbe

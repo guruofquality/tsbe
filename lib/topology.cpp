@@ -93,3 +93,11 @@ void Topology::disconnect(const Connection &connection_)
     (*this)->actor->Push(message, receiver.GetAddress());
     receiver.Wait();
 }
+
+void Topology::clear_all(void)
+{
+    Theron::Receiver receiver;
+    TopologyClearMessage message;
+    (*this)->actor->Push(message, receiver.GetAddress());
+    receiver.Wait();
+}
