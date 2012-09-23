@@ -31,17 +31,22 @@ namespace tsbe
  */
 struct TSBE_API Port
 {
+    typedef boost::shared_ptr<void> Container;
+
     //! Create an unitialized port
     Port(void);
 
     //! Create a port from an element and IO index
-    Port(const Element &elem, const size_t index);
+    Port(const Element &elem, const size_t index, Container container = Container());
 
     //! The element in this port
     Element elem;
 
     //! The IO index of this port
     size_t index;
+
+    //! An optional reference to a container class
+    Container container;
 };
 
 //! a comparison operator overload for ports
