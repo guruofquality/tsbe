@@ -34,9 +34,11 @@ Topology::Topology(const TopologyConfig &)
 {
     this->reset(new ElementImpl());
     (*this)->block = false;
-    (*this)->thread_pool = ThreadPool::get_active();
-    //(*this)->framework = boost::shared_ptr<Theron::Framework>(new Theron::Framework(1/*thread*/));
-    (*this)->actor = boost::shared_ptr<Actor>(new TopologyActor((*this)->thread_pool->framework));
+    //(*this)->thread_pool = ThreadPool::get_active();
+    //(*this)->actor = boost::shared_ptr<Actor>(new TopologyActor((*this)->thread_pool->framework));
+
+    (*this)->framework = boost::shared_ptr<Theron::Framework>(new Theron::Framework(1/*thread*/));
+    (*this)->actor = boost::shared_ptr<Actor>(new TopologyActor(*((*this)->framework)));
 }
 
 const Element &Topology::self(void) const

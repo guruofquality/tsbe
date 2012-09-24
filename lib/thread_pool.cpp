@@ -43,7 +43,7 @@ ThreadPoolImpl::ThreadPoolImpl(const ThreadPoolConfig &config):
 static size_t hardware_concurrency(void)
 {
     const size_t n = boost::thread::hardware_concurrency();
-    return std::max(size_t(3), n);
+    return std::max(size_t(2), n);
 }
 
 ThreadPoolConfig::ThreadPoolConfig(void)

@@ -33,9 +33,11 @@ Executor::Executor(void)
 Executor::Executor(const ExecutorConfig &config)
 {
     this->reset(new ExecutorImpl());
-    //(*this)->framework = boost::shared_ptr<Theron::Framework>(new Theron::Framework(1/*thread*/));
-    (*this)->thread_pool = ThreadPool::get_active();
-    (*this)->actor = boost::shared_ptr<Actor>(new ExecutorActor((*this)->thread_pool->framework, config));
+    //(*this)->thread_pool = ThreadPool::get_active();
+    //(*this)->actor = boost::shared_ptr<Actor>(new ExecutorActor((*this)->thread_pool->framework, config));
+
+    (*this)->framework = boost::shared_ptr<Theron::Framework>(new Theron::Framework(1/*thread*/));
+    (*this)->actor = boost::shared_ptr<Actor>(new ExecutorActor(*((*this)->framework), config));
 }
 
 void Executor::commit(void)
