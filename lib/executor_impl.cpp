@@ -24,9 +24,9 @@
 using namespace tsbe;
 
 inline void ExecutorActor::send_topology_update(
-    const std::vector<Element> &changed_block_set
+    const std::vector<Base> &changed_block_set
 ){
-    BOOST_FOREACH(const Element &block, changed_block_set)
+    BOOST_FOREACH(const Base &block, changed_block_set)
     {
         BlockChangedMessage message_i;
         block->actor->Push(message_i, receiver.GetAddress());
@@ -39,7 +39,7 @@ void ExecutorActor::handle_commit(
     const Theron::Address from
 ){
     std::vector<Connection> new_flat_connections;
-    std::vector<Element> changed_block_set;
+    std::vector<Base> changed_block_set;
 
     //step 1) resolve all connections in the topology
     {
@@ -126,7 +126,7 @@ void ExecutorActor::handle_post_msg(
     const ExecutorPostMessage &message,
     const Theron::Address from
 ){
-    BOOST_FOREACH(const Element &block, this->block_set)
+    BOOST_FOREACH(const Base &block, this->block_set)
     {
         BlockPostMessage message_i;
         message_i.msg = message.msg;

@@ -32,7 +32,7 @@ Block::Block(void)
 
 Block::Block(const BlockConfig &config)
 {
-    this->reset(new ElementImpl());
+    this->reset(new BaseImpl());
     (*this)->block = true;
     (*this)->thread_pool = ThreadPool::get_active();
     (*this)->actor = boost::shared_ptr<Actor>(new BlockActor((*this)->thread_pool->framework, config));

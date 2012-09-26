@@ -23,7 +23,7 @@ Port::Port(void)
     index = 0;
 }
 
-Port::Port(const Element &elem, const size_t index, Container container):
+Port::Port(const Base &elem, const size_t index, Container container):
     elem(elem), index(index), container(container)
 {
     //NOP

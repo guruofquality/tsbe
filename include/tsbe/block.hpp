@@ -52,7 +52,7 @@ struct TSBE_API BlockConfig
  * Arbitrary messages may be accepted from upstream ports
  * and arbitrary messages may be posted to downstream ports.
  */
-struct TSBE_API Block : boost::shared_ptr<ElementImpl>
+struct TSBE_API Block : boost::shared_ptr<BaseImpl>
 {
     //! Construct a null block
     Block(void);

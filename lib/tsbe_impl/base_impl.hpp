@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
-#define INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP
+#ifndef INCLUDED_LIBTSBE_BASE_IMPL_HPP
+#define INCLUDED_LIBTSBE_BASE_IMPL_HPP
 
 #include <tsbe/thread_pool.hpp>
 #include <tsbe_impl/common_impl.hpp>
@@ -26,15 +26,15 @@
 namespace tsbe
 {
 
-//! ElementImpl is both a topology and a block to allow interconnection
-struct ElementImpl
+//! BaseImpl is both a topology and a block to allow interconnection
+struct BaseImpl
 {
-    ElementImpl(void)
+    BaseImpl(void)
     {
         //NOP
     }
 
-    ~ElementImpl(void)
+    ~BaseImpl(void)
     {
         this->actor.reset();
     }
@@ -53,4 +53,4 @@ struct ElementImpl
 
 } //namespace tsbe
 
-#endif /*INCLUDED_LIBTSBE_ELEMENT_IMPL_HPP*/
+#endif /*INCLUDED_LIBTSBE_BASE_IMPL_HPP*/

@@ -23,8 +23,8 @@ namespace tsbe
 {
 
 /*!
- * A port represents a the IO port of an element.
- * The element can be a block or a topology.
+ * A port represents a the IO port of an base.
+ * The base can be a block or a topology.
  * The index can be a input or output index.
  * The interpretation of port as a source of data
  * or a sink for data is up to the caller.
@@ -36,11 +36,11 @@ struct TSBE_API Port
     //! Create an unitialized port
     Port(void);
 
-    //! Create a port from an element and IO index
-    Port(const Element &elem, const size_t index, Container container = Container());
+    //! Create a port from an base and IO index
+    Port(const Base &elem, const size_t index, Container container = Container());
 
-    //! The element in this port
-    Element elem;
+    //! The base in this port
+    Base elem;
 
     //! The IO index of this port
     size_t index;

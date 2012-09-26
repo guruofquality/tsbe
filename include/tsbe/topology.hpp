@@ -29,7 +29,7 @@ struct TSBE_API TopologyConfig
 };
 
 /*!
- * Topology is an interconnection of elements,
+ * Topology is an interconnection of bases,
  * which includes: child topologies and blocks.
  * A topology describes a data flow for blocks.
  *
@@ -38,7 +38,7 @@ struct TSBE_API TopologyConfig
  *   - affinity of processing structure
  *   - processing unit chunk size
  */
-struct TSBE_API Topology : boost::shared_ptr<ElementImpl>
+struct TSBE_API Topology : boost::shared_ptr<BaseImpl>
 {
     //! Create a null Topology
     Topology(void);
@@ -46,8 +46,8 @@ struct TSBE_API Topology : boost::shared_ptr<ElementImpl>
     //! Create a new Topology object
     Topology(const TopologyConfig &config);
 
-    //! Get access to this topology as an Element for connect
-    const Element &self(void) const;
+    //! Get access to this topology as an Base for connect
+    const Base &self(void) const;
 
     /*!
      * Add a child topology to this parent.
@@ -60,8 +60,8 @@ struct TSBE_API Topology : boost::shared_ptr<ElementImpl>
     void remove_topology(const Topology &topology);
 
     /*!
-     * Connect the outport port of an element to the input port of an element.
-     * The element may be a block, a topology, or this object via self().
+     * Connect the outport port of an base to the input port of an base.
+     * The base may be a block, a topology, or this object via self().
      */
     void connect(const Connection &connection);
 

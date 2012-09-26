@@ -75,8 +75,8 @@ struct ExecutorImpl;
 struct TaskInterface;
 struct TaskInterfaceImpl;
 
-struct ElementImpl;
-typedef boost::shared_ptr<ElementImpl> Element;
+struct BaseImpl;
+typedef boost::shared_ptr<BaseImpl> Base;
 
 struct ThreadPool;
 struct ThreadPoolImpl;

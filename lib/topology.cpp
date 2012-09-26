@@ -32,7 +32,7 @@ Topology::Topology(void)
 
 Topology::Topology(const TopologyConfig &)
 {
-    this->reset(new ElementImpl());
+    this->reset(new BaseImpl());
     (*this)->block = false;
     //(*this)->thread_pool = ThreadPool::get_active();
     //(*this)->actor = boost::shared_ptr<Actor>(new TopologyActor((*this)->thread_pool->framework));
@@ -41,7 +41,7 @@ Topology::Topology(const TopologyConfig &)
     (*this)->actor = boost::shared_ptr<Actor>(new TopologyActor(*((*this)->framework)));
 }
 
-const Element &Topology::self(void) const
+const Base &Topology::self(void) const
 {
     return *this;
 }

@@ -61,12 +61,12 @@ struct ExecutorActor : Actor
     void handle_post_msg(const ExecutorPostMessage &message, const Theron::Address from);
 
     std::vector<Connection> flat_connections;
-    std::vector<Element> block_set;
+    std::vector<Base> block_set;
 
     ExecutorConfig config;
     Theron::Receiver receiver;
 
-    void send_topology_update(const std::vector<Element> &);
+    void send_topology_update(const std::vector<Base> &);
 };
 
 /***********************************************************************

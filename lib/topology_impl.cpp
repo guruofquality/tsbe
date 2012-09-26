@@ -176,7 +176,7 @@ void TopologyActor::handle_resolve_conns(
     }
 
     //get a list of unique sub-topolgies
-    std::vector<Element> sub_topologies;
+    std::vector<Base> sub_topologies;
     BOOST_FOREACH(const Topology &topology, this->topologies)
     {
         remove_one(sub_topologies, topology);
@@ -199,7 +199,7 @@ void TopologyActor::handle_resolve_conns(
     }
 
     //now recurse through all sub-topologies
-    BOOST_FOREACH(const Element &topology, sub_topologies)
+    BOOST_FOREACH(const Base &topology, sub_topologies)
     {
         std::vector<Connection> flat_connections_i;
         TopologyResolveConnectionsMessage message_i;
